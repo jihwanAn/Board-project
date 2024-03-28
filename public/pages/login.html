@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Board</title>
+    <link rel="stylesheet" href="../assets/styles/style.css" />
+    <script defer src="../scripts/Login.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1><a href="http://127.0.0.1:5500/public/index.html">Board</a></h1>
+      </header>
+
+      <main>
+        <section class="board_login_wrap">
+          <!--login-->
+          <form id="loginForm">
+            <input type="text" id="userId_login" placeholder="ID" />
+            <input type="password" id="password_login" placeholder="Password" />
+            <input type="submit" value="로그인" />
+          </form>
+
+          <!--signup-->
+          <button id="signupBtn" onclick="openModal()">회원가입</button>
+
+          <div id="myModal" class="modal">
+            <span class="close" onclick="closeModal()">&times;</span>
+
+            <!--signup Modal-->
+            <form id="signupForm">
+              <label for="userName_signup">이름</label>
+              <input
+                type="text"
+                id="userName_signup"
+                name="userName"
+                required
+              />
+              <label for="userId_signup">아이디</label>
+              <input type="text" id="userId_signup" name="userId" required />
+              <label for="password_signup">비밀번호</label>
+              <input
+                type="password"
+                id="password_signup"
+                name="password"
+                required
+              />
+              <label for="confirmPassword">비밀번호 확인</label>
+              <input
+                type="password"
+                id="confirmPassword"
+                name="confirmPassword"
+                required
+              />
+              <input type="submit" value="가입" />
+            </form>
+          </div>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>

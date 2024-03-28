@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Board</title>
+    <link rel="stylesheet" href="./assets/styles/style.css" />
+    <script defer src="./scripts/carousel.js"></script>
+    <script defer src="./scripts/List.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>Board</h1>
+        <div class="right" id="userButtons">
+          <button id="writeBtn">글 작성</button>
+          <a href="./pages/login.html">로그인</a>
+        </div>
+      </header>
+
+      <main>
+        <div class="carousel_container">
+          <div class="carousel">
+            <!--carousel-->
+          </div>
+          <button class="prev_btn">이전</button>
+          <button class="next_btn">다음</button>
+          <div class="bullets_container"></div>
+        </div>
+
+        <section class="board_list_wrap">
+          <table>
+            <thead>
+              <tr>
+                <td>No</td>
+                <td class="title">제목</td>
+                <td>작성자</td>
+                <td>등록일</td>
+                <td>조회</td>
+              </tr>
+            </thead>
+            <tbody id="list">
+              <!-- list -->
+            </tbody>
+          </table>
+
+          <div class="board_page"></div>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>
