@@ -21,7 +21,12 @@ const refreshTokenSecret =
   process.env.JWT_REFRESH_SECRET || crypto.randomBytes(64).toString("hex");
 
 // CORS 옵션
-app.use(cors());
+const corsOptions = {
+  origin: "http://localhost:3000",
+  credentials: true, // 인증 정보(쿠키 등) 전송 허용
+};
+
+app.use(cors(corsOptions));
 
 app.use(cookieParser());
 
@@ -37,7 +42,7 @@ app.use("/user", memberRouter);
 app.use(express.static("/public"));
 
 // 서버 시작
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(`서버가 포트 ${PORT}에서 실행 중입니다.`);
 });

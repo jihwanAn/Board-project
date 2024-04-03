@@ -30,7 +30,7 @@ router.post("/", verifyToken, async (req, res) => {
     await user.save();
 
     res
-      .status(201)
+      .status(200)
       .json({ idx: board._id, newAccessToken: req.newAccessToken }); // 저장된 글의 ID, new토큰 클라이언트로 전송
   } catch (error) {
     console.error(error);
@@ -55,7 +55,7 @@ router.put("/:id", verifyToken, async (req, res) => {
 router.delete("/:id", verifyToken, async (req, res) => {
   try {
     await Board.findByIdAndDelete(req.params.id);
-    res.sendStatus(204);
+    res.sendStatus(200);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "서버 에러" });
