@@ -38,13 +38,13 @@ router.post("/login", async (req, res) => {
     const user = await User.findOne({ userId });
 
     if (!user) {
-      return res.status(401).json({ message: "사용자가 존재하지 않습니다." });
+      return res.status(401).json({ error: "사용자가 존재하지 않습니다." });
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
-      return res.status(401).json({ message: "비밀번호가 일치하지 않습니다." });
+      return res.status(401).json({ error: "비밀번호가 일치하지 않습니다." });
     }
 
     // access token 생성
