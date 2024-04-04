@@ -4,6 +4,51 @@ import banner1 from "../assets/banner_Img/banner1.jpg";
 import banner2 from "../assets/banner_Img/banner2.jpg";
 import banner3 from "../assets/banner_Img/banner3.jpg";
 
+const Carousel = () => {
+  const images = [banner1, banner2, banner3];
+
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const totalSlides = images.length;
+
+  const goToSlide = (index) => {
+    setCurrentSlide(index);
+  };
+
+  const goToPrevSlide = () => {
+    setCurrentSlide((prev) => (prev === 0 ? totalSlides - 1 : prev - 1));
+  };
+
+  const goToNextSlide = useCallback(() => {
+    setCurrentSlide((prev) => (prev === totalSlides - 1 ? 0 : prev + 1));
+  }, [totalSlides]);
+
+  useEffect(() => {
+    const interval = setInterval(goToNextSlide, 2500);
+    return () => clearInterval(interval);
+  }, [currentSlide, goToNextSlide]);
+
+  return (
+    <Wrapper>
+      <Slide style={{ transform: `translateX(-${currentSlide * 100}%)` }}>
+        {images.map((image, index) => (
+          <Img key={index} src={image} alt={`Slide ${index + 1}`} />
+        ))}
+      </Slide>
+      <PrevButton onClick={goToPrevSlide}>이전</PrevButton>
+      <NextButton onClick={goToNextSlide}>다음</NextButton>
+      <BulletWrapper>
+        {images.map((_, index) => (
+          <Bullet
+            key={index}
+            className={index === currentSlide ? "active" : ""}
+            onClick={() => goToSlide(index)}
+          />
+        ))}
+      </BulletWrapper>
+    </Wrapper>
+  );
+};
+
 const Wrapper = styled.div`
   position: relative;
   width: 100%;
@@ -52,7 +97,6 @@ const BulletWrapper = styled.div`
 const Bullet = styled.div`
   width: 10px;
   height: 10px;
-  /* background-color: ${({ active }) => (active ? "white" : "#333")}; */
   background-color: #333;
   border-radius: 50%;
   margin: 0 5px;
@@ -61,50 +105,5 @@ const Bullet = styled.div`
     background-color: white;
   }
 `;
-
-const Carousel = () => {
-  const images = [banner1, banner2, banner3];
-
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const totalSlides = images.length;
-
-  const goToSlide = (index) => {
-    setCurrentSlide(index);
-  };
-
-  const goToPrevSlide = () => {
-    setCurrentSlide((prev) => (prev === 0 ? totalSlides - 1 : prev - 1));
-  };
-
-  const goToNextSlide = useCallback(() => {
-    setCurrentSlide((prev) => (prev === totalSlides - 1 ? 0 : prev + 1));
-  }, [totalSlides]);
-
-  useEffect(() => {
-    const interval = setInterval(goToNextSlide, 2500);
-    return () => clearInterval(interval);
-  }, [currentSlide, goToNextSlide]);
-
-  return (
-    <Wrapper>
-      <Slide style={{ transform: `translateX(-${currentSlide * 100}%)` }}>
-        {images.map((image, index) => (
-          <Img key={index} src={image} alt={`Slide ${index + 1}`} />
-        ))}
-      </Slide>
-      <PrevButton onClick={goToPrevSlide}>이전</PrevButton>
-      <NextButton onClick={goToNextSlide}>다음</NextButton>
-      <BulletWrapper>
-        {images.map((_, index) => (
-          <Bullet
-            key={index}
-            className={index === currentSlide ? "active" : ""}
-            onClick={() => goToSlide(index)}
-          />
-        ))}
-      </BulletWrapper>
-    </Wrapper>
-  );
-};
 
 export default Carousel;

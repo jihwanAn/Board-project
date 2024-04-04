@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import styled from "styled-components";
+import PostActions from "../components/PostActions";
 
 function View() {
   const [post, setPost] = useState(null);
@@ -19,7 +20,7 @@ function View() {
               "Content-Type": "application/json",
               Authorization: `Bearer ${localStorage.getItem("token")}`,
             },
-            withCredentials: true, // 쿠키를 자동으로 보내도록 설정
+            withCredentials: true,
           }
         );
 
@@ -39,12 +40,10 @@ function View() {
   }, [objectId]);
 
   const handleUpdateBtnClick = () => {
-    // 수정 버튼 클릭 시 동작
     navigate(`/update?id=${objectId}`);
   };
 
   const handleDeleteBtnClick = async () => {
-    // 삭제 버튼 클릭 시 동작
     try {
       const response = await axios.delete(
         `http://localhost:8080/board/${objectId}`
@@ -68,23 +67,68 @@ function View() {
 
   return (
     <main className="container">
-      <section className="board_view_wrap">
-        <div id="subject">제목: {post && post.subject}</div>
-        <div id="writer">작성자: {post && post.writer}</div>
-        <div id="date">날짜: {post && formatTimestamp(post.date)}</div>
-        <div id="content">{post && post.content}</div>
-        {isOwner && (
-          <div className="btnForm">
-            <button onClick={handleUpdateBtnClick}>수정</button>
-            <button onClick={handleDeleteBtnClick}>삭제</button>
-          </div>
-        )}
-        <div className="btnForm">
-          <Link to="/">목록으로</Link>
-        </div>
-      </section>
+      <ViewWrap>
+        <ViewForm>
+          <Subject>제목: {post && post.subject}</Subject>
+          <Writer>작성자: {post && post.writer}</Writer>
+          <div id="date">날짜: {post && formatTimestamp(post.date)}</div>
+          <Content>{post && post.content}</Content>
+          <ButtonContainer>
+            {" "}
+            {isOwner && (
+              <PostActions
+                buttonText={{
+                  back: "목록으로",
+                  modify: "수정",
+                  delete: "삭제",
+                }}
+                handleDelete={handleDeleteBtnClick}
+                handleUpdate={handleUpdateBtnClick}
+              />
+            )}
+            {!isOwner && <PostActions buttonText={{ back: "목록으로" }} />}
+          </ButtonContainer>
+        </ViewForm>
+      </ViewWrap>
     </main>
   );
 }
+
+const ViewWrap = styled.section`
+  width: 100%;
+  border-top: 1px solid black;
+`;
+
+const ViewForm = styled.div`
+  border-bottom: 1px solid black;
+  margin: 12px 0;
+`;
+
+const Subject = styled.div`
+  width: 100%;
+  font-weight: bold;
+  margin-bottom: 3px;
+`;
+
+const Writer = styled.div`
+  width: 100%;
+  margin-bottom: 3px;
+`;
+
+const Content = styled.div`
+  height: 250px;
+  width: 90%;
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 20px;
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+`;
 
 export default View;

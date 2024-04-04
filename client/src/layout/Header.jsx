@@ -1,22 +1,17 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import styled from "styled-components";
+import { TextStyledButton } from "../components/button";
 
-const HeaderWrapper = styled.header`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 30px;
-`;
-
-const RightContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-`;
-
-const Header = ({ isLoggedIn, onLogout }) => {
+const Header = ({ isLoggedIn }) => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const [currentRoute, setCurrentRoute] = useState(location.pathname);
+
+  useEffect(() => {
+    setCurrentRoute(location.pathname);
+  }, [location]);
 
   const handleWriteButtonClick = async () => {
     try {
@@ -90,27 +85,60 @@ const Header = ({ isLoggedIn, onLogout }) => {
         }
       }
     } catch (error) {
-      // 네트워크 오류 등의 예외 처리
       console.error("Network error:", error);
     }
   };
 
+  const initialBtnHandler = (text) => {
+    text === "Board" ? navigate("/") : navigate("/login");
+  };
+
   return (
     <HeaderWrapper>
-      <a href="/">Board</a>
+      <TextStyledButton
+        children="Board"
+        onClick={() => initialBtnHandler("Board")}
+        size="26px"
+      />
       <RightContainer>
-        {isLoggedIn ? (
+        {isLoggedIn && currentRoute === "/" ? (
           <>
-            <button onClick={handleWriteButtonClick}>글 작성</button>
-            <button onClick={handleMyPageButtonClick}>마이페이지</button>
-            <button onClick={handleLogoutButtonClick}>로그아웃</button>
+            <TextStyledButton
+              children="글 작성"
+              onClick={handleWriteButtonClick}
+            />
+            <TextStyledButton
+              children="마이페이지"
+              onClick={handleMyPageButtonClick}
+            />
+            <TextStyledButton
+              children="로그아웃"
+              onClick={handleLogoutButtonClick}
+            />
           </>
+        ) : currentRoute === "/" ? (
+          <TextStyledButton
+            children="로그인"
+            onClick={() => initialBtnHandler("Login")}
+          />
         ) : (
-          <a href="/login">로그인</a>
+          ""
         )}
       </RightContainer>
     </HeaderWrapper>
   );
 };
+
+const HeaderWrapper = styled.header`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 30px;
+`;
+
+const RightContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
 
 export default Header;

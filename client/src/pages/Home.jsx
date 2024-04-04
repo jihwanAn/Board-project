@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 import CarouselContainer from "../components/carousel";
 
 const Home = () => {
@@ -30,7 +31,7 @@ const Home = () => {
       day: "2-digit",
       hour: "2-digit",
       minute: "2-digit",
-      hour12: false, // AM/PM 제외
+      hour12: false,
     });
     return formattedDate.replace(",", "");
   };
@@ -38,30 +39,32 @@ const Home = () => {
   return (
     <Container>
       <CarouselContainer />
-      <table>
+      <StyledTable>
         <thead>
           <tr>
-            <th>No</th>
-            <th>제목</th>
-            <th>작성자</th>
-            <th>등록일</th>
-            <th>조회</th>
+            <TableHeader>No</TableHeader>
+            <TableHeader>제목</TableHeader>
+            <TableHeader>작성자</TableHeader>
+            <TableHeader>등록일</TableHeader>
+            <TableHeader>조회</TableHeader>
           </tr>
         </thead>
         <tbody>
           {posts.map((post, index) => (
-            <tr key={post._id}>
-              <td>{index + 1}</td>
-              <td className="title">
-                <a href={`./view?id=${post._id}`}> {post.subject}</a>
-              </td>
-              <td>{post.writer}</td>
-              <td>{formatTimestamp(post.date)}</td>
-              <td>{post.views}</td>
-            </tr>
+            <TableRow key={post._id}>
+              <TableData>{index + 1}</TableData>
+              <TableData>
+                <StyledLink to={`./view?id=${post._id}`}>
+                  {post.subject}
+                </StyledLink>
+              </TableData>
+              <TableData>{post.writer}</TableData>
+              <TableData>{formatTimestamp(post.date)}</TableData>
+              <TableData>{post.views}</TableData>
+            </TableRow>
           ))}
         </tbody>
-      </table>
+      </StyledTable>
     </Container>
   );
 };
@@ -71,6 +74,45 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   width: 100%;
+`;
+
+const StyledTable = styled.table`
+  width: 100%;
+  border-collapse: collapse;
+
+  th,
+  td {
+    padding: 10px;
+    text-align: center;
+  }
+
+  th {
+    background-color: #f2f2f2;
+    border-bottom: 1px solid #ccc;
+  }
+`;
+
+const TableHeader = styled.th`
+  font-weight: bold;
+  color: #333;
+`;
+
+const TableRow = styled.tr`
+  border-bottom: 1px solid #ccc;
+`;
+
+const TableData = styled.td`
+  color: #555;
+`;
+
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: #007bff;
+  transition: color 0.3s ease;
+
+  &:hover {
+    color: #0056b3;
+  }
 `;
 
 export default Home;

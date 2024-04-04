@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
+import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import { StyledBtn, TextStyledButton } from "../components/button";
 
 const Login = () => {
   const [loginData, setLoginData] = useState({ userId: "", password: "" });
@@ -39,6 +41,7 @@ const Login = () => {
       });
       if (response.status === 200) {
         const { accessToken } = response.data;
+
         localStorage.setItem("token", accessToken);
         document.cookie =
           "refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
@@ -48,7 +51,7 @@ const Login = () => {
         throw new Error(response.statusText);
       }
     } catch (error) {
-      alert("로그인 실패: " + error.message);
+      alert(error.response.data.error);
       console.error(error);
     }
   };
@@ -77,10 +80,10 @@ const Login = () => {
         alert(`${userName}님 회원가입을 축하드립니다!`);
         navigate(`/`);
       } else {
-        throw new Error(response.data.error || "회원가입 실패");
+        throw new Error(response.data.error);
       }
     } catch (error) {
-      alert("회원가입 실패: " + error.message);
+      alert(error.response.data.error);
       console.error(error);
     }
   };
@@ -89,85 +92,139 @@ const Login = () => {
     setModalOpen(true);
   };
 
-  const closeModal = () => {
-    setModalOpen(false);
-  };
+  // const closeModal = () => {
+  //   setModalOpen(false);
+  // };
+
   return (
-    <div className="container">
-      <main>
-        <section className="board_login_wrap">
-          <form id="loginForm" onSubmit={handleLogin}>
-            <input
-              type="text"
-              name="userId"
-              placeholder="ID"
-              value={loginData.userId}
-              onChange={handleLoginChange}
-            />
-            <input
-              type="password"
-              name="password"
-              placeholder="Password"
-              value={loginData.password}
-              onChange={handleLoginChange}
-            />
-            <input type="submit" value="로그인" />
-          </form>
+    <Container>
+      <LoginSection>
+        <LoginForm id="loginForm" onSubmit={handleLogin}>
+          <Input
+            type="text"
+            name="userId"
+            placeholder="ID"
+            value={loginData.userId}
+            onChange={handleLoginChange}
+          />
+          <Input
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={loginData.password}
+            onChange={handleLoginChange}
+          />
+          <BtnForm>
+            <StyledBtn children={"로그인"} />
+          </BtnForm>
+        </LoginForm>
 
-          <button id="signupBtn" onClick={openModal}>
-            회원가입
-          </button>
+        <BtnForm>
+          <TextStyledButton onClick={openModal} children={"회원가입"} />
+        </BtnForm>
 
-          {modalOpen && (
-            <div id="myModal" className="modal">
-              <span className="close" onClick={closeModal}>
-                &times;
-              </span>
-              <form id="signupForm" onSubmit={handleSignup}>
-                <label htmlFor="userName_signup">이름</label>
-                <input
-                  type="text"
-                  name="userName"
-                  placeholder="이름"
-                  value={signupData.userName}
-                  onChange={handleSignupChange}
-                  required
-                />
-                <label htmlFor="userId_signup">아이디</label>
-                <input
-                  type="text"
-                  name="userId"
-                  placeholder="아이디"
-                  value={signupData.userId}
-                  onChange={handleSignupChange}
-                  required
-                />
-                <label htmlFor="password_signup">비밀번호</label>
-                <input
-                  type="password"
-                  name="password"
-                  placeholder="비밀번호"
-                  value={signupData.password}
-                  onChange={handleSignupChange}
-                  required
-                />
-                <label htmlFor="confirmPassword">비밀번호 확인</label>
-                <input
-                  type="password"
-                  name="confirmPassword"
-                  placeholder="비밀번호 확인"
-                  value={signupData.confirmPassword}
-                  onChange={handleSignupChange}
-                  required
-                />
-                <input type="submit" value="가입" />
-              </form>
-            </div>
-          )}
-        </section>
-      </main>
-    </div>
+        {modalOpen && (
+          <Modal className="modal">
+            <SignupForm id="signupForm" onSubmit={handleSignup}>
+              <Label htmlFor="userName_signup">이름</Label>
+              <Input
+                type="text"
+                name="userName"
+                placeholder="이름"
+                value={signupData.userName}
+                onChange={handleSignupChange}
+                required
+              />
+              <Label htmlFor="userId_signup">아이디</Label>
+              <Input
+                type="text"
+                name="userId"
+                placeholder="아이디"
+                value={signupData.userId}
+                onChange={handleSignupChange}
+                required
+              />
+              <Label htmlFor="password_signup">비밀번호</Label>
+              <Input
+                type="password"
+                name="password"
+                placeholder="비밀번호"
+                value={signupData.password}
+                onChange={handleSignupChange}
+                required
+              />
+              <Label htmlFor="confirmPassword">비밀번호 확인</Label>
+              <Input
+                type="password"
+                name="confirmPassword"
+                placeholder="비밀번호 확인"
+                value={signupData.confirmPassword}
+                onChange={handleSignupChange}
+                required
+              />
+              <StyledBtn children={"가입"} />
+            </SignupForm>
+          </Modal>
+        )}
+      </LoginSection>
+    </Container>
   );
 };
+
+const Container = styled.div`
+  width: 100%;
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+`;
+
+const LoginSection = styled.section`
+  width: 100%;
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+`;
+
+const LoginForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+`;
+
+const BtnForm = styled.div`
+  margin: 10px 0;
+  display: flex;
+  justify-content: center;
+`;
+
+const Modal = styled.div`
+  display: ${(props) => (props.modalOpen ? "none" : "block")};
+  position: fixed;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 20px;
+  border-radius: 10px;
+  color: #f5f5f7;
+  z-index: 999;
+  width: 550px;
+`;
+
+const SignupForm = styled.form`
+  display: flex;
+  flex-direction: column;
+`;
+
+const Input = styled.input`
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+`;
+
+const Label = styled.label`
+  margin-bottom: 10px;
+`;
 
 export default Login;

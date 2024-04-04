@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import styled from "styled-components";
+import PostActions from "../components/PostActions";
 
 const MyPage = () => {
   const [userInfo, setUserInfo] = useState({});
@@ -36,35 +38,100 @@ const MyPage = () => {
   };
 
   return (
-    <main className="container">
-      <section className="user_info_wrap">
-        <div className="userInfo">
-          <p>
+    <MainContainer>
+      <UserInfoWrap>
+        <UserInfo>
+          <UserInfoItem>
             <strong>아이디:</strong> {userInfo.userId}
-          </p>
-          <p>
+          </UserInfoItem>
+          <UserInfoItem>
             <strong>이름:</strong> {userInfo.name}
-          </p>
-        </div>
-        <div className="userPosts">
+          </UserInfoItem>
+        </UserInfo>
+        <UserPosts>
           <ul>
             {userPosts.map((post) => (
-              <li key={post._id}>
-                <Link to={`/view?id=${post._id}`}>{post.subject}</Link>
-                <span>{formatDate(post.date)}</span>
-                <span> 조회: {post.views}</span>
-              </li>
+              <UserPost key={post._id}>
+                <StyledLink to={`/view?id=${post._id}`}>
+                  {post.subject}
+                </StyledLink>
+                <PostViews>조회: {post.views}</PostViews>
+                <PostDate>{formatDate(post.date)}</PostDate>
+              </UserPost>
             ))}
           </ul>
-        </div>
-      </section>
-      <div className="btnForm">
-        <Link to="/" className="btn">
-          목록으로
-        </Link>
-      </div>
-    </main>
+        </UserPosts>
+      </UserInfoWrap>
+
+      <PostActions buttonText={{ back: "목록으로" }} />
+    </MainContainer>
   );
 };
+
+const MainContainer = styled.main``;
+
+const UserInfoWrap = styled.section`
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+  width: 100%;
+  margin: 12px 0;
+`;
+
+const UserInfo = styled.div`
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+`;
+
+const UserInfoItem = styled.p`
+  flex: 1;
+`;
+
+const UserPosts = styled.div`
+  margin-top: 20px;
+  width: 100%;
+  border: 1px solid rgb(175, 175, 175);
+  border-radius: 7px;
+  height: 400px;
+  overflow-y: auto;
+  margin-bottom: 20px;
+
+  /* ul의 기본 마커 제거 */
+  ul {
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+  }
+`;
+
+const UserPost = styled.li`
+  border-bottom: 1px solid rgb(175, 175, 175);
+  padding: 15px;
+  display: flex;
+  align-items: center;
+`;
+
+const StyledLink = styled(Link)`
+  flex: 3;
+  color: blue;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
+const PostViews = styled.span`
+  flex: 0.4;
+  color: #666;
+  font-size: 15px;
+`;
+
+const PostDate = styled.span`
+  flex: 0.6;
+  color: #666;
+  margin-left: 5px;
+  font-size: 15px;
+`;
 
 export default MyPage;

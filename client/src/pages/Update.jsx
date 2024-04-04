@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
+import PostForm from "../components/PostForm";
 
 function Update() {
   const [subject, setSubject] = useState("");
   const [content, setContent] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
+
   useEffect(() => {
     const getPostIdFromUrl = () => {
       return new URLSearchParams(location.search).get("id");
@@ -65,40 +67,17 @@ function Update() {
     }
   };
 
-  const handleCancel = () => {
-    navigate("/");
-  };
-
   return (
     <main className="container">
       <section className="board_update_wrap">
-        <form onSubmit={handleSubmit}>
-          <div>
-            제목 :{" "}
-            <input
-              type="text"
-              name="subject"
-              value={subject}
-              onChange={(e) => setSubject(e.target.value)}
-            />
-          </div>
-          <div>
-            내용 :{" "}
-            <textarea
-              name="content"
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-            ></textarea>
-          </div>
-          <div className="btnForm">
-            <button className="btn" type="button" onClick={handleCancel}>
-              취소
-            </button>
-            <button className="btn" type="submit">
-              수정 완료
-            </button>
-          </div>
-        </form>
+        <PostForm
+          subject={subject}
+          content={content}
+          setSubject={setSubject}
+          setContent={setContent}
+          handleSubmit={handleSubmit}
+          buttonText="수정 완료"
+        />
       </section>
     </main>
   );
