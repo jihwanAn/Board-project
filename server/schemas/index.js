@@ -26,7 +26,6 @@ module.exports = async () => {
     console.log("몽고디비 연결이 끊겼습니다. 연결을 재시도 합니다.");
   });
 
-  // User와 Board 모델의 스키마 정의 파일을 불러옴
   require("./user");
   require("./board");
 };

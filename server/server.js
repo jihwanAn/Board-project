@@ -22,7 +22,11 @@ const refreshTokenSecret =
 
 // CORS 옵션
 const corsOptions = {
-  origin: "http://localhost:3000",
+  origin: [
+    "https://free-board.netlify.app",
+    "https://port-0-free-board-754g42aluoci77d.sel5.cloudtype.app",
+    "http://localhost:3000",
+  ],
   credentials: true, // 인증 정보(쿠키 등) 전송 허용
 };
 
