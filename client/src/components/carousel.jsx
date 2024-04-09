@@ -3,9 +3,12 @@ import styled from "styled-components";
 import banner1 from "../assets/banner_Img/banner1.jpg";
 import banner2 from "../assets/banner_Img/banner2.jpg";
 import banner3 from "../assets/banner_Img/banner3.jpg";
+import banner4 from "../assets/banner_Img/banner4.jpg";
+import banner5 from "../assets/banner_Img/banner5.jpg";
+import banner6 from "../assets/banner_Img/banner6.jpg";
 
 const Carousel = () => {
-  const images = [banner1, banner2, banner3];
+  const images = [banner1, banner2, banner3, banner4, banner5, banner6];
 
   const [currentSlide, setCurrentSlide] = useState(0);
   const totalSlides = images.length;
