@@ -14,7 +14,7 @@ function View() {
     const fetchPostData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8080/board/${objectId}`,
+          `https://port-0-free-board-754g42aluoci77d.sel5.cloudtype.app/board/${objectId}`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -46,7 +46,7 @@ function View() {
   const handleDeleteBtnClick = async () => {
     try {
       const response = await axios.delete(
-        `http://localhost:8080/board/${objectId}`
+        `https://port-0-free-board-754g42aluoci77d.sel5.cloudtype.app/board/${objectId}`
       );
 
       if (response.status === 200) {

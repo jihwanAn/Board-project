@@ -35,10 +35,13 @@ const Login = () => {
     }
 
     try {
-      const response = await axios.post("http://localhost:8080/user/login", {
-        userId,
-        password,
-      });
+      const response = await axios.post(
+        "https://port-0-free-board-754g42aluoci77d.sel5.cloudtype.app/user/login",
+        {
+          userId,
+          password,
+        }
+      );
       if (response.status === 200) {
         const { accessToken } = response.data;
 
@@ -71,11 +74,14 @@ const Login = () => {
     }
 
     try {
-      const response = await axios.post("http://localhost:8080/user/signup", {
-        name: userName,
-        userId,
-        password,
-      });
+      const response = await axios.post(
+        "https://port-0-free-board-754g42aluoci77d.sel5.cloudtype.app/user/signup",
+        {
+          name: userName,
+          userId,
+          password,
+        }
+      );
       if (response.status === 200) {
         alert(`${userName}님 회원가입을 축하드립니다!`);
         navigate(`/`);

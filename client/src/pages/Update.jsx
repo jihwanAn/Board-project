@@ -17,7 +17,9 @@ function Update() {
     const fetchPostData = async () => {
       try {
         const id = getPostIdFromUrl();
-        const response = await axios.get(`http://localhost:8080/board/${id}`);
+        const response = await axios.get(
+          `https://port-0-free-board-754g42aluoci77d.sel5.cloudtype.app/board/${id}`
+        );
 
         if (response.status === 200) {
           const { board } = response.data;
@@ -46,7 +48,7 @@ function Update() {
       const postData = { subject, content };
 
       const response = await axios.put(
-        `http://localhost:8080/board/${id}`,
+        `https://port-0-free-board-754g42aluoci77d.sel5.cloudtype.app/board/${id}`,
         postData,
         {
           headers: {

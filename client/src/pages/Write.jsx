@@ -23,7 +23,7 @@ function Write() {
       };
 
       const response = await axios.post(
-        "http://localhost:8080/board",
+        "https://port-0-free-board-754g42aluoci77d.sel5.cloudtype.app/board",
         writeData,
         {
           headers: {
