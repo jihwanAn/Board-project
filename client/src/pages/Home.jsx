@@ -13,7 +13,9 @@ const Home = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/board");
+      const response = await axios.get(
+        "https://port-0-free-board-754g42aluoci77d.sel5.cloudtype.app/board"
+      );
       const sortedPosts = response.data.sort(
         (a, b) => new Date(b.date) - new Date(a.date)
       );
