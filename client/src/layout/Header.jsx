@@ -17,12 +17,15 @@ const Header = ({ isLoggedIn }) => {
     try {
       const token = localStorage.getItem("token");
       if (isLoggedIn && token) {
-        const response = await axios.get("http://localhost:8080/board", {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await axios.get(
+          "https://port-0-free-board-754g42aluoci77d.sel5.cloudtype.app/board",
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         if (response.status === 200) {
           navigate("/write");
         } else {
@@ -41,12 +44,15 @@ const Header = ({ isLoggedIn }) => {
       const token = localStorage.getItem("token");
 
       if (isLoggedIn && token) {
-        const response = await axios.get("http://localhost:8080/board", {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await axios.get(
+          "https://port-0-free-board-754g42aluoci77d.sel5.cloudtype.app/board",
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         if (response.status === 200) {
           navigate("/mypage");
         } else {
@@ -65,7 +71,7 @@ const Header = ({ isLoggedIn }) => {
       const token = localStorage.getItem("token");
       if (token) {
         const response = await axios.post(
-          "http://localhost:8080/user/logout",
+          "https://port-0-free-board-754g42aluoci77d.sel5.cloudtype.app/user/logout",
           // null,
           {
             headers: {
