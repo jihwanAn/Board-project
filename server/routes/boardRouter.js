@@ -10,7 +10,6 @@ router.post("/", verifyToken, async (req, res) => {
     const userId = req.user;
 
     const user = await User.findById(userId);
-    console.log(user);
 
     const { subject, content } = req.body;
     const board = new Board({
