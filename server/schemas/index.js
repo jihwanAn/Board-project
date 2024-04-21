@@ -26,6 +26,6 @@ module.exports = async () => {
     console.log("몽고디비 연결이 끊겼습니다. 연결을 재시도 합니다.");
   });
 
-  require("./user");
-  require("./board");
+  require("./User");
+  require("./Board");
 };

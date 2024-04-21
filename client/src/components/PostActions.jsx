@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { StyledBtn } from "../components/button";
+import { StyledBtn } from "./Button";
 import styled from "styled-components";
 
 function PostActions({ buttonText, handleUpdate, handleDelete, handleLogin }) {

@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
-const User = require("../schemas/user");
-const Board = require("../schemas/board");
+const User = require("../schemas/User");
+const Board = require("../schemas/Board");
 const Token = require("../schemas/Token");
 const bcrypt = require("bcrypt");
 const { verifyToken } = require("../middleware/auth");

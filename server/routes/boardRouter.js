@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const Board = require("../schemas/board");
-const User = require("../schemas/user");
+const Board = require("../schemas/Board");
+const User = require("../schemas/User");
 const { checkOwnership, verifyToken } = require("../middleware/auth");
 
 // 게시물 작성

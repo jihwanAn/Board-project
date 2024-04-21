@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-import CarouselContainer from "../components/carousel";
+import CarouselContainer from "../components/Carousel";
 
 const Home = () => {
   const [posts, setPosts] = useState([]);

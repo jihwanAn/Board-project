@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import styled from "styled-components";
-import { TextStyledButton } from "../components/button";
+import { TextStyledButton } from "../components/Button";
 
 const Header = ({ isLoggedIn }) => {
   const navigate = useNavigate();

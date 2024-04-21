@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { StyledBtn } from "../components/button";
+import { StyledBtn } from "../components/Button";
 
 function PostForm({
   subject,
