@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const User = require("../schemas/User");
 const Board = require("../schemas/Board");
-const Comment = require("../schemas/Comment");
 const { checkOwnership, verifyToken } = require("../middleware/auth");
 
 // 게시물 작성
@@ -91,29 +90,6 @@ router.get("/:id", verifyToken, checkOwnership, async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).send("서버 에러");
-  }
-});
-
-// 댓글 작성
-router.post("/comment", verifyToken, async (req, res) => {
-  try {
-    const { board_id, content } = req.body;
-    const userId = req.user;
-
-    console.log(userId);
-
-    const comment = new Comment({
-      board_id,
-      writer_id: userId,
-      content,
-    });
-
-    await comment.save();
-
-    res.status(201).json(comment);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "서버 에러" });
   }
 });
 
