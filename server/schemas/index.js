@@ -28,4 +28,5 @@ module.exports = async () => {
 
   require("./User");
   require("./Board");
+  require("./Comment");
 };

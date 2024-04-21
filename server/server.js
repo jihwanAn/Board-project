@@ -4,6 +4,7 @@ const cors = require("cors");
 const connect = require("./schemas"); // mongodb 연결
 const boardRouter = require("./routes/boardRouter");
 const memberRouter = require("./routes/memberRouter");
+const commentRouter = require("./routes/commentRouter");
 const dotenv = require("dotenv");
 const crypto = require("crypto");
 const cookieParser = require("cookie-parser");
@@ -40,6 +41,7 @@ app.use(express.urlencoded({ extended: true }));
 // 라우터 등록
 app.use("/board", boardRouter);
 app.use("/user", memberRouter);
+app.use("/comment", commentRouter);
 
 // 기본 페이지
 app.use(express.static("/public"));
