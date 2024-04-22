@@ -1,6 +1,5 @@
 const jwt = require("jsonwebtoken");
-const User = require("../schemas/user");
-const Board = require("../schemas/board");
+const Board = require("../schemas/Board");
 const Token = require("../schemas/Token");
 
 // 토큰 존재 확인 및 refresh 토큰 전달 미들웨어
