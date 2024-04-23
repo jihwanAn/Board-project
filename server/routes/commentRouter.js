@@ -15,11 +15,24 @@ router.post("/", verifyToken, async (req, res) => {
       content,
     });
 
-    console.log(comment);
-
     await comment.save();
+    res.status(200).json(comment);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "서버 에러" });
+  }
+});
 
-    res.status(201).json(comment);
+// 댓글 조회
+router.get("/", async (req, res) => {
+  try {
+    const { board_id } = req.query;
+    const comments = await Comment.find({ board_id }).populate(
+      "writer_id",
+      "name userId"
+    );
+
+    res.status(200).json(comments);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "서버 에러" });
