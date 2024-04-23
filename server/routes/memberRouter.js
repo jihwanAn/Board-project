@@ -112,26 +112,13 @@ router.post("/logout", async (req, res) => {
 router.get("/", verifyToken, async (req, res) => {
   try {
     const userId = req.user._id;
-    const user = await User.findById(userId);
+    const user = await User.findById(userId).populate("posts");
 
     if (!user) {
       return res.status(404).json({ message: "사용자를 찾을 수 없습니다." });
     }
 
-    const postIds = user.posts;
-
-    // Board 모델에서 해당 아이디의 글 정보 조회하여 배열에 담기
-    const userPosts = await Promise.all(
-      postIds.map(async (postId) => {
-        const post = await Board.findById(postId);
-
-        return post;
-      })
-    );
-
-    const filteredPostIds = userPosts.filter((postId) => postId !== null);
-
-    res.status(200).json({ user: user.toObject(), filteredPostIds });
+    res.status(200).json({ user: user.toObject() });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "서버 에러" });

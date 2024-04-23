@@ -29,8 +29,9 @@ const MyPage = () => {
       }
 
       const userData = response.data;
+
       setUserInfo(userData.user);
-      setUserPosts(userData.filteredPostIds);
+      setUserPosts(userData.user.posts);
     } catch (error) {
       console.error("Error fetching user data:", error);
     }
