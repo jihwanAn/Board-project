@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { StyledBtn } from "./Button";
@@ -7,11 +7,7 @@ const CommentForm = ({ board_id }) => {
   const [commentText, setCommentText] = useState("");
   const [comments, setComments] = useState([]);
 
-  useEffect(() => {
-    fetchComments();
-  }, []);
-
-  const fetchComments = async () => {
+  const fetchComments = useCallback(async () => {
     try {
       const response = await axios.get(
         `https://port-0-free-board-754g42aluoci77d.sel5.cloudtype.app/comment`,
@@ -19,10 +15,6 @@ const CommentForm = ({ board_id }) => {
           params: {
             board_id,
           },
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-          withCredentials: true,
         }
       );
 
@@ -35,21 +27,25 @@ const CommentForm = ({ board_id }) => {
     } catch (error) {
       console.error(error);
     }
-  };
+  }, [board_id]);
+
+  useEffect(() => {
+    fetchComments();
+  }, [fetchComments]);
 
   const handleInputChange = (e) => {
     setCommentText(e.target.value);
   };
 
-  const token = localStorage.getItem("token");
-  if (!token) {
-    alert("로그인 후 댓글 작성이 가능합니다.");
-    return;
-  }
-
   const handleSubmit = async () => {
     if (commentText.trim() === "") {
       alert("댓글을 작성해 주세요");
+    }
+
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("로그인 후 댓글 작성이 가능합니다.");
+      return;
     }
 
     try {
