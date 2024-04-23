@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import styled from "styled-components";
 import PostActions from "../components/PostActions";
+import CommentForm from "../components/CommentForm";
 
 function View() {
   const [post, setPost] = useState(null);
@@ -90,6 +91,7 @@ function View() {
           </ButtonContainer>
         </ViewForm>
       </ViewWrap>
+      <CommentForm board_id={objectId} />
     </main>
   );
 }

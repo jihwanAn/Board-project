@@ -1,14 +1,51 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { StyledBtn } from "./Button";
 
-const CommentForm = () => {
+const CommentForm = ({ board_id }) => {
   const [commentText, setCommentText] = useState("");
+  const [comments, setComments] = useState([]);
+
+  useEffect(() => {
+    fetchComments();
+  }, []);
+
+  const fetchComments = async () => {
+    try {
+      const response = await axios.get(
+        `https://port-0-free-board-754g42aluoci77d.sel5.cloudtype.app/comment`,
+        {
+          params: {
+            board_id,
+          },
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          withCredentials: true,
+        }
+      );
+
+      if (response.status === 200) {
+        const sortedComments = response.data.sort(
+          (a, b) => new Date(b.date) - new Date(a.date)
+        );
+        setComments(sortedComments);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const handleInputChange = (e) => {
     setCommentText(e.target.value);
   };
+
+  const token = localStorage.getItem("token");
+  if (!token) {
+    alert("로그인 후 댓글 작성이 가능합니다.");
+    return;
+  }
 
   const handleSubmit = async () => {
     if (commentText.trim() === "") {
@@ -18,16 +55,27 @@ const CommentForm = () => {
     try {
       const response = await axios.post(
         "https://port-0-free-board-754g42aluoci77d.sel5.cloudtype.app/comment",
+
         {
+          board_id,
           content: commentText,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          withCredentials: true,
         }
       );
 
       if (response.status === 200) {
-        console.log(response.data);
+        setCommentText("");
+        fetchComments();
       }
     } catch (error) {
       console.error(error);
+      alert("댓글 작성 오류");
     }
   };
 
@@ -40,6 +88,17 @@ const CommentForm = () => {
         onChange={handleInputChange}
       />
       <FormButton onClick={handleSubmit}>등록</FormButton>
+      <CommentList>
+        {comments.map((comment) => (
+          <Comment key={comment._id}>
+            <CommentContent>{comment.content}</CommentContent>
+            <CommentInfo>
+              <CommentDate>{comment.date}</CommentDate>
+              <CommentAuthor>{comment.writer_id.name}</CommentAuthor>
+            </CommentInfo>
+          </Comment>
+        ))}
+      </CommentList>
     </CommentsForm>
   );
 };
@@ -49,17 +108,13 @@ const CommentsForm = styled.div`
   margin-top: 20px;
   padding: 20px;
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: center;
-
-  @media screen and (max-width: 765px) {
-    flex-direction: column;
-  }
 `;
 
 const CommentInput = styled.textarea`
   width: 85%;
-  height: 70px;
+  height: 60px;
   margin-bottom: 20px;
   padding: 10px;
   border: 1px solid #ccc;
@@ -69,6 +124,35 @@ const CommentInput = styled.textarea`
 
 const FormButton = styled(StyledBtn)`
   margin-bottom: 20px;
+`;
+
+const CommentList = styled.div`
+  width: 100%;
+  background-color: #f5f4f4;
+  border-top: 1px solid #cacaca;
+`;
+
+const Comment = styled.div`
+  border-bottom: 1px solid #cacaca;
+  padding: 0 15px;
+`;
+
+const CommentContent = styled.p``;
+
+const CommentInfo = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+`;
+
+const CommentDate = styled.span`
+  color: #888;
+  font-size: 12px;
+`;
+
+const CommentAuthor = styled.span`
+  color: #333;
+  font-weight: bold;
 `;
 
 export default CommentForm;
