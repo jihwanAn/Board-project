@@ -142,11 +142,6 @@ const CommentInfo = styled.div`
   margin-bottom: 10px;
 `;
 
-const CommentDate = styled.span`
-  color: #888;
-  font-size: 12px;
-`;
-
 const CommentAuthor = styled.span`
   color: #333;
   font-weight: bold;
