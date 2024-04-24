@@ -3,6 +3,7 @@ import axios from "axios";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import CarouselContainer from "../components/Carousel";
+import DateConverter from "../components/DateConverter";
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
@@ -23,19 +24,6 @@ const Home = () => {
     } catch (error) {
       console.error("Error fetching data:", error);
     }
-  };
-
-  const formatTimestamp = (timestamp) => {
-    const date = new Date(timestamp);
-    const formattedDate = date.toLocaleString("en-US", {
-      year: "2-digit",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: false,
-    });
-    return formattedDate.replace(",", "");
   };
 
   return (
@@ -61,7 +49,9 @@ const Home = () => {
                 </StyledLink>
               </TableData>
               <TableData>{post.writer}</TableData>
-              <TableData>{formatTimestamp(post.date)}</TableData>
+              <TableData>
+                <DateConverter dateString={post.date} />
+              </TableData>
               <TableData>{post.views}</TableData>
             </TableRow>
           ))}

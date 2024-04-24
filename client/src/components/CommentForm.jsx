@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { StyledBtn } from "./Button";
+import DateConverter from "./DateConverter";
 
 const CommentForm = ({ board_id }) => {
   const [commentText, setCommentText] = useState("");
@@ -89,7 +90,7 @@ const CommentForm = ({ board_id }) => {
           <Comment key={comment._id}>
             <CommentContent>{comment.content}</CommentContent>
             <CommentInfo>
-              <CommentDate>{comment.date}</CommentDate>
+              <DateConverter dateString={comment.date} />
               <CommentAuthor>{comment.writer_id.name}</CommentAuthor>
             </CommentInfo>
           </Comment>

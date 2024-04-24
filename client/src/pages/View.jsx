@@ -4,6 +4,7 @@ import axios from "axios";
 import styled from "styled-components";
 import PostActions from "../components/PostActions";
 import CommentForm from "../components/CommentForm";
+import DateConverter from "../components/DateConverter";
 
 function View() {
   const [post, setPost] = useState(null);
@@ -60,19 +61,15 @@ function View() {
     }
   };
 
-  const formatTimestamp = (timestamp) => {
-    const date = new Date(timestamp);
-    const formattedDate = date.toLocaleString();
-    return formattedDate;
-  };
-
   return (
     <main className="container">
       <ViewWrap>
         <ViewForm>
           <Subject>제목: {post && post.subject}</Subject>
-          <Writer>작성자: {post && post.writer}</Writer>
-          <div id="date">날짜: {post && formatTimestamp(post.date)}</div>
+          <InfoForm>
+            <div>작성자: {post && post.writer}</div>
+            <DateConverter dateString={post && post.date} />
+          </InfoForm>
           <Content>{post && post.content}</Content>
           <ButtonContainer>
             {" "}
@@ -107,14 +104,15 @@ const ViewForm = styled.div`
 `;
 
 const Subject = styled.div`
-  width: 100%;
   font-weight: bold;
-  margin-bottom: 3px;
+  margin-bottom: 7px;
 `;
 
-const Writer = styled.div`
-  width: 100%;
+const InfoForm = styled.div`
+  width: 90%;
   margin-bottom: 3px;
+  display: flex;
+  justify-content: space-between;
 `;
 
 const Content = styled.div`
