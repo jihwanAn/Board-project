@@ -21,16 +21,22 @@ const userSchema = new Schema({
     type: Date,
     default: Date.now,
   },
+  role: {
+    type: String,
+    default: "user", // 기본 역할 설정
+  },
   posts: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Board",
     },
   ],
-  role: {
-    type: String,
-    default: "user", // 기본 역할 설정
-  },
+  comments: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Comment",
+    },
+  ],
 });
 
 // 비밀번호를 저장 전, 비밀번호를 해싱하는 미들웨어
