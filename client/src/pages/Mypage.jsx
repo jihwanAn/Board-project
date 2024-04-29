@@ -15,11 +15,14 @@ const MyPage = () => {
   const fetchData = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get("http://localhost:8080/user", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.get(
+        "https://port-0-free-board-754g42aluoci77d.sel5.cloudtype.app/user",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       if (response.status !== 200) {
         throw new Error("Failed to fetch user data");
@@ -55,7 +58,9 @@ const MyPage = () => {
               <UserPost key={post._id}>
                 <StyledLink to={`/view?id=${post._id}`}>
                   {post.subject}{" "}
-                  <CommentCount>({post.comments.length})</CommentCount>
+                  {post.comments.length > 0 && (
+                    <CommentCount>({post.comments.length})</CommentCount>
+                  )}
                 </StyledLink>
                 <PostViews>조회: {post.views}</PostViews>
                 <PostDate>{formatDate(post.date)}</PostDate>
@@ -126,6 +131,7 @@ const StyledLink = styled(Link)`
 const CommentCount = styled.span`
   font-size: 0.9rem;
   color: #d36f11;
+  margin-left: 4px;
 `;
 
 const PostViews = styled.span`

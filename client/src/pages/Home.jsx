@@ -32,11 +32,11 @@ const Home = () => {
       <StyledTable>
         <thead>
           <tr>
-            <TableHeader>No</TableHeader>
-            <TableHeader>제목</TableHeader>
-            <TableHeader>작성자</TableHeader>
-            <TableHeader>등록일</TableHeader>
-            <TableHeader>조회</TableHeader>
+            <TableHeader width="5%">No</TableHeader>
+            <TableHeader width="60%">제목</TableHeader>
+            <TableHeader width="12%">작성자</TableHeader>
+            <TableHeader width="15%">등록일</TableHeader>
+            <TableHeader width="8%">조회</TableHeader>
           </tr>
         </thead>
         <tbody>
@@ -45,8 +45,10 @@ const Home = () => {
               <TableData>{index + 1}</TableData>
               <TableData>
                 <StyledLink to={`./view?id=${post._id}`}>
-                  {post.subject}{" "}
-                  <CommentCount>({post.comments.length})</CommentCount>
+                  {post.subject}
+                  {post.comments.length > 0 && (
+                    <CommentCount>({post.comments.length})</CommentCount>
+                  )}
                 </StyledLink>
               </TableData>
               <TableData>{post.writer}</TableData>
@@ -102,6 +104,8 @@ const StyledLink = styled(Link)`
   text-decoration: none;
   color: #007bff;
   transition: color 0.3s ease;
+  display: flex;
+  margin-left: 10px;
 
   &:hover {
     color: #0056b3;
@@ -111,6 +115,7 @@ const StyledLink = styled(Link)`
 const CommentCount = styled.span`
   font-size: 0.9rem;
   color: #d36f11;
+  margin-left: 4px;
 `;
 
 export default Home;
