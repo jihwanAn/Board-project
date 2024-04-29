@@ -45,7 +45,8 @@ const Home = () => {
               <TableData>{index + 1}</TableData>
               <TableData>
                 <StyledLink to={`./view?id=${post._id}`}>
-                  {post.subject}
+                  {post.subject}{" "}
+                  <CommentCount>({post.comments.length})</CommentCount>
                 </StyledLink>
               </TableData>
               <TableData>{post.writer}</TableData>
@@ -105,6 +106,11 @@ const StyledLink = styled(Link)`
   &:hover {
     color: #0056b3;
   }
+`;
+
+const CommentCount = styled.span`
+  font-size: 0.9rem;
+  color: #d36f11;
 `;
 
 export default Home;
