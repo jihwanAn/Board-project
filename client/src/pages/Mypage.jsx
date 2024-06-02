@@ -16,7 +16,7 @@ const MyPage = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        "https://port-0-free-board-754g42aluoci77d.sel5.cloudtype.app/user",
+        `${process.env.REACT_APP_API_URL}/user`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

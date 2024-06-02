@@ -4,9 +4,12 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 import CarouselContainer from "../components/Carousel";
 import DateConverter from "../components/DateConverter";
+import Pagination from "../components/Pagination";
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const postsPerPage = 9;
 
   useEffect(() => {
     fetchData();
@@ -15,8 +18,9 @@ const Home = () => {
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        "https://port-0-free-board-754g42aluoci77d.sel5.cloudtype.app/board"
+        `${process.env.REACT_APP_API_URL}/board`
       );
+
       const sortedPosts = response.data.sort(
         (a, b) => new Date(b.date) - new Date(a.date)
       );
@@ -25,6 +29,10 @@ const Home = () => {
       console.error("Error fetching data:", error);
     }
   };
+
+  const indexOfLastPost = currentPage * postsPerPage;
+  const indexOfFirstPost = indexOfLastPost - postsPerPage;
+  const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
 
   return (
     <Container>
@@ -40,9 +48,9 @@ const Home = () => {
           </tr>
         </thead>
         <tbody>
-          {posts.map((post, index) => (
+          {currentPosts.map((post, index) => (
             <TableRow key={post._id}>
-              <TableData>{index + 1}</TableData>
+              <TableData>{indexOfFirstPost + index + 1}</TableData>
               <TableData>
                 <StyledLink to={`./view?id=${post._id}`}>
                   {post.subject}
@@ -60,6 +68,13 @@ const Home = () => {
           ))}
         </tbody>
       </StyledTable>
+
+      <Pagination
+        posts={posts}
+        postsPerPage={postsPerPage}
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
+      />
     </Container>
   );
 };
@@ -84,6 +99,8 @@ const StyledTable = styled.table`
   th {
     background-color: #f2f2f2;
     border-bottom: 1px solid #ccc;
+    padding: 5px;
+    font-size: 14px;
   }
 `;
 

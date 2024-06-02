@@ -36,7 +36,7 @@ const Login = () => {
 
     try {
       const response = await axios.post(
-        "https://port-0-free-board-754g42aluoci77d.sel5.cloudtype.app/user/login",
+        `${process.env.REACT_APP_API_URL}/user/login`,
         {
           userId,
           password,
@@ -75,7 +75,7 @@ const Login = () => {
 
     try {
       const response = await axios.post(
-        "https://port-0-free-board-754g42aluoci77d.sel5.cloudtype.app/user/signup",
+        `${process.env.REACT_APP_API_URL}/user/signup`,
         {
           name: userName,
           userId,

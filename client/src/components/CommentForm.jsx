@@ -13,9 +13,12 @@ const CommentForm = ({ board_id }) => {
 
   const fetchComments = useCallback(async () => {
     try {
-      const response = await axios.get(`http://localhost:8080/comment`, {
-        params: { board_id },
-      });
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_URL}/comment`,
+        {
+          params: { board_id },
+        }
+      );
 
       if (response.status === 200) {
         const sortedComments = response.data.sort(
@@ -50,7 +53,7 @@ const CommentForm = ({ board_id }) => {
 
     try {
       const response = await axios.post(
-        "http://localhost:8080/comment",
+        `${process.env.REACT_APP_API_URL}/comment`,
         {
           board_id,
           content: commentText,
@@ -91,7 +94,7 @@ const CommentForm = ({ board_id }) => {
 
     try {
       const response = await axios.put(
-        `http://localhost:8080/comment/${commentId}`,
+        `${process.env.REACT_APP_API_URL}/comment/${commentId}`,
         { content: editedContent },
         {
           headers: {
@@ -122,7 +125,7 @@ const CommentForm = ({ board_id }) => {
 
       try {
         const response = await axios.delete(
-          `http://localhost:8080/comment/${commentId}`,
+          `${process.env.REACT_APP_API_URL}/comment/${commentId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -159,7 +162,7 @@ const CommentForm = ({ board_id }) => {
 
     try {
       const response = await axios.post(
-        `http://localhost:8080/comment/${replyTo}/reply`,
+        `${process.env.REACT_APP_API_URL}/comment/${replyTo}/reply`,
         {
           board_id,
           content: replyText,

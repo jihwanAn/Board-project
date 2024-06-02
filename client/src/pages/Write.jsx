@@ -23,7 +23,7 @@ function Write() {
       };
 
       const response = await axios.post(
-        "https://port-0-free-board-754g42aluoci77d.sel5.cloudtype.app/board",
+        `${process.env.REACT_APP_API_URL}/board`,
         writeData,
         {
           headers: {

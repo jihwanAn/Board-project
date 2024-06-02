@@ -18,7 +18,7 @@ const Header = ({ isLoggedIn }) => {
       const token = localStorage.getItem("token");
       if (isLoggedIn && token) {
         const response = await axios.get(
-          "https://port-0-free-board-754g42aluoci77d.sel5.cloudtype.app/board",
+          `${process.env.REACT_APP_API_URL}/board`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -45,7 +45,7 @@ const Header = ({ isLoggedIn }) => {
 
       if (isLoggedIn && token) {
         const response = await axios.get(
-          "https://port-0-free-board-754g42aluoci77d.sel5.cloudtype.app/board",
+          `${process.env.REACT_APP_API_URL}/board`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -71,8 +71,7 @@ const Header = ({ isLoggedIn }) => {
       const token = localStorage.getItem("token");
       if (token) {
         const response = await axios.post(
-          "https://port-0-free-board-754g42aluoci77d.sel5.cloudtype.app/user/logout",
-          // null,
+          `${process.env.REACT_APP_API_URL}/user/logout`,
           {
             headers: {
               "Content-Type": "application/json",

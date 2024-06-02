@@ -16,7 +16,7 @@ function View() {
     const fetchPostData = async () => {
       try {
         const response = await axios.get(
-          `https://port-0-free-board-754g42aluoci77d.sel5.cloudtype.app/board/${objectId}`,
+          `${process.env.REACT_APP_API_URL}/board/${objectId}`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -48,7 +48,7 @@ function View() {
   const handleDeleteBtnClick = async () => {
     try {
       const response = await axios.delete(
-        `https://port-0-free-board-754g42aluoci77d.sel5.cloudtype.app/board/${objectId}`
+        `${process.env.REACT_APP_API_URL}/board/${objectId}`
       );
 
       if (response.status === 200) {
@@ -72,7 +72,6 @@ function View() {
           </InfoForm>
           <Content>{post && post.content}</Content>
           <ButtonContainer>
-            {" "}
             {isOwner && (
               <PostActions
                 buttonText={{

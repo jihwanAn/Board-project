@@ -18,7 +18,7 @@ function Update() {
       try {
         const id = getPostIdFromUrl();
         const response = await axios.get(
-          `https://port-0-free-board-754g42aluoci77d.sel5.cloudtype.app/board/${id}`
+          `${process.env.REACT_APP_API_URL}/board/${id}`
         );
 
         if (response.status === 200) {
@@ -48,7 +48,7 @@ function Update() {
       const postData = { subject, content };
 
       const response = await axios.put(
-        `https://port-0-free-board-754g42aluoci77d.sel5.cloudtype.app/board/${id}`,
+        `${process.env.REACT_APP_API_URL}/board/${id}`,
         postData,
         {
           headers: {
