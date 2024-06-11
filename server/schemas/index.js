@@ -5,7 +5,7 @@ module.exports = async () => {
     if (process.env.NODE_ENV !== "production") {
       mongoose.set("debug", true);
     }
-    await mongoose.connect("mongodb://svc.sel5.cloudtype.app:31953", {
+    await mongoose.connect("mongodb://svc.sel5.cloudtype.app:31300", {
       dbName: "db", // 실제로 data 저장할 db
     });
     console.log("몽고디비 연결 성공");
