@@ -65,7 +65,7 @@ const fadeIn = keyframes`
 const Container = styled.div`
   display: flex;
   justify-content: center;
-  margin: 16px 0;
+  margin-top: 1rem;
 `;
 
 const PageNumber = styled.button`

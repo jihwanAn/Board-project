@@ -42,7 +42,7 @@ const MyPage = () => {
   };
 
   return (
-    <MainContainer>
+    <main>
       <UserInfoWrap>
         <UserInfo>
           <UserInfoItem>
@@ -71,16 +71,14 @@ const MyPage = () => {
       </UserInfoWrap>
 
       <PostActions buttonText={{ back: "목록으로" }} />
-    </MainContainer>
+    </main>
   );
 };
-
-const MainContainer = styled.main``;
 
 const UserInfoWrap = styled.section`
   border-top: 1px solid black;
   border-bottom: 1px solid black;
-  width: 100%;
+  margin-bottom: 1rem;
 `;
 
 const UserInfo = styled.div`
@@ -102,7 +100,6 @@ const UserPosts = styled.div`
   overflow-y: auto;
   margin-bottom: 20px;
 
-  /* ul의 기본 마커 제거 */
   ul {
     padding: 0;
     margin: 0;
