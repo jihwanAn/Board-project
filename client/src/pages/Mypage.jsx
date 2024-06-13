@@ -81,7 +81,6 @@ const UserInfoWrap = styled.section`
   border-top: 1px solid black;
   border-bottom: 1px solid black;
   width: 100%;
-  margin: 12px 0;
 `;
 
 const UserInfo = styled.div`

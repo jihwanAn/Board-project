@@ -39,7 +39,6 @@ function PostForm({
 const FormWrapper = styled.form`
   border-top: 1px solid black;
   border-bottom: 1px solid black;
-  margin: 12px 0;
   padding-top: 20px;
 `;
 

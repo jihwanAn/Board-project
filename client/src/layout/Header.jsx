@@ -138,7 +138,8 @@ const HeaderWrapper = styled.header`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 30px;
+  padding: 12px;
+  background-color: #f0f6fc;
 `;
 
 const RightContainer = styled.div`
