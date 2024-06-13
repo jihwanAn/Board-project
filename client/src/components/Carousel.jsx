@@ -56,15 +56,21 @@ const Wrapper = styled.div`
   position: relative;
   width: 100%;
   overflow: hidden;
+
+  @media (max-width: 830px) {
+    display: none;
+  }
 `;
 
 const Slide = styled.div`
   display: flex;
   transition: transform 0.5s ease;
+  height: 100%;
 `;
 
 const Img = styled.img`
   width: 100%;
+  height: 100%;
 `;
 
 const Button = styled.button`
@@ -91,7 +97,7 @@ const NextButton = styled(Button)`
 
 const BulletWrapper = styled.div`
   position: absolute;
-  bottom: 10px;
+  bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
