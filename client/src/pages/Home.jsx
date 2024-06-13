@@ -40,19 +40,27 @@ const Home = () => {
       <StyledTable>
         <thead>
           <tr>
-            <TableHeader width="5%">No</TableHeader>
-            <TableHeader width="60%">제목</TableHeader>
+            <TableHeader width="5%" className="hidden_on_fir">
+              No
+            </TableHeader>
+            <TableHeader width="55%">제목</TableHeader>
             <TableHeader width="12%">작성자</TableHeader>
-            <TableHeader width="15%">등록일</TableHeader>
-            <TableHeader width="8%">조회</TableHeader>
+            <TableHeader width="20%" className="hidden_on_sec">
+              등록일
+            </TableHeader>
+            <TableHeader width="8%" className="hidden_on_fir">
+              조회
+            </TableHeader>
           </tr>
         </thead>
         <tbody>
           {currentPosts.map((post, index) => (
             <TableRow key={post._id}>
-              <TableData>{indexOfFirstPost + index + 1}</TableData>
+              <TableData className="hidden_on_fir">
+                {indexOfFirstPost + index + 1}
+              </TableData>
               <TableData>
-                <StyledLink to={`./view?id=${post._id}`}>
+                <StyledLink to={`./view?id=${post._id}`} className="center_on">
                   {post.subject}
                   {post.comments.length > 0 && (
                     <CommentCount>({post.comments.length})</CommentCount>
@@ -60,10 +68,10 @@ const Home = () => {
                 </StyledLink>
               </TableData>
               <TableData>{post.writer}</TableData>
-              <TableData>
+              <TableData className="hidden_on_sec">
                 <DateConverter dateString={post.date} />
               </TableData>
-              <TableData>{post.views}</TableData>
+              <TableData className="hidden_on_fir">{post.views}</TableData>
             </TableRow>
           ))}
         </tbody>
@@ -101,6 +109,23 @@ const StyledTable = styled.table`
     border-bottom: 1px solid #ccc;
     padding: 5px;
     font-size: 14px;
+  }
+
+  @media (max-width: 785px) {
+    .hidden_on_fir {
+      display: none;
+    }
+  }
+
+  @media (max-width: 620px) {
+    .hidden_on_sec {
+      display: none;
+    }
+    .center_on {
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
   }
 `;
 
