@@ -1,7 +1,8 @@
 import React from "react";
+import styled from "styled-components";
 
 function DateConverter({ dateString }) {
-  if (!dateString) return ""; // dateString이 null이면 빈 문자열
+  if (!dateString) return "-";
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -12,12 +13,38 @@ function DateConverter({ dateString }) {
     const hours = String(date.getHours()).padStart(2, "0");
     const minutes = String(date.getMinutes()).padStart(2, "0");
 
-    return `${year}.${month}.${day} ${hours}:${minutes}`;
+    return {
+      fullDate: `${year}.${month}.${day} ${hours}:${minutes}`,
+      timeOnly: `${hours}:${minutes}`,
+    };
   };
 
-  const formattedDate = formatDate(dateString);
+  const { fullDate, timeOnly } = formatDate(dateString);
 
-  return <span>{formattedDate}</span>;
+  return (
+    <DateText>
+      <span className="fullDate">{fullDate}</span>
+      <span className="timeOnly">{timeOnly}</span>
+    </DateText>
+  );
 }
+
+const DateText = styled.span`
+  .fullDate {
+    display: inline;
+  }
+  .timeOnly {
+    display: none;
+  }
+
+  @media (max-width: 576px) {
+    .fullDate {
+      display: none;
+    }
+    .timeOnly {
+      display: inline;
+    }
+  }
+`;
 
 export default DateConverter;
