@@ -37,9 +37,7 @@ function PostForm({
 }
 
 const FormWrapper = styled.form`
-  border-top: 1px solid black;
   border-bottom: 1px solid black;
-  padding-top: 20px;
 `;
 
 const Input = styled.input`

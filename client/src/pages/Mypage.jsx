@@ -42,8 +42,8 @@ const MyPage = () => {
   };
 
   return (
-    <main>
-      <UserInfoWrap>
+    <Container>
+      <section>
         <UserInfo>
           <UserInfoItem>
             <strong>아이디:</strong> {userInfo.userId}
@@ -68,21 +68,19 @@ const MyPage = () => {
             ))}
           </ul>
         </UserPosts>
-      </UserInfoWrap>
+      </section>
 
       <PostActions buttonText={{ back: "목록으로" }} />
-    </main>
+    </Container>
   );
 };
 
-const UserInfoWrap = styled.section`
-  border-top: 1px solid black;
+const Container = styled.main`
+  padding: 10px;
   border-bottom: 1px solid black;
-  margin-bottom: 1rem;
 `;
 
 const UserInfo = styled.div`
-  margin-top: 20px;
   display: flex;
   justify-content: space-between;
 `;
@@ -92,7 +90,7 @@ const UserInfoItem = styled.p`
 `;
 
 const UserPosts = styled.div`
-  margin-top: 20px;
+  margin-top: 15px;
   width: 100%;
   border: 1px solid rgb(175, 175, 175);
   border-radius: 7px;

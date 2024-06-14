@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import PostForm from "../components/PostForm";
@@ -46,7 +47,7 @@ function Write() {
   };
 
   return (
-    <main className="container">
+    <Container className="container">
       <section className="board_write_wrap">
         <PostForm
           subject={subject}
@@ -57,8 +58,12 @@ function Write() {
           buttonText="작성 완료"
         />
       </section>
-    </main>
+    </Container>
   );
 }
+
+const Container = styled.main`
+  padding: 10px;
+`;
 
 export default Write;

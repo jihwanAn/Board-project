@@ -56,10 +56,6 @@ const Wrapper = styled.div`
   position: relative;
   width: 100%;
   overflow: hidden;
-
-  @media (max-width: 830px) {
-    display: none;
-  }
 `;
 
 const Slide = styled.div`
@@ -85,6 +81,10 @@ const Button = styled.button`
   cursor: pointer;
   z-index: 2;
   border: none;
+
+  @media (max-width: 576px) {
+    display: none;
+  }
 `;
 
 const PrevButton = styled(Button)`

@@ -62,7 +62,7 @@ function View() {
   };
 
   return (
-    <main className="container">
+    <Container className="container">
       <ViewWrap>
         <ViewForm>
           <Subject>제목: {post && post.subject}</Subject>
@@ -88,18 +88,20 @@ function View() {
         </ViewForm>
       </ViewWrap>
       <CommentForm board_id={objectId} />
-    </main>
+    </Container>
   );
 }
 
+const Container = styled.main`
+  padding: 10px;
+`;
+
 const ViewWrap = styled.section`
   width: 100%;
-  border-top: 1px solid black;
 `;
 
 const ViewForm = styled.div`
   border-bottom: 1px solid black;
-  margin: 12px 0;
 `;
 
 const Subject = styled.div`

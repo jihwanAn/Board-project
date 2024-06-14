@@ -40,17 +40,11 @@ const Home = () => {
       <StyledTable>
         <thead>
           <tr>
-            <TableHeader width="5%" className="hidden_on_fir">
-              No
-            </TableHeader>
-            <TableHeader width="55%">제목</TableHeader>
-            <TableHeader width="12%">작성자</TableHeader>
-            <TableHeader width="20%" className="hidden_on_sec">
-              등록일
-            </TableHeader>
-            <TableHeader width="8%" className="hidden_on_fir">
-              조회
-            </TableHeader>
+            <TableHeader className="hidden_on_fir">No</TableHeader>
+            <TableHeader width="63%">제목</TableHeader>
+            <TableHeader>작성자</TableHeader>
+            <TableHeader>등록일</TableHeader>
+            <TableHeader className="hidden_on_fir">조회</TableHeader>
           </tr>
         </thead>
         <tbody>
@@ -60,7 +54,7 @@ const Home = () => {
                 {indexOfFirstPost + index + 1}
               </TableData>
               <TableData>
-                <StyledLink to={`./view?id=${post._id}`} className="center_on">
+                <StyledLink to={`./view?id=${post._id}`}>
                   {post.subject}
                   {post.comments.length > 0 && (
                     <CommentCount>({post.comments.length})</CommentCount>
@@ -68,7 +62,7 @@ const Home = () => {
                 </StyledLink>
               </TableData>
               <TableData>{post.writer}</TableData>
-              <TableData className="hidden_on_sec">
+              <TableData>
                 <DateConverter dateString={post.date} />
               </TableData>
               <TableData className="hidden_on_fir">{post.views}</TableData>
@@ -111,20 +105,18 @@ const StyledTable = styled.table`
     font-size: 14px;
   }
 
-  @media (max-width: 785px) {
+  // small : 576px 스마트폰
+  // Medium : 768px 테블릿
+
+  @media (max-width: 768px) {
     .hidden_on_fir {
       display: none;
     }
   }
 
-  @media (max-width: 620px) {
+  @media (max-width: 576px) {
     .hidden_on_sec {
       display: none;
-    }
-    .center_on {
-      justify-content: center;
-      align-items: center;
-      text-align: center;
     }
   }
 `;
@@ -147,7 +139,6 @@ const StyledLink = styled(Link)`
   color: #007bff;
   transition: color 0.3s ease;
   display: flex;
-  margin-left: 10px;
 
   &:hover {
     color: #0056b3;

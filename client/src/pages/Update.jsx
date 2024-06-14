@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
 import PostForm from "../components/PostForm";
+import styled from "styled-components";
 
 function Update() {
   const [subject, setSubject] = useState("");
@@ -70,7 +71,7 @@ function Update() {
   };
 
   return (
-    <main className="container">
+    <Container className="container">
       <section className="board_update_wrap">
         <PostForm
           subject={subject}
@@ -81,8 +82,12 @@ function Update() {
           buttonText="수정 완료"
         />
       </section>
-    </main>
+    </Container>
   );
 }
+
+const Container = styled.main`
+  padding: 10px;
+`;
 
 export default Update;

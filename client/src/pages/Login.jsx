@@ -177,26 +177,22 @@ const Login = () => {
   );
 };
 
-const Container = styled.div`
-  width: 100%;
-  border-top: 1px solid black;
+const Container = styled.main`
+  padding: 10px;
   border-bottom: 1px solid black;
 `;
 
 const LoginSection = styled.section`
   width: 100%;
-  border-top: 1px solid black;
-  border-bottom: 1px solid black;
 `;
 
 const LoginForm = styled.form`
   display: flex;
   flex-direction: column;
-  margin-top: 20px;
 `;
 
 const BtnForm = styled.div`
-  margin: 10px 0;
+  margin: 5px 0;
   display: flex;
   justify-content: center;
 `;

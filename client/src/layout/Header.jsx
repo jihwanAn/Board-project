@@ -140,6 +140,7 @@ const HeaderWrapper = styled.header`
   justify-content: space-between;
   padding: 12px;
   background-color: #f0f6fc;
+  border-bottom: 1px solid #ccc;
 `;
 
 const RightContainer = styled.div`
