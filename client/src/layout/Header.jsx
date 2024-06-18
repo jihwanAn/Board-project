@@ -138,7 +138,7 @@ const HeaderWrapper = styled.header`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px;
+  padding: 18px;
   background-color: #f0f6fc;
   border-bottom: 1px solid #ccc;
 `;

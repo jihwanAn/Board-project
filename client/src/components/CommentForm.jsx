@@ -202,26 +202,28 @@ const CommentForm = ({ board_id }) => {
 
   const renderComment = (comment) => (
     <Comment key={comment._id}>
-      {currentUser && (
-        <ButtonContainer>
-          <ActionButton
-            onClick={() =>
-              handleEditComment(
-                comment._id,
-                prompt("댓글을 수정하세요", comment.content)
-              )
-            }
-          >
-            수정
-          </ActionButton>
-          <ActionButton onClick={() => handleDeleteComment(comment._id)}>
-            삭제
-          </ActionButton>
-          <ActionButton onClick={() => handleReplyComment(comment._id)}>
-            답글
-          </ActionButton>
-        </ButtonContainer>
-      )}
+      <ButtonContainer>
+        {currentUser && (
+          <>
+            <ActionButton
+              onClick={() =>
+                handleEditComment(
+                  comment._id,
+                  prompt("댓글을 수정하세요", comment.content)
+                )
+              }
+            >
+              수정
+            </ActionButton>
+            <ActionButton onClick={() => handleDeleteComment(comment._id)}>
+              삭제
+            </ActionButton>
+            <ActionButton onClick={() => handleReplyComment(comment._id)}>
+              답글
+            </ActionButton>
+          </>
+        )}
+      </ButtonContainer>
       <CommentContent>{comment.content}</CommentContent>
       <CommentInfo>
         <DateConverter dateString={comment.date} />
@@ -326,14 +328,13 @@ const CommentAuthor = styled.span`
 const ButtonContainer = styled.div`
   display: flex;
   justify-content: end;
-  margin-top: 5px;
+  padding-top: 10px;
 `;
 
 const ActionButton = styled.button`
   background-color: transparent;
   border: none;
   cursor: pointer;
-  margin: 2px;
   color: #3f3fd6;
 `;
 
