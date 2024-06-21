@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-function DateConverter({ dateString }) {
+const DateConverter = ({ dateString }) => {
   if (!dateString) return "-";
 
   const formatDate = (dateString) => {
@@ -27,7 +27,7 @@ function DateConverter({ dateString }) {
       <span className="timeOnly">{timeOnly}</span>
     </DateText>
   );
-}
+};
 
 const DateText = styled.span`
   .fullDate {

@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import PostForm from "../components/PostForm";
 import styled from "styled-components";
 
-function Update() {
+const Update = () => {
   const [subject, setSubject] = useState("");
   const [content, setContent] = useState("");
   const navigate = useNavigate();
@@ -84,7 +84,7 @@ function Update() {
       </section>
     </Container>
   );
-}
+};
 
 const Container = styled.main`
   padding: 10px;

@@ -6,7 +6,7 @@ import PostActions from "../components/PostActions";
 import CommentForm from "../components/CommentForm";
 import DateConverter from "../components/DateConverter";
 
-function View() {
+const View = () => {
   const [post, setPost] = useState(null);
   const [isOwner, setIsOwner] = useState(false);
   const objectId = window.location.search.split("=")[1];
@@ -90,7 +90,7 @@ function View() {
       <CommentForm board_id={objectId} />
     </Container>
   );
-}
+};
 
 const Container = styled.main`
   padding: 10px;

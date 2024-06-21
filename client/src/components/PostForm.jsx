@@ -2,14 +2,14 @@ import React from "react";
 import styled from "styled-components";
 import { StyledBtn } from "../components/Button";
 
-function PostForm({
+const PostForm = ({
   subject,
   content,
   setSubject,
   setContent,
   handleSubmit,
   buttonText,
-}) {
+}) => {
   return (
     <FormWrapper onSubmit={handleSubmit}>
       <div>
@@ -34,7 +34,7 @@ function PostForm({
       </div>
     </FormWrapper>
   );
-}
+};
 
 const FormWrapper = styled.form`
   border-bottom: 1px solid black;

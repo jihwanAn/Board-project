@@ -1,6 +1,18 @@
 import React from "react";
 import styled from "styled-components";
 
+const StyledBtn = ({ children, className, onClick }) => (
+  <Button className={className} onClick={onClick}>
+    {children}
+  </Button>
+);
+
+const TextStyledButton = ({ className, onClick, children, size }) => (
+  <TextButton className={className} onClick={onClick} size={size}>
+    {children}
+  </TextButton>
+);
+
 const Button = styled.button`
   border: none;
   display: inline-block;
@@ -31,17 +43,5 @@ const TextButton = styled(Button)`
     background: none;
   }
 `;
-
-const StyledBtn = ({ children, className, onClick }) => (
-  <Button className={className} onClick={onClick}>
-    {children}
-  </Button>
-);
-
-const TextStyledButton = ({ className, onClick, children, size }) => (
-  <TextButton className={className} onClick={onClick} size={size}>
-    {children}
-  </TextButton>
-);
 
 export { StyledBtn, TextStyledButton };

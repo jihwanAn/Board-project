@@ -3,7 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { StyledBtn } from "./Button";
 import styled from "styled-components";
 
-function PostActions({ buttonText, handleUpdate, handleDelete, handleLogin }) {
+const PostActions = ({
+  buttonText,
+  handleUpdate,
+  handleDelete,
+  handleLogin,
+}) => {
   const navigate = useNavigate();
 
   return (
@@ -27,7 +32,7 @@ function PostActions({ buttonText, handleUpdate, handleDelete, handleLogin }) {
       </ButtonWrapper>
     </ButtonContainer>
   );
-}
+};
 
 const ButtonWrapper = styled.div`
   margin: 0 10px;

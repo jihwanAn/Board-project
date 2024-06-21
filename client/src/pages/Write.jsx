@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import PostForm from "../components/PostForm";
 
-function Write() {
+const Write = () => {
   const [subject, setSubject] = useState("");
   const [content, setContent] = useState("");
   const navigate = useNavigate();
@@ -60,7 +60,7 @@ function Write() {
       </section>
     </Container>
   );
-}
+};
 
 const Container = styled.main`
   padding: 10px;
