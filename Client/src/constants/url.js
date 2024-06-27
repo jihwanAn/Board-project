@@ -6,6 +6,8 @@ const URL = {
 
   REGISTER: "/register",
   VERIFY_NICKNAME: "/register/verify",
+
+  MYPAGE: "/mypage",
 };
 
 export default URL;

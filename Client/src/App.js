@@ -6,19 +6,23 @@ import Main from "./pages/Main";
 import Footer from "./components/Footer";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import MyPage from "./pages/MyPage";
 import URL from "./constants/url";
 
 function App() {
-  const [user, setUser] = useState();
+  // 임시 로그인 상태
+  const [user, setUser] = useState(false);
+  console.log("Hello :::");
 
   return (
     <Container>
-      <Header user={user} />
+      <Header setUser={setUser} />
       <Contents>
         <Routes>
           <Route path={URL.MAIN} element={<Main />} />
           <Route path={URL.LOGIN} element={<Login setUser={setUser} />} />
           <Route path={URL.REGISTER} element={<Register />} />
+          <Route path={URL.MYPAGE} element={<MyPage />} />
         </Routes>
       </Contents>
       <Footer />

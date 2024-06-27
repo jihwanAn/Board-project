@@ -17,6 +17,7 @@ const GoogleLoginBtn = ({ setUser }) => {
     } else {
       // 회원으로 등록 된 구글 계정
       localStorage.setItem("user", JSON.stringify(user));
+      setUser(true);
       navigate(URL.MAIN);
     }
   };
@@ -25,7 +26,6 @@ const GoogleLoginBtn = ({ setUser }) => {
   const googleLogin = useGoogleLogin({
     onSuccess: (tokenResponse) => {
       requestGet(URL.LOGIN_GOOGLE, { tokenResponse }, onSuccessLogin);
-      setUser(true);
     },
     onError: (error) => console.log("Login Failed", error),
     flow: "implicit",

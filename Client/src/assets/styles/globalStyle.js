@@ -25,8 +25,10 @@ const GlobalStyle = createGlobalStyle`
 
   button { 
     border: none;
-    border-radius: 8px;
+    border-radius: 6px;
     transition: all 0.3s;
+    background-color: transparent;
+    font-size: 16px;
 
     cursor: pointer;
     &:hover {
