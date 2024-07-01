@@ -20,7 +20,7 @@ const Header = ({ setUser }) => {
       {userInfo ? (
         <RightBox>
           <div>
-            <StyledLink to={URL.MYPAGE}>{userInfo[0].nick_name}</StyledLink>님
+            <StyledLink to={URL.MYPAGE}>{userInfo.nick_name}</StyledLink>님
             환영합니다
           </div>
           <LogoutBtn onClick={handleLogout}> 로그아웃</LogoutBtn>
