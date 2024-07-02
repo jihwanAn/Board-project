@@ -25,15 +25,23 @@ const GlobalStyle = createGlobalStyle`
 
   button { 
     border: none;
-    border-radius: 6px;
     transition: all 0.3s;
     background-color: transparent;
     font-size: 16px;
+    width: max-content;
+
 
     cursor: pointer;
     &:hover {
-      box-shadow: ${(props) => props.theme.shadows.hover};
+      color: ${(props) => props.theme.colors.primaryLight};
     }
+  }
+
+  input,textarea {
+    border: 1px solid #ccc;
+    font-size: 16px;
+    padding: 10px;
+    border-radius: 4px;
   }
 `;
 
