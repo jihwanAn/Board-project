@@ -1,28 +1,32 @@
 import { Routes, Route } from "react-router-dom";
-import { useState } from "react";
 import styled from "styled-components";
+import URL from "./constants/url";
 import Header from "./components/Header";
 import Main from "./pages/Main";
 import Footer from "./components/Footer";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import MyPage from "./pages/MyPage";
-import URL from "./constants/url";
+import Board from "./pages/board/Board";
+import CreatePost from "./pages/board/CreatePost";
+import DetailPost from "./pages/board/DetailPost";
 
 function App() {
   // 임시 로그인 상태
-  const [user, setUser] = useState(false);
-  console.log("Hello :::");
+  // const [user, setUser] = useState(null);
 
   return (
     <Container>
-      <Header setUser={setUser} />
+      <Header />
       <Contents>
         <Routes>
           <Route path={URL.MAIN} element={<Main />} />
-          <Route path={URL.LOGIN} element={<Login setUser={setUser} />} />
+          <Route path={URL.LOGIN} element={<Login />} />
           <Route path={URL.REGISTER} element={<Register />} />
           <Route path={URL.MYPAGE} element={<MyPage />} />
+          <Route path={URL.BOARD} element={<Board />} />
+          <Route path={URL.POST_CREATE} element={<CreatePost />} />
+          <Route path={URL.POST_DETAIL} element={<DetailPost />} />
         </Routes>
       </Contents>
       <Footer />
@@ -40,7 +44,6 @@ const Container = styled.div`
 `;
 
 const Contents = styled.main`
-  padding: 1rem;
   height: 100%;
 `;
 

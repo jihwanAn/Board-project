@@ -6,11 +6,11 @@ import URL from "../constants/url";
 import CODE from "../constants/code";
 
 const Register = () => {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const inputRef = useRef(null);
   const [inputs, setInputs] = useState({ nickName: "" });
   const [nickNameVerified, setNickNameVerified] = useState(false);
+  const inputRef = useRef(null);
+  const location = useLocation();
+  const navigate = useNavigate();
 
   // 닉네임 중복 검사
   const verifyNickName = (e) => {
@@ -35,7 +35,7 @@ const Register = () => {
   const registerAccount = (e) => {
     e.preventDefault();
 
-    requestPost(URL.REGISTER, { userData: inputs }, handleResponse);
+    requestPost(URL.REGISTER, { userInfo: inputs }, handleResponse);
   };
 
   const handleResponse = (res) => {

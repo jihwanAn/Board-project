@@ -1,8 +1,11 @@
+const axios = require("axios");
 const { pool } = require("../DB/connection");
 const { QUERY } = require("../constants/query");
 const { CODE } = require("../constants/code");
-const jwtUtils = require("../utils/jwtUtils");
-const axios = require("axios");
+const {
+  generateAccessToken,
+  generateRefreshToken,
+} = require("../utils/jwtUtils");
 
 const getGoogleUser = async (req, res) => {
   let conn;
@@ -25,34 +28,22 @@ const getGoogleUser = async (req, res) => {
 
     // 로그인 성공
     if (rows.length > 0) {
-      const user = rows[0];
+      const userInfo = rows[0];
 
       // JWT 토큰 발급
-      const accessToken = jwtUtils.generateAccessToken({
-        id: user.id,
-        platform: user.platform,
-        email: user.email,
-        nickName: user.nick_name,
-      });
-      const refreshToken = jwtUtils.generateRefreshToken({
-        id: user.id,
-        platform: user.platform,
-        email: user.email,
-        nickName: user.nick_name,
-      });
+      const accessToken = generateAccessToken(userInfo);
+      const refreshToken = generateRefreshToken(userInfo);
 
-      res.cookie("accessToken", accessToken, {
-        httpOnly: true,
-        // secure: process.env.NODE_ENV === "production",
-        maxAge: 15 * 60 * 1000,
-      });
-      res.cookie("refreshToken", refreshToken, {
-        httpOnly: true,
-        // secure: process.env.NODE_ENV === "production",
-        maxAge: 24 * 60 * 60 * 1000,
-      });
+      // Token DB 저장
+      conn = await pool.getConnection();
 
-      res.status(200).json(user);
+      // token 테이블에 이전의 토큰 남아있다면 삭제
+      await conn.query(QUERY.REMOVE_TOKEN, [userInfo.email]);
+
+      // 토큰 DB에 저장
+      conn.query(QUERY.SAVE_TOKEN, [userInfo.email, accessToken, refreshToken]);
+
+      res.status(200).json({ token: accessToken });
     } else {
       // 등록 된 계정 정보 없음
       res
@@ -67,14 +58,17 @@ const getGoogleUser = async (req, res) => {
 };
 
 const registerUser = async (req, res) => {
-  const { nickName, platform, email } = req.body.userData;
   let conn;
 
   try {
+    const { nickName, platform, email } = req.body.userInfo;
+
     conn = await pool.getConnection();
 
     // 계정 등록
     await conn.query(QUERY.REGISTER_ACCOUNT, [platform, email, nickName]);
+
+    conn.release();
 
     res.status(200).send();
   } catch (error) {
@@ -85,14 +79,17 @@ const registerUser = async (req, res) => {
 };
 
 const varifyNickname = async (req, res) => {
-  const nickName = req.query.nickName;
   let conn;
 
   try {
+    const nickName = req.query.nickName;
+
     conn = await pool.getConnection();
 
     // 닉네임 중복 체크
     const rows = await conn.query(QUERY.CHECK_NICKNAME, nickName);
+
+    conn.release();
 
     // 중복 된 닉네임
     if (rows.length > 0) {
@@ -106,5 +103,24 @@ const varifyNickname = async (req, res) => {
     res.status(500).send();
   }
 };
+
+// const removeToken = async (req, res) => {
+//   let conn;
+
+//   try {
+//     const { token } = req.body.token;
+
+//     conn = await pool.getConnection();
+//     await conn.query(QUERY.REMOVE_TOKEN, [token]);
+
+//     conn.release();
+
+//     res.send("Complete Logout");
+//   } catch (error) {
+//     console.log(error);
+//     if (conn) conn.release;
+//     res.status(500).send();
+//   }
+// };
 
 module.exports = { getGoogleUser, registerUser, varifyNickname };

@@ -1,15 +1,23 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import URL from "../constants/url";
+import { getSessionItem } from "../utils/storage";
+import { removeSessionItem } from "../utils/storage";
+// import { requestPost } from "../api/fetch";
 
-const Header = ({ setUser }) => {
+const Header = () => {
+  const session = getSessionItem("token");
   const navigate = useNavigate();
-  const userInfo = JSON.parse(localStorage.getItem("user"));
+  const location = useLocation();
+
+  const handleCreatePostPage = () => {
+    navigate(URL.POST_CREATE);
+  };
 
   const handleLogout = () => {
-    localStorage.removeItem("user");
-    setUser(false);
+    // requestPost(URL.LOGOUT, { token: session });
+    removeSessionItem("token");
     alert("로그아웃 되었습니다.");
     navigate(URL.MAIN);
   };
@@ -17,12 +25,12 @@ const Header = ({ setUser }) => {
   return (
     <Container>
       <Link to={URL.MAIN}>Title</Link>
-      {userInfo ? (
+      {session ? (
         <RightBox>
-          <div>
-            <StyledLink to={URL.MYPAGE}>{userInfo.nick_name}</StyledLink>님
-            환영합니다
-          </div>
+          {location.pathname === "/board" ? (
+            <button onClick={handleCreatePostPage}>글 작성</button>
+          ) : null}
+          <div style={{ marginLeft: "1.6rem" }}>환영합니다</div>
           <LogoutBtn onClick={handleLogout}> 로그아웃</LogoutBtn>
         </RightBox>
       ) : (
@@ -43,11 +51,6 @@ const Container = styled.header`
 
 const RightBox = styled.div`
   display: flex;
-`;
-
-const StyledLink = styled(Link)`
-  color: #7b7bf1;
-  font-weight: 550;
 `;
 
 const LogoutBtn = styled.button`

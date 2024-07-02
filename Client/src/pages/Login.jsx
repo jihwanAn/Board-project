@@ -2,11 +2,11 @@ import React from "react";
 import styled from "styled-components";
 import GoogleLoginBtn from "../components/GoogleLoginBtn";
 
-const Login = ({ setUser }) => {
+const Login = () => {
   return (
     <Container>
       <div>로그인</div>
-      <GoogleLoginBtn setUser={setUser} />
+      <GoogleLoginBtn />
       <div>회원 가입</div>
     </Container>
   );

@@ -4,20 +4,19 @@ import { useNavigate } from "react-router-dom";
 import { requestGet } from "../api/fetch";
 import URL from "../constants/url";
 import CODE from "../constants/code";
+import { setSessionItem } from "../utils/storage";
 
-const GoogleLoginBtn = ({ setUser }) => {
+const GoogleLoginBtn = () => {
   const navigate = useNavigate();
 
   const onSuccessLogin = (res) => {
-    const user = res.data;
-
     // 회원으로 등록 되지 않은 구글 계정
     if (res.status === CODE.ACCOUNT_NOT_REGISTERD) {
-      navigate(URL.REGISTER, { state: user });
+      navigate(URL.REGISTER, { state: res.data });
     } else {
-      // 회원으로 등록 된 구글 계정
-      localStorage.setItem("user", JSON.stringify(user));
-      setUser(true);
+      // 로그인 성공
+      const { token } = res.data;
+      setSessionItem("token", token);
       navigate(URL.MAIN);
     }
   };
@@ -33,7 +32,7 @@ const GoogleLoginBtn = ({ setUser }) => {
 
   return (
     <div>
-      <div onClick={googleLogin}>Google 로그인</div>
+      <button onClick={googleLogin}>Google 로그인</button>
     </div>
   );
 };
