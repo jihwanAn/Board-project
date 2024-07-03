@@ -36,11 +36,11 @@ const Board = () => {
             posts.map((post, idx) => (
               <tr key={post.id}>
                 <td>0000</td>
-                <td>
-                  <Link to={URL.POST_DETAIL} state={{ post }}>
+                <TitleCell>
+                  <TitleLink to={URL.POST_DETAIL} state={{ post }}>
                     {post.title}
-                  </Link>
-                </td>
+                  </TitleLink>
+                </TitleCell>
                 <td>{post.nick_name}</td>
                 <td>{formatDate(post.created_at)}</td>
                 <td>{post.view_count}</td>
@@ -66,18 +66,43 @@ const StyledTable = styled.table`
   width: 100%;
   border-collapse: collapse;
 
-  th,
-  td {
-    padding: 10px;
-    text-align: center;
-  }
-
   th {
     background-color: #f2f2f2;
     border-bottom: 1px solid #ccc;
     padding: 5px;
     font-size: 14px;
   }
+
+  td {
+    padding: 0.5rem;
+    text-align: center;
+  }
+
+  td:nth-child(2) {
+    width: 60%;
+  }
+  td:nth-child(3) {
+    width: 12%;
+  }
+  td:nth-child(4) {
+    width: 15%;
+  }
+`;
+
+const TitleCell = styled.td`
+  max-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+
+const TitleLink = styled(Link)`
+  display: block;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: left;
 `;
 
 const NoDataMessage = styled.tr`
