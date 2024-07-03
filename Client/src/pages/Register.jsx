@@ -20,6 +20,14 @@ const Register = () => {
       return;
     }
 
+    if (
+      inputs.nickName.length > 16 ||
+      !/^[가-힣a-zA-Z0-9]*$/.test(inputs.nickName)
+    ) {
+      alert("닉네임은 한글, 영문, 숫자를 포함한 16글자 이내로 입력해 주세요.");
+      return;
+    }
+
     requestGet(URL.VERIFY_NICKNAME, { nickName: inputs.nickName }, (res) => {
       if (res.status === CODE.DUPLICATE_NICKNAME) {
         alert("이미 사용 중인 닉네임입니다.");

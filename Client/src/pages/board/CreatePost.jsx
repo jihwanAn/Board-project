@@ -26,6 +26,11 @@ const CreatePost = () => {
       alert("내용을 입력해 주세요");
       return;
     }
+    if (inputs.title.length > 70) {
+      console.log(inputs.title.length);
+      alert("제목은 70자 이내로 작성해 주세요.");
+      return;
+    }
 
     try {
       requestPost(URL.POST_CREATE, { token: session, ...inputs });
