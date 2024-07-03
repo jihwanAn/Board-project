@@ -4,7 +4,7 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const { URL } = require("./constants/url");
 const { getGoogleUser, registerUser, varifyNickname } = require("./auth/auth");
-const { getBoard, createPost } = require("./board/board");
+const { getBoard, getPostDetail, createPost } = require("./board/board");
 
 // Body parser 미들웨어
 app.use(express.json());
@@ -22,6 +22,7 @@ app.get(URL.VERIFY_NICKNAME, varifyNickname);
 
 // 게시판
 app.get(URL.BOARD, getBoard);
+app.get(URL.POST_DETAIL, getPostDetail);
 app.post(URL.POST_CREATE, createPost);
 
 const PORT = process.env.PORT || 8080;

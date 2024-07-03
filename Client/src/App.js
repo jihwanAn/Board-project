@@ -1,3 +1,4 @@
+import React from "react";
 import { Routes, Route } from "react-router-dom";
 import styled from "styled-components";
 import URL from "./constants/url";
@@ -12,9 +13,6 @@ import CreatePost from "./pages/board/CreatePost";
 import DetailPost from "./pages/board/DetailPost";
 
 function App() {
-  // 임시 로그인 상태
-  // const [user, setUser] = useState(null);
-
   return (
     <Container>
       <Header />

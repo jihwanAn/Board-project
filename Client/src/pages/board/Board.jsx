@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import URL from "../../constants/url";
 import { requestGet } from "../../api/fetch";
@@ -35,7 +36,11 @@ const Board = () => {
             posts.map((post, idx) => (
               <tr key={post.id}>
                 <td>0000</td>
-                <td>{post.title}</td>
+                <td>
+                  <Link to={URL.POST_DETAIL} state={{ post }}>
+                    {post.title}
+                  </Link>
+                </td>
                 <td>{post.nick_name}</td>
                 <td>{formatDate(post.created_at)}</td>
                 <td>{post.view_count}</td>

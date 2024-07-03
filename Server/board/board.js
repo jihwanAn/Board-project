@@ -22,11 +22,29 @@ const getBoard = async (req, res) => {
   }
 };
 
+const getPostDetail = async (req, res) => {
+  try {
+    const { token, post } = req.query;
+
+    const userInfo = jwt.verify(token, process.env.JWT_ACCESS_SECRET);
+    const isAuthor = userInfo.email === post.email;
+
+    res.status(200).json({ isAuthor });
+  } catch (error) {
+    // 토큰 에러처리 추가
+    // TokenExpiredError: jwt expired
+
+    console.log(error);
+    // if (conn) conn.release;
+    res.status(500).send();
+  }
+};
+
 const createPost = async (req, res) => {
   let conn;
 
   try {
-    const { title, content, token } = req.body;
+    const { token, title, content } = req.body;
     const userInfo = jwt.verify(token, process.env.JWT_ACCESS_SECRET);
 
     conn = await pool.getConnection();
@@ -48,4 +66,4 @@ const createPost = async (req, res) => {
   }
 };
 
-module.exports = { getBoard, createPost };
+module.exports = { getBoard, getPostDetail, createPost };

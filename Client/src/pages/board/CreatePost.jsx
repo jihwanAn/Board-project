@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { requestPost } from "../../api/fetch";
-import { getSessionItem } from "../../utils/storage";
 import URL from "../../constants/url";
+import { getSessionItem } from "../../utils/storage";
 
 const CreatePost = () => {
   const [inputs, setInputs] = useState({ title: "", content: "" });
@@ -28,7 +28,7 @@ const CreatePost = () => {
     }
 
     try {
-      requestPost(URL.POST_CREATE, { ...inputs, token: session });
+      requestPost(URL.POST_CREATE, { token: session, ...inputs });
       alert("게시글이 작성되었습니다.");
       navigate(URL.BOARD);
     } catch (error) {
@@ -38,7 +38,7 @@ const CreatePost = () => {
 
   return (
     <Container>
-      <Title>게시판 글 작성</Title>
+      <Title>게시 글 작성</Title>
       <Form onSubmit={handleSubmit}>
         <Label htmlFor="title">제목</Label>
         <Input
