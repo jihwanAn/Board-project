@@ -6,8 +6,8 @@ import URL from "../constants/url";
 import CODE from "../constants/code";
 
 const Register = () => {
-  const [inputs, setInputs] = useState({ nickName: "" });
-  const [nickNameVerified, setNickNameVerified] = useState(false);
+  const [inputs, setInputs] = useState({ nick_name: "" });
+  const [nickNameChecked, setNickNameChecked] = useState(false);
   const inputRef = useRef(null);
   const location = useLocation();
   const navigate = useNavigate();
@@ -15,26 +15,26 @@ const Register = () => {
   // 닉네임 중복 검사
   const verifyNickName = (e) => {
     e.preventDefault();
-    if (inputs.nickName.trim() === "") {
+    if (inputs.nick_name.trim() === "") {
       alert("닉네임을 입력해주세요.");
       return;
     }
 
     if (
-      inputs.nickName.length > 16 ||
-      !/^[가-힣a-zA-Z0-9]*$/.test(inputs.nickName)
+      inputs.nick_name.length > 16 ||
+      !/^[가-힣a-zA-Z0-9]*$/.test(inputs.nick_name)
     ) {
       alert("닉네임은 한글, 영문, 숫자를 포함한 16글자 이내로 입력해 주세요.");
       return;
     }
 
-    requestGet(URL.VERIFY_NICKNAME, { nickName: inputs.nickName }, (res) => {
+    requestGet(URL.CHECK_NICKNAME, { nick_name: inputs.nick_name }, (res) => {
       if (res.status === CODE.DUPLICATE_NICKNAME) {
         alert("이미 사용 중인 닉네임입니다.");
         return;
       } else {
         alert("사용 가능한 닉네임 입니다.");
-        setNickNameVerified(true);
+        setNickNameChecked(true);
       }
     });
   };
@@ -48,7 +48,7 @@ const Register = () => {
 
   const handleResponse = (res) => {
     if (res.status === 200) {
-      alert(`${inputs.nickName}님 회원 가입을 축하 드립니다.`);
+      alert(`${inputs.nick_name}님 회원 가입을 축하 드립니다.`);
       navigate(URL.MAIN);
     }
   };
@@ -68,29 +68,29 @@ const Register = () => {
       platform: location.state.platform,
       email: location.state.email,
     }));
-  }, []);
+  }, [location.state]);
 
   return (
     <Form onSubmit={registerAccount}>
       <InputBox>
         <Input
-          value={inputs.nickName}
+          value={inputs.nick_name}
           placeholder="사용하실 닉네임을 입력해 주세요."
           ref={inputRef}
-          disabled={nickNameVerified}
+          disabled={nickNameChecked}
           onChange={(e) =>
-            setInputs((state) => ({ ...state, nickName: e.target.value }))
+            setInputs((state) => ({ ...state, nick_name: e.target.value }))
           }
         />
         <button
           type="button"
           onClick={verifyNickName}
-          disabled={nickNameVerified}
+          disabled={nickNameChecked}
         >
           중복확인
         </button>
       </InputBox>
-      <button type="submit" disabled={!nickNameVerified}>
+      <button type="submit" disabled={!nickNameChecked}>
         가입하기
       </button>
     </Form>

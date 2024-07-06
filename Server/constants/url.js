@@ -5,7 +5,7 @@ const URL = {
   LOGIN_GOOGLE: "/login/google",
 
   REGISTER: "/register",
-  VERIFY_NICKNAME: "/register/verify",
+  CHECK_NICKNAME: "/register/verify",
 
   MYPAGE: "/mypage",
 

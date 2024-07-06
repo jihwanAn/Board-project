@@ -1,16 +1,20 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
+const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
 const { URL } = require("./constants/url");
-const { getGoogleUser, registerUser, varifyNickname } = require("./auth/auth");
+const { getGoogleUser, registerUser, checkNickname } = require("./auth/auth");
 const { getBoard, getPostDetail, createPost } = require("./board/board");
+const { verifyJwt } = require("./middlewares/verifyJwt");
 
-// Body parser 미들웨어
+dotenv.config();
+
 app.use(express.json());
-
 app.use(express.urlencoded({ extended: false }));
-app.use(cors({ origin: "http://localhost:3000" }));
+app.use(
+  cors({ origin: "http://localhost:3000", exposedHeaders: ["Authorization"] })
+);
 app.use(cookieParser());
 
 // 로그인
@@ -18,12 +22,12 @@ app.get(URL.LOGIN_GOOGLE, getGoogleUser);
 
 // 가입
 app.post(URL.REGISTER, registerUser);
-app.get(URL.VERIFY_NICKNAME, varifyNickname);
+app.get(URL.CHECK_NICKNAME, checkNickname);
 
 // 게시판
 app.get(URL.BOARD, getBoard);
-app.get(URL.POST_DETAIL, getPostDetail);
-app.post(URL.POST_CREATE, createPost);
+app.get(URL.POST_DETAIL, verifyJwt, getPostDetail);
+app.post(URL.POST_CREATE, verifyJwt, createPost);
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {

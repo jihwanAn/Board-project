@@ -1,12 +1,26 @@
 import axios from "axios";
-import { SREVER_URL } from "../config";
+import { SERVER_URL } from "../config";
+import { getSessionItem } from "../utils/storage";
+
+const axiosInstance = axios.create({
+  baseURL: SERVER_URL,
+});
+
+const setAuthHeader = async () => {
+  const token = await getSessionItem("token");
+  if (token) {
+    return { Authorization: `Bearer ${token}` };
+  }
+  return {};
+};
 
 export const requestGet = async (url, params, handler, errorHandler) => {
   try {
-    const res = await axios({
-      url: `${SREVER_URL}${url}`,
-      method: "get",
+    const headers = await setAuthHeader();
+
+    const res = await axiosInstance.get(url, {
       params,
+      headers,
     });
     console.log("GET", res);
 
@@ -18,15 +32,16 @@ export const requestGet = async (url, params, handler, errorHandler) => {
 
 export const requestPost = async (url, data, handler, errorHandler) => {
   try {
-    const res = await axios({
-      url: `${SREVER_URL}${url}`,
-      method: "post",
-      data,
+    const headers = await setAuthHeader();
+
+    const res = await axiosInstance.post(url, data, {
+      headers,
     });
-    console.log("Post", res);
+    console.log("POST", res);
 
     if (handler) handler(res);
   } catch (error) {
-    if (error) errorHandler(error);
+    console.error("POST Error:", error);
+    if (errorHandler) errorHandler(error);
   }
 };

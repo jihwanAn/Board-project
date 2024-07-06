@@ -14,9 +14,12 @@ const GoogleLoginBtn = () => {
     if (res.status === CODE.ACCOUNT_NOT_REGISTERD) {
       navigate(URL.REGISTER, { state: res.data });
     } else {
+      console.log(res.headers);
       // 로그인 성공
-      const { token } = res.data;
+      const token = res.headers["authorization"].split("Bearer ")[1];
+      const userInfo = res.data.userInfo;
       setSessionItem("token", token);
+      setSessionItem("user", userInfo);
       navigate(URL.MAIN);
     }
   };
@@ -24,7 +27,9 @@ const GoogleLoginBtn = () => {
   // 토큰 받아오기
   const googleLogin = useGoogleLogin({
     onSuccess: (tokenResponse) => {
-      requestGet(URL.LOGIN_GOOGLE, { tokenResponse }, onSuccessLogin);
+      requestGet(URL.LOGIN_GOOGLE, { tokenResponse }, onSuccessLogin, (res) => {
+        console.log(res);
+      });
     },
     onError: (error) => console.log("Login Failed", error),
     flow: "implicit",

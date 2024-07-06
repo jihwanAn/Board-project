@@ -3,20 +3,27 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { requestPost } from "../../api/fetch";
 import URL from "../../constants/url";
-import { getSessionItem } from "../../utils/storage";
+import CODE from "../../constants/code";
+import {
+  getSessionItem,
+  setSessionItem,
+  removeSessionItem,
+} from "../../utils/storage";
 
 const CreatePost = () => {
   const [inputs, setInputs] = useState({ title: "", content: "" });
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setInputs((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
 
-    const session = getSessionItem("token");
-    if (!session) {
-      alert("로그인이 필요합니다. 로그인 후 다시 이용해 주세요.");
-      return;
-    }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
     if (inputs.title.trim() === "") {
       alert("제목을 입력해 주세요");
@@ -27,17 +34,48 @@ const CreatePost = () => {
       return;
     }
     if (inputs.title.length > 70) {
-      console.log(inputs.title.length);
       alert("제목은 70자 이내로 작성해 주세요.");
       return;
     }
 
     try {
-      requestPost(URL.POST_CREATE, { token: session, ...inputs });
-      alert("게시글이 작성되었습니다.");
-      navigate(URL.BOARD);
+      const session = getSessionItem("token");
+      if (!session) {
+        alert("로그인이 필요합니다. 로그인 후 다시 이용해 주세요.");
+        return;
+      }
+
+      const handleResponse = (res) => {
+        if (res.status === 200) {
+          const Authorization = res.headers.authorization;
+          if (Authorization) {
+            const token = Authorization.split("Bearer ")[1];
+            setSessionItem("token", token);
+          }
+          alert("게시글이 작성되었습니다.");
+          navigate(URL.BOARD);
+        }
+      };
+
+      await requestPost(
+        URL.POST_CREATE,
+        { ...inputs },
+        handleResponse,
+        (error) => {
+          if (error.response.status === CODE.UNAUTHORIZED) {
+            removeSessionItem("token");
+            removeSessionItem("user");
+            alert("세션이 만료되었습니다. 다시 로그인해 주세요.");
+            return;
+          } else {
+            console.error(error);
+            alert("게시글 작성에 실패했습니다. 다시 시도해 주세요.");
+          }
+        }
+      );
     } catch (error) {
-      console.log(error);
+      console.error(error);
+      alert("게시글 작성에 실패했습니다. 다시 시도해 주세요.");
     }
   };
 
@@ -48,18 +86,18 @@ const CreatePost = () => {
         <Label htmlFor="title">제목</Label>
         <Input
           type="text"
+          id="title"
+          name="title"
           value={inputs.title}
-          onChange={(e) =>
-            setInputs((state) => ({ ...state, title: e.target.value }))
-          }
+          onChange={handleChange}
         />
 
         <Label htmlFor="content">내용</Label>
         <TextArea
+          id="content"
+          name="content"
           value={inputs.content}
-          onChange={(e) =>
-            setInputs((state) => ({ ...state, content: e.target.value }))
-          }
+          onChange={handleChange}
         />
         <BtnContainer>
           <button type="submit">작성 완료</button>

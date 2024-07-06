@@ -18,6 +18,7 @@ const Header = () => {
   const handleLogout = () => {
     // requestPost(URL.LOGOUT, { token: session });
     removeSessionItem("token");
+    removeSessionItem("user");
     alert("로그아웃 되었습니다.");
     navigate(URL.MAIN);
   };

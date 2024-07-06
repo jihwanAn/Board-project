@@ -24,8 +24,6 @@ const getGoogleUser = async (req, res) => {
     const rows = await conn.query(QUERY.GET_USER, ["google", data.email]);
     console.log("Registered User Info :: ", rows);
 
-    conn.release();
-
     // 로그인 성공
     if (rows.length > 0) {
       const userInfo = rows[0];
@@ -34,16 +32,16 @@ const getGoogleUser = async (req, res) => {
       const accessToken = generateAccessToken(userInfo);
       const refreshToken = generateRefreshToken(userInfo);
 
-      // Token DB 저장
+      // <이전의 토큰 남아있는 경우, 삭제>
+
       conn = await pool.getConnection();
-
-      // token 테이블에 이전의 토큰 남아있다면 삭제
-      await conn.query(QUERY.REMOVE_TOKEN, [userInfo.email]);
-
       // 토큰 DB에 저장
       conn.query(QUERY.SAVE_TOKEN, [userInfo.email, accessToken, refreshToken]);
 
-      res.status(200).json({ token: accessToken });
+      res
+        .status(200)
+        .header("Authorization", `Bearer ${accessToken}`)
+        .json({ userInfo });
     } else {
       // 등록 된 계정 정보 없음
       res
@@ -51,9 +49,10 @@ const getGoogleUser = async (req, res) => {
         .json({ platform: "google", email: data.email });
     }
   } catch (error) {
-    console.log(error);
-    if (conn) conn.release;
-    res.status(500).send();
+    console.log("getGoogleUser Error :: ", error);
+    res.status(500).send("getGoogleUser Error");
+  } finally {
+    if (conn) conn.release();
   }
 };
 
@@ -61,35 +60,30 @@ const registerUser = async (req, res) => {
   let conn;
 
   try {
-    const { nickName, platform, email } = req.body.userInfo;
+    const { nick_name, platform, email } = req.body.userInfo;
 
     conn = await pool.getConnection();
-
     // 계정 등록
-    await conn.query(QUERY.REGISTER_ACCOUNT, [platform, email, nickName]);
-
-    conn.release();
+    await conn.query(QUERY.REGISTER_ACCOUNT, [platform, email, nick_name]);
 
     res.status(200).send();
   } catch (error) {
-    console.log(error);
-    if (conn) conn.release;
-    res.status(500).send();
+    console.log("registerUser Error :: ", error);
+    res.status(500).send("registerUser Error");
+  } finally {
+    if (conn) conn.release();
   }
 };
 
-const varifyNickname = async (req, res) => {
+const checkNickname = async (req, res) => {
   let conn;
 
   try {
-    const nickName = req.query.nickName;
+    const { nick_name } = req.query;
 
     conn = await pool.getConnection();
-
     // 닉네임 중복 체크
-    const rows = await conn.query(QUERY.CHECK_NICKNAME, nickName);
-
-    conn.release();
+    const rows = await conn.query(QUERY.CHECK_NICKNAME, nick_name);
 
     // 중복 된 닉네임
     if (rows.length > 0) {
@@ -98,29 +92,11 @@ const varifyNickname = async (req, res) => {
       res.send("Available Nickname");
     }
   } catch (error) {
-    console.log(error);
-    if (conn) conn.release;
-    res.status(500).send();
+    console.log("Nickname check Error :: ", error);
+    res.status(500).send("Nickname check Error");
+  } finally {
+    if (conn) conn.release();
   }
 };
 
-// const removeToken = async (req, res) => {
-//   let conn;
-
-//   try {
-//     const { token } = req.body.token;
-
-//     conn = await pool.getConnection();
-//     await conn.query(QUERY.REMOVE_TOKEN, [token]);
-
-//     conn.release();
-
-//     res.send("Complete Logout");
-//   } catch (error) {
-//     console.log(error);
-//     if (conn) conn.release;
-//     res.status(500).send();
-//   }
-// };
-
-module.exports = { getGoogleUser, registerUser, varifyNickname };
+module.exports = { getGoogleUser, registerUser, checkNickname };

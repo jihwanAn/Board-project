@@ -1,32 +1,62 @@
-const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
+const {
+  getAccessTokenSecret,
+  getRefreshTokenSecret,
+} = require("../config/secretKey");
 
-// 시크릿 키 생성, 저장
-const accessTokenSecret =
-  process.env.JWT_ACCESS_SECRET || crypto.randomBytes(64).toString("hex");
-const refreshTokenSecret =
-  process.env.JWT_REFRESH_SECRET || crypto.randomBytes(64).toString("hex");
-
-// 토큰 생성
-function generateAccessToken(userInfo) {
+// 엑세스 토큰 생성
+const generateAccessToken = (userInfo) => {
   return jwt.sign(
     {
       id: userInfo.id,
       platform: userInfo.platform,
       email: userInfo.email,
-      nickName: userInfo.nick_name,
+      nick_name: userInfo.nick_name,
     },
-    accessTokenSecret,
-    { expiresIn: "15m" }
+    getAccessTokenSecret(),
+    { expiresIn: "10s" }
   );
-}
+};
 
-function generateRefreshToken(userInfo) {
+// 리프레시 토큰 생성
+const generateRefreshToken = (userInfo) => {
   return jwt.sign(
-    { id: userInfo.id, email: userInfo.email },
-    refreshTokenSecret,
-    { expiresIn: "1d" }
+    {
+      id: userInfo.id,
+      platform: userInfo.platform,
+      email: userInfo.email,
+      nick_name: userInfo.nick_name,
+    },
+    getRefreshTokenSecret(),
+    { expiresIn: "5m" }
   );
-}
+};
 
-module.exports = { generateAccessToken, generateRefreshToken };
+// 엑세스 토큰 디코딩
+const decodeAccess = async (accessToken) => {
+  try {
+    const decoded = jwt.verify(accessToken, getAccessTokenSecret());
+    return decoded;
+  } catch (error) {
+    console.error("decodeAccessError", error.message);
+    throw error;
+  }
+};
+
+// 리프레시 토큰 디코딩
+const decodeRefresh = async (refreshToken) => {
+  try {
+    const decoded = jwt.verify(refreshToken, getRefreshTokenSecret());
+    return decoded;
+  } catch (error) {
+    console.error("decodeRefreshError", error.message);
+    throw error;
+  }
+};
+
+module.exports = {
+  generateAccessToken,
+  generateRefreshToken,
+  decodeAccess,
+  decodeRefresh,
+};

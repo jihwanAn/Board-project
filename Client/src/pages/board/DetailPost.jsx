@@ -4,28 +4,51 @@ import { useLocation } from "react-router-dom";
 import { formatDate } from "../../utils/formatDate";
 import { requestGet } from "../../api/fetch";
 import URL from "../../constants/url";
-import { getSessionItem } from "../../utils/storage";
+import {
+  getSessionItem,
+  setSessionItem,
+  removeSessionItem,
+} from "../../utils/storage";
+import CODE from "../../constants/code";
 
 const DetailPost = () => {
   const [isAuthor, setIsAuthor] = useState(false);
   const location = useLocation();
   const currPost = location.state.post;
-
-  // if (!currPost) {
-  //   게시글에 접근할 수 없습니다.
-  // }
-
   const session = getSessionItem("token");
 
-  useEffect(() => {
-    // 로그인 사용자인 경우에만
-    if (session) {
-      requestGet(URL.POST_DETAIL, { token: session, post: currPost }, (res) => {
-        console.log(res);
-        setIsAuthor(res.data.isAuthor);
-      });
+  const handleResponse = (res) => {
+    console.log(res.headers);
+    const Authorization = res.headers.authorization;
+    if (Authorization) {
+      const token = Authorization.split("Bearer ")[1];
+      setSessionItem("token", token);
     }
-  }, [session, currPost]);
+    setIsAuthor(res.data.isAuthor);
+  };
+
+  useEffect(() => {
+    const fetchPostDetail = async () => {
+      await requestGet(
+        URL.POST_DETAIL,
+        { post: currPost },
+        handleResponse,
+        (error) => {
+          if (error.status === CODE.UNAUTHORIZED) {
+            removeSessionItem("token");
+            removeSessionItem("user");
+            alert("세션이 만료되었습니다. 다시 로그인해 주세요.");
+          } else {
+            console.error(error);
+          }
+        }
+      );
+    };
+
+    if (session) {
+      fetchPostDetail();
+    }
+  }, [currPost, session]);
 
   return (
     <Container>
@@ -38,10 +61,10 @@ const DetailPost = () => {
         <span>조회: {currPost.view_count}</span>
       </UserInfo>
       {isAuthor && (
-        <BurttonForm>
+        <ButtonForm>
           <button>수정</button>
           <button>삭제</button>
-        </BurttonForm>
+        </ButtonForm>
       )}
       <Content>{currPost.content}</Content>
     </Container>
@@ -53,8 +76,9 @@ const Container = styled.div`
   flex-direction: column;
 `;
 
-const Title = styled.h2`
+const Title = styled.h3`
   padding: 1rem;
+  color: #5f5f5f;
 `;
 
 const UserInfo = styled.span`
@@ -76,7 +100,7 @@ const Content = styled.p`
   padding-left: 1rem;
 `;
 
-const BurttonForm = styled.div`
+const ButtonForm = styled.div`
   display: flex;
   justify-content: right;
 
