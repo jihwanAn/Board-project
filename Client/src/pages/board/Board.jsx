@@ -13,10 +13,17 @@ const Board = () => {
   });
 
   useEffect(() => {
-    requestGet(URL.BOARD, { page: seachOptions.page }, (res) => {
-      const board = res.data;
-      setPosts(board);
-    });
+    requestGet(
+      URL.BOARD,
+      { page: seachOptions.page },
+      (res) => {
+        const board = res.data;
+        setPosts(board);
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
   }, []);
 
   return (
@@ -37,7 +44,7 @@ const Board = () => {
               <tr key={post.id}>
                 <td>0000</td>
                 <TitleCell>
-                  <TitleLink to={URL.POST_DETAIL} state={{ post }}>
+                  <TitleLink to={URL.POST_DETAIL} state={post}>
                     {post.title}
                   </TitleLink>
                 </TitleCell>

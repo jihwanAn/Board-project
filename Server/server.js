@@ -5,7 +5,13 @@ const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
 const { URL } = require("./constants/url");
 const { getGoogleUser, registerUser, checkNickname } = require("./auth/auth");
-const { getBoard, getPostDetail, createPost } = require("./board/board");
+const {
+  getBoard,
+  getPostDetail,
+  createPost,
+  editPost,
+  deletePost,
+} = require("./board/board");
 const { verifyJwt } = require("./middlewares/verifyJwt");
 
 dotenv.config();
@@ -28,6 +34,8 @@ app.get(URL.CHECK_NICKNAME, checkNickname);
 app.get(URL.BOARD, getBoard);
 app.get(URL.POST_DETAIL, verifyJwt, getPostDetail);
 app.post(URL.POST_CREATE, verifyJwt, createPost);
+app.post(URL.POST_EDIT, verifyJwt, editPost);
+app.delete(URL.POST_DELETE, verifyJwt, deletePost);
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {

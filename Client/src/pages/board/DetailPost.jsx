@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { formatDate } from "../../utils/formatDate";
-import { requestGet } from "../../api/fetch";
+import { requestGet, requestDelete } from "../../api/fetch";
 import URL from "../../constants/url";
 import {
   getSessionItem,
@@ -14,39 +14,60 @@ import CODE from "../../constants/code";
 const DetailPost = () => {
   const [isAuthor, setIsAuthor] = useState(false);
   const location = useLocation();
-  const currPost = location.state.post;
+  const navigate = useNavigate();
+  const currPost = location.state;
+  const postId = currPost.id;
   const session = getSessionItem("token");
 
+  const handleEditClick = () => {
+    navigate(URL.POST_EDIT, { state: currPost });
+  };
+
+  const handleDelete = () => {
+    requestDelete(
+      URL.POST_DELETE,
+      { postId },
+      (res) => {
+        if (res.status === 200) {
+          alert("게시글이 삭제되었습니다.");
+          navigate(URL.BOARD);
+        }
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  };
+
   const handleResponse = (res) => {
-    console.log(res.headers);
-    const Authorization = res.headers.authorization;
-    if (Authorization) {
-      const token = Authorization.split("Bearer ")[1];
+    if (res.headers.authorization) {
+      const token = res.headers.authorization.split("Bearer ")[1];
       setSessionItem("token", token);
     }
     setIsAuthor(res.data.isAuthor);
   };
 
-  useEffect(() => {
-    const fetchPostDetail = async () => {
-      await requestGet(
-        URL.POST_DETAIL,
-        { post: currPost },
-        handleResponse,
-        (error) => {
-          if (error.status === CODE.UNAUTHORIZED) {
-            removeSessionItem("token");
-            removeSessionItem("user");
-            alert("세션이 만료되었습니다. 다시 로그인해 주세요.");
-          } else {
-            console.error(error);
-          }
-        }
-      );
-    };
+  const getPost = async () => {
+    if (!currPost) {
+      alert("비정상적인 접근입니다.");
+      navigate(URL.MAIN);
+      return;
+    }
 
+    await requestGet(URL.POST_DETAIL, { postId }, handleResponse, (error) => {
+      if (error.status === CODE.UNAUTHORIZED) {
+        removeSessionItem("token");
+        removeSessionItem("user");
+        alert("세션이 만료되었습니다. 다시 로그인해 주세요.");
+      } else {
+        console.error(error);
+      }
+    });
+  };
+
+  useEffect(() => {
     if (session) {
-      fetchPostDetail();
+      getPost();
     }
   }, [currPost, session]);
 
@@ -62,8 +83,12 @@ const DetailPost = () => {
       </UserInfo>
       {isAuthor && (
         <ButtonForm>
-          <button>수정</button>
-          <button>삭제</button>
+          <button type="button" onClick={handleEditClick}>
+            수정
+          </button>
+          <button type="button" onClick={handleDelete}>
+            삭제
+          </button>
         </ButtonForm>
       )}
       <Content>{currPost.content}</Content>

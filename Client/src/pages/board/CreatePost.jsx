@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { requestPost } from "../../api/fetch";
@@ -13,6 +13,8 @@ import {
 const CreatePost = () => {
   const [inputs, setInputs] = useState({ title: "", content: "" });
   const navigate = useNavigate();
+  const titleRef = useRef(null);
+  const contentRef = useRef(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -27,10 +29,12 @@ const CreatePost = () => {
 
     if (inputs.title.trim() === "") {
       alert("제목을 입력해 주세요");
+      titleRef.current.focus();
       return;
     }
     if (inputs.content.trim() === "") {
       alert("내용을 입력해 주세요");
+      contentRef.current.focus();
       return;
     }
     if (inputs.title.length > 70) {
@@ -38,46 +42,46 @@ const CreatePost = () => {
       return;
     }
 
-    try {
-      const session = getSessionItem("token");
-      if (!session) {
-        alert("로그인이 필요합니다. 로그인 후 다시 이용해 주세요.");
-        return;
+    const handleResponse = (res) => {
+      if (res.status === 200) {
+        const Authorization = res.headers.authorization;
+        if (Authorization) {
+          const token = Authorization.split("Bearer ")[1];
+          setSessionItem("token", token);
+        }
+
+        alert("게시글이 작성되었습니다.");
+        navigate(URL.BOARD);
       }
+    };
 
-      const handleResponse = (res) => {
-        if (res.status === 200) {
-          const Authorization = res.headers.authorization;
-          if (Authorization) {
-            const token = Authorization.split("Bearer ")[1];
-            setSessionItem("token", token);
-          }
-          alert("게시글이 작성되었습니다.");
-          navigate(URL.BOARD);
+    await requestPost(
+      URL.POST_CREATE,
+      { ...inputs },
+      handleResponse,
+      (error) => {
+        if (error.response.status === CODE.UNAUTHORIZED) {
+          removeSessionItem("token");
+          removeSessionItem("user");
+          alert("세션이 만료되었습니다. 다시 로그인해 주세요.");
+          return;
+        } else {
+          console.error(error);
+          alert("게시글 작성에 실패했습니다. 다시 시도해 주세요.");
         }
-      };
-
-      await requestPost(
-        URL.POST_CREATE,
-        { ...inputs },
-        handleResponse,
-        (error) => {
-          if (error.response.status === CODE.UNAUTHORIZED) {
-            removeSessionItem("token");
-            removeSessionItem("user");
-            alert("세션이 만료되었습니다. 다시 로그인해 주세요.");
-            return;
-          } else {
-            console.error(error);
-            alert("게시글 작성에 실패했습니다. 다시 시도해 주세요.");
-          }
-        }
-      );
-    } catch (error) {
-      console.error(error);
-      alert("게시글 작성에 실패했습니다. 다시 시도해 주세요.");
-    }
+      }
+    );
   };
+
+  useEffect(() => {
+    const session = getSessionItem("token");
+    if (!session) {
+      alert("로그인이 필요합니다. 로그인 후 다시 이용해 주세요.");
+      return;
+    }
+
+    titleRef.current.focus();
+  }, []);
 
   return (
     <Container>
@@ -88,6 +92,7 @@ const CreatePost = () => {
           type="text"
           id="title"
           name="title"
+          ref={titleRef}
           value={inputs.title}
           onChange={handleChange}
         />
@@ -96,6 +101,7 @@ const CreatePost = () => {
         <TextArea
           id="content"
           name="content"
+          ref={contentRef}
           value={inputs.content}
           onChange={handleChange}
         />

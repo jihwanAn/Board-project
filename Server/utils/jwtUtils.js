@@ -14,7 +14,7 @@ const generateAccessToken = (userInfo) => {
       nick_name: userInfo.nick_name,
     },
     getAccessTokenSecret(),
-    { expiresIn: "10s" }
+    { expiresIn: "1h" }
   );
 };
 
@@ -28,7 +28,7 @@ const generateRefreshToken = (userInfo) => {
       nick_name: userInfo.nick_name,
     },
     getRefreshTokenSecret(),
-    { expiresIn: "5m" }
+    { expiresIn: "6h" }
   );
 };
 

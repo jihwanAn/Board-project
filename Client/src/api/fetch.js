@@ -45,3 +45,16 @@ export const requestPost = async (url, data, handler, errorHandler) => {
     if (errorHandler) errorHandler(error);
   }
 };
+
+export const requestDelete = async (url, params, handler, errorHandler) => {
+  try {
+    const headers = await setAuthHeader();
+
+    const res = await axiosInstance.delete(url, { params, headers });
+    console.log("DELETE", res);
+
+    if (handler) handler(res);
+  } catch (error) {
+    if (error) errorHandler(error);
+  }
+};

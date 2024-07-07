@@ -11,6 +11,7 @@ import MyPage from "./pages/MyPage";
 import Board from "./pages/board/Board";
 import CreatePost from "./pages/board/CreatePost";
 import DetailPost from "./pages/board/DetailPost";
+import EditPost from "./pages/board/EditPost";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
           <Route path={URL.BOARD} element={<Board />} />
           <Route path={URL.POST_CREATE} element={<CreatePost />} />
           <Route path={URL.POST_DETAIL} element={<DetailPost />} />
+          <Route path={URL.POST_EDIT} element={<EditPost />} />
         </Routes>
       </Contents>
       <Footer />
