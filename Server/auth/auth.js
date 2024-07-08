@@ -6,6 +6,29 @@ const {
   generateAccessToken,
   generateRefreshToken,
 } = require("../utils/jwtUtils");
+const bcrypt = require("bcrypt");
+
+const loginUser = async (req, res) => {
+  let conn;
+
+  try {
+    const { email, password } = req.body.userInfo;
+
+    conn = await pool.getConnection();
+    const rows = await conn.query(QUERY.GET_USER, ["local", email]);
+    const valid_PW = await bcrypt.compare(password, rows[0].password);
+    console.log(valid_PW);
+
+    if (!valid_PW) {
+      return res.status(400).send("이메일 또는 비밀번호가 올바르지 않습니다.");
+    }
+
+    res.status(200).send("Login Success");
+  } catch (error) {
+    console.log("Login Error :: ", error);
+    res.status(500).send("Login Error");
+  }
+};
 
 const getGoogleUser = async (req, res) => {
   let conn;
@@ -56,6 +79,25 @@ const getGoogleUser = async (req, res) => {
   }
 };
 
+const signupUser = async (req, res) => {
+  let conn;
+
+  try {
+    const { email, password, nick_name } = req.body.userInfo;
+    const hashed_PW = await bcrypt.hash(password, 10);
+
+    conn = await pool.getConnection();
+    conn.query(QUERY.SIGNUP_USER, [email, hashed_PW, nick_name]);
+
+    res.status(200).send("Signup Success");
+  } catch (error) {
+    console.log("Signup Error :: ", error);
+    res.status(500).send("Signup Error");
+  } finally {
+    if (conn) conn.release();
+  }
+};
+
 const registerUser = async (req, res) => {
   let conn;
 
@@ -99,4 +141,10 @@ const checkNickname = async (req, res) => {
   }
 };
 
-module.exports = { getGoogleUser, registerUser, checkNickname };
+module.exports = {
+  loginUser,
+  getGoogleUser,
+  signupUser,
+  registerUser,
+  checkNickname,
+};

@@ -3,6 +3,7 @@ const URL = {
 
   LOGIN: "/login",
   LOGIN_GOOGLE: "/login/google",
+  SIGNUP: "/signup",
 
   REGISTER: "/register",
   CHECK_NICKNAME: "/register/verify",

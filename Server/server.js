@@ -4,7 +4,13 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
 const { URL } = require("./constants/url");
-const { getGoogleUser, registerUser, checkNickname } = require("./auth/auth");
+const {
+  loginUser,
+  getGoogleUser,
+  signupUser,
+  registerUser,
+  checkNickname,
+} = require("./auth/auth");
 const {
   getBoard,
   getPostDetail,
@@ -24,9 +30,11 @@ app.use(
 app.use(cookieParser());
 
 // 로그인
+app.post(URL.LOGIN, loginUser);
 app.get(URL.LOGIN_GOOGLE, getGoogleUser);
 
 // 가입
+app.post(URL.SIGNUP, signupUser);
 app.post(URL.REGISTER, registerUser);
 app.get(URL.CHECK_NICKNAME, checkNickname);
 

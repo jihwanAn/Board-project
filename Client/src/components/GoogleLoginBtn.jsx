@@ -1,4 +1,5 @@
 import React from "react";
+import styled from "styled-components";
 import { useGoogleLogin } from "@react-oauth/google";
 import { useNavigate } from "react-router-dom";
 import { requestGet } from "../api/fetch";
@@ -35,11 +36,15 @@ const GoogleLoginBtn = () => {
     flow: "implicit",
   });
 
-  return (
-    <div>
-      <button onClick={googleLogin}>Google 로그인</button>
-    </div>
-  );
+  return <Button onClick={googleLogin}>Google 로그인</Button>;
 };
+const Button = styled.button`
+  margin: 1rem 0;
+  border: 1px solid #ccc;
+  background-color: #f8f8ff;
+  padding: 0.5rem;
+  border-radius: 8px;
+  width: 300px;
+`;
 
 export default GoogleLoginBtn;
