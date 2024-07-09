@@ -8,28 +8,50 @@ const {
 } = require("../utils/jwtUtils");
 const bcrypt = require("bcrypt");
 
+// 로그인
 const loginUser = async (req, res) => {
   let conn;
 
   try {
     const { email, password } = req.body.userInfo;
-
     conn = await pool.getConnection();
     const rows = await conn.query(QUERY.GET_USER, ["local", email]);
-    const valid_PW = await bcrypt.compare(password, rows[0].password);
-    console.log(valid_PW);
 
-    if (!valid_PW) {
-      return res.status(400).send("이메일 또는 비밀번호가 올바르지 않습니다.");
+    if (rows.length > 0) {
+      const userInfo = rows[0];
+
+      const valid_PW = await bcrypt.compare(password, userInfo.password);
+      if (!valid_PW) {
+        return res.status(CODE.INVALID_CREDENTIALS).send();
+      }
+
+      const accessToken = generateAccessToken(userInfo);
+      const refreshToken = generateRefreshToken(userInfo);
+
+      // <이전의 토큰 남아있는 경우, 삭제>
+
+      await conn.query(QUERY.SAVE_TOKEN, [
+        userInfo.email,
+        accessToken,
+        refreshToken,
+      ]);
+
+      res
+        .status(200)
+        .header("Authorization", `Bearer ${accessToken}`)
+        .json({ userInfo });
+    } else {
+      return res.status(CODE.ACCOUNT_NOT_REGISTERD).send();
     }
-
-    res.status(200).send("Login Success");
   } catch (error) {
     console.log("Login Error :: ", error);
     res.status(500).send("Login Error");
+  } finally {
+    if (conn) conn.release();
   }
 };
 
+// 구글 로그인
 const getGoogleUser = async (req, res) => {
   let conn;
 
@@ -45,21 +67,21 @@ const getGoogleUser = async (req, res) => {
     // DB users에서 유저 정보 조회
     conn = await pool.getConnection();
     const rows = await conn.query(QUERY.GET_USER, ["google", data.email]);
-    console.log("Registered User Info :: ", rows);
 
     // 로그인 성공
     if (rows.length > 0) {
       const userInfo = rows[0];
 
-      // JWT 토큰 발급
       const accessToken = generateAccessToken(userInfo);
       const refreshToken = generateRefreshToken(userInfo);
 
       // <이전의 토큰 남아있는 경우, 삭제>
 
-      conn = await pool.getConnection();
-      // 토큰 DB에 저장
-      conn.query(QUERY.SAVE_TOKEN, [userInfo.email, accessToken, refreshToken]);
+      await conn.query(QUERY.SAVE_TOKEN, [
+        userInfo.email,
+        accessToken,
+        refreshToken,
+      ]);
 
       res
         .status(200)
@@ -79,6 +101,7 @@ const getGoogleUser = async (req, res) => {
   }
 };
 
+// 회원 가입
 const signupUser = async (req, res) => {
   let conn;
 
@@ -87,10 +110,13 @@ const signupUser = async (req, res) => {
     const hashed_PW = await bcrypt.hash(password, 10);
 
     conn = await pool.getConnection();
-    conn.query(QUERY.SIGNUP_USER, [email, hashed_PW, nick_name]);
+    await conn.query(QUERY.SIGNUP_USER, [email, hashed_PW, nick_name]);
 
     res.status(200).send("Signup Success");
   } catch (error) {
+    if (error.code === "ER_DUP_ENTRY") {
+      return res.status(CODE.DUPLICATE_EMAIL).send();
+    }
     console.log("Signup Error :: ", error);
     res.status(500).send("Signup Error");
   } finally {
@@ -98,6 +124,7 @@ const signupUser = async (req, res) => {
   }
 };
 
+// 구글 계정으로 가입
 const registerUser = async (req, res) => {
   let conn;
 
@@ -105,7 +132,6 @@ const registerUser = async (req, res) => {
     const { nick_name, platform, email } = req.body.userInfo;
 
     conn = await pool.getConnection();
-    // 계정 등록
     await conn.query(QUERY.REGISTER_ACCOUNT, [platform, email, nick_name]);
 
     res.status(200).send();
@@ -117,6 +143,7 @@ const registerUser = async (req, res) => {
   }
 };
 
+// 닉네임 중복 체크
 const checkNickname = async (req, res) => {
   let conn;
 
@@ -124,7 +151,6 @@ const checkNickname = async (req, res) => {
     const { nick_name } = req.query;
 
     conn = await pool.getConnection();
-    // 닉네임 중복 체크
     const rows = await conn.query(QUERY.CHECK_NICKNAME, nick_name);
 
     // 중복 된 닉네임

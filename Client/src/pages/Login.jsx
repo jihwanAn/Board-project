@@ -1,17 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import GoogleLoginBtn from "../components/GoogleLoginBtn";
-import { requestPost } from "../api/fetch";
 import URL from "../constants/url";
+import CODE from "../constants/code";
+import { requestGet, requestPost } from "../api/fetch";
+import { setSessionItem } from "../utils/storage";
 
-const LoginSignupModal = () => {
-  const [openLogin, setOpenLogin] = useState(false);
-  const [openSignup, setOpenSignup] = useState(false);
+const Login = () => {
+  const [mode, setMode] = useState(""); // "" | "login" | "signup"
   const [inputs, setInputs] = useState({});
-  const navigete = useNavigate();
+  const [nickNameChecked, setNickNameChecked] = useState(false);
+  const emailRef = useRef(null);
+  const navigate = useNavigate();
 
-  const handleCange = (e) => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
 
     setInputs((prevState) => ({
@@ -20,35 +23,92 @@ const LoginSignupModal = () => {
     }));
   };
 
-  const onSubmit = async () => {
-    if (openLogin) {
+  const verifyNickName = (e) => {
+    e.preventDefault();
+
+    requestGet(URL.CHECK_NICKNAME, { nick_name: inputs.nick_name }, (res) => {
+      if (res.status === CODE.DUPLICATE_NICKNAME) {
+        alert("이미 사용 중인 닉네임입니다.");
+        return;
+      } else {
+        alert("사용 가능한 닉네임 입니다.");
+        setNickNameChecked(true);
+      }
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (mode === "login") {
       await requestPost(
         URL.LOGIN,
         { userInfo: inputs },
         (res) => {
-          if (res.status === 200) {
-            navigete(URL.MAIN);
+          if (res.status === CODE.INVALID_CREDENTIALS) {
+            alert("아이디 또는 비밀번호가 일치하지 않습니다.");
+          } else if (res.status === CODE.ACCOUNT_NOT_REGISTERD) {
+            alert("일치하는 회원 정보가 존재하지 않습니다.");
+          } else if (res.status === 200) {
+            const token = res.headers["authorization"].split("Bearer ")[1];
+            const userInfo = res.data.userInfo;
+            setSessionItem("token", token);
+            setSessionItem("user", userInfo);
+            navigate(URL.MAIN);
           }
         },
         (error) => {
           console.log(error);
-          alert("아이디 또는 비밀번호가 일치하지 않습니다.");
+          alert("로그인 실패하였습니다. 잠시 후 다시 시도해 주세요.");
         }
       );
     }
 
-    if (openSignup) {
+    if (mode === "signup") {
+      if (
+        !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(inputs.email)
+      )
+        return alert("올바른 이메일 형식이 아닙니다.");
+      if (
+        !/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(
+          inputs.password
+        )
+      )
+        return alert(
+          "비밀번호는 영문, 숫자, 특수문자 포함 8자 이상이어야 합니다."
+        );
+      if (inputs.password === inputs.CheckPassword)
+        return alert("비밀번호가 일치하지 않습니다.");
+      if (!nickNameChecked) return alert("닉네임 중복 확인을 완료해 주세요.");
+      if (
+        inputs.nick_name.length > 16 ||
+        !/^[가-힣a-zA-Z0-9]*$/.test(inputs.nick_name)
+      )
+        return alert(
+          "닉네임은 한글, 영문, 숫자를 포함한 16글자 이내로 입력해 주세요."
+        );
+
       await requestPost(
         URL.SIGNUP,
         { userInfo: inputs },
         (res) => {
+          if (res.status === CODE.DUPLICATE_EMAIL) {
+            alert("이미 사용 중인 이메일입니다.");
+            setInputs((prev) => ({
+              ...prev,
+              email: "",
+            }));
+            emailRef.current.focus();
+            return;
+          }
           if (res.status === 200) {
-            navigete(URL.MAIN);
+            alert("회원 가입이 완료되었습니다.");
+            navigate(URL.MAIN);
           }
         },
         (error) => {
           console.log(error);
-          alert("비정상적인 요청입니다.");
+          alert("회원 가입 실패하였습니다. 잠시 후 다시 시도해 주세요.");
         }
       );
     }
@@ -56,109 +116,81 @@ const LoginSignupModal = () => {
 
   return (
     <Container>
-      {openLogin || openSignup ? (
+      {mode ? (
         <ModalForm>
           <div style={{ display: "flex", justifyContent: "right" }}>
-            <button
-              id="cancelBtn"
-              onClick={() => {
-                setOpenLogin(false);
-                setOpenSignup(false);
-              }}
-            >
+            <button id="cancelBtn" onClick={() => setMode("")}>
               X
             </button>
           </div>
 
-          {openLogin ? (
-            <InputForm onSubmit={onSubmit}>
-              <Input
-                type="email"
-                name="email"
-                placeholder="이메일"
-                onChange={handleCange}
-                required
-              />
-              <Input
-                type="password"
-                name="password"
-                placeholder="비밀번호"
-                onChange={handleCange}
-                required
-              />
-              <Button type="submit">로그인</Button>
-            </InputForm>
-          ) : (
-            <InputForm onSubmit={onSubmit}>
-              <Input
-                type="email"
-                name="email"
-                placeholder="이메일"
-                onChange={handleCange}
-                required
-              />
-              <Input
-                type="password"
-                name="password"
-                placeholder="비밀번호"
-                onChange={handleCange}
-                required
-              />
-              <Input type="password" placeholder="비밀번호 확인" />
-              <Input
-                type="text"
-                name="nick_name"
-                placeholder="닉네임"
-                onChange={handleCange}
-                required
-              />
-              <Button type="submit">회원 가입</Button>
-            </InputForm>
-          )}
+          <InputForm onSubmit={handleSubmit}>
+            <Input
+              type="email"
+              name="email"
+              placeholder="이메일"
+              onChange={handleChange}
+              ref={emailRef}
+              required
+            />
+            <Input
+              type="password"
+              name="password"
+              placeholder="비밀번호"
+              onChange={handleChange}
+              required
+            />
+            {mode === "signup" && (
+              <>
+                <Input
+                  type="password"
+                  name="CheckPassword"
+                  placeholder="비밀번호 확인"
+                  required
+                />
+                <Nickname>
+                  <Input
+                    type="text"
+                    name="nick_name"
+                    placeholder="닉네임"
+                    onChange={handleChange}
+                    disabled={nickNameChecked}
+                    required
+                  />
+                  <Button
+                    type="button"
+                    onClick={verifyNickName}
+                    style={{
+                      fontSize: "15px",
+                      width: "110px",
+                      marginLeft: "0.5rem",
+                    }}
+                    disabled={nickNameChecked}
+                  >
+                    중복 확인
+                  </Button>
+                </Nickname>
+              </>
+            )}
+            <Button type="submit">
+              {mode === "login" ? "로그인" : "회원 가입"}
+            </Button>
+          </InputForm>
 
-          {openLogin ? (
-            <Text>
-              계정이 없으신가요?
-              <ToggleButton
-                onClick={() => {
-                  setOpenLogin(false);
-                  setOpenSignup(true);
-                }}
-              >
-                회원 가입
-              </ToggleButton>
-            </Text>
-          ) : (
-            <Text>
-              계정이 없으신가요?
-              <ToggleButton
-                onClick={() => {
-                  setOpenLogin(true);
-                  setOpenSignup(false);
-                }}
-              >
-                로그인
-              </ToggleButton>
-            </Text>
-          )}
+          <Text>
+            {mode === "login" ? "계정이 없으신가요?" : "계정이 있으신가요?"}
+            <ToggleButton
+              onClick={() => setMode(mode === "login" ? "signup" : "login")}
+            >
+              {mode === "login" ? "회원 가입" : "로그인"}
+            </ToggleButton>
+          </Text>
         </ModalForm>
       ) : (
         <ButtonContainer>
-          <Button
-            onClick={() => {
-              setOpenLogin(true);
-            }}
-          >
-            로그인
-          </Button>
+          <Button onClick={() => setMode("login")}>로그인</Button>
           <GoogleLoginBtn>Google 로그인</GoogleLoginBtn>
-          <Button
-            onClick={() => {
-              setOpenSignup(true);
-            }}
-          >
-            회원 가입
-          </Button>
+          <Button onClick={() => setMode("signup")}>회원 가입</Button>
         </ButtonContainer>
       )}
     </Container>
@@ -215,6 +247,11 @@ const Input = styled.input`
   border-radius: 8px;
 `;
 
+const Nickname = styled.div`
+  display: flex;
+  width: 100%;
+`;
+
 const Text = styled.div`
   display: flex;
   justify-content: center;
@@ -230,4 +267,4 @@ const ToggleButton = styled.button`
   text-decoration: underline;
 `;
 
-export default LoginSignupModal;
+export default Login;

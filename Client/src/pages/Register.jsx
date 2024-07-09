@@ -43,14 +43,21 @@ const Register = () => {
   const registerAccount = (e) => {
     e.preventDefault();
 
-    requestPost(URL.REGISTER, { userInfo: inputs }, handleResponse);
-  };
-
-  const handleResponse = (res) => {
-    if (res.status === 200) {
-      alert(`${inputs.nick_name}님 회원 가입을 축하 드립니다.`);
-      navigate(URL.MAIN);
-    }
+    requestPost(
+      URL.REGISTER,
+      { userInfo: inputs },
+      (res) => {
+        if (res.status === 200) {
+          alert(`${inputs.nick_name}님 회원 가입을 축하 드립니다.`);
+          navigate(URL.MAIN);
+        }
+      },
+      (error) => {
+        console.log(error);
+        alert("가입 실패하였습니다. 잠시 후 다시 시도해 주세요");
+        navigate(URL.MAIN);
+      }
+    );
   };
 
   useEffect(() => {

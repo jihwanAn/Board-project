@@ -33,7 +33,7 @@ const generateRefreshToken = (userInfo) => {
 };
 
 // 엑세스 토큰 디코딩
-const decodeAccess = async (accessToken) => {
+const decodeAccess = (accessToken) => {
   try {
     const decoded = jwt.verify(accessToken, getAccessTokenSecret());
     return decoded;
@@ -44,7 +44,7 @@ const decodeAccess = async (accessToken) => {
 };
 
 // 리프레시 토큰 디코딩
-const decodeRefresh = async (refreshToken) => {
+const decodeRefresh = (refreshToken) => {
   try {
     const decoded = jwt.verify(refreshToken, getRefreshTokenSecret());
     return decoded;
