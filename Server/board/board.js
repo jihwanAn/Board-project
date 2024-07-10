@@ -2,15 +2,22 @@ const { pool } = require("../DB/connection");
 const { QUERY } = require("../constants/query");
 
 const getBoard = async (req, res) => {
-  // const page = req.query;
-  // console.log(page);
   let conn;
 
   try {
-    conn = await pool.getConnection();
-    const board = await conn.query(QUERY.GET_BOARD);
+    const { page, itemsPerPage } = req.query;
 
-    res.status(200).json(board);
+    conn = await pool.getConnection();
+    const rows_1 = await conn.query(QUERY.BOARD_COUNT);
+    const { count } = rows_1[0];
+    const totalPages = Math.ceil(Number(count) / itemsPerPage);
+
+    const rows_2 = await conn.query(QUERY.GET_BOARD, [
+      Number(itemsPerPage),
+      (page - 1) * Number(itemsPerPage),
+    ]);
+
+    res.status(200).json({ totalPages, board: rows_2 });
   } catch (error) {
     console.log("fetching board Error :: ", error);
     res.status(500).send("fetching board Error");
@@ -34,6 +41,8 @@ const getPostDetail = async (req, res) => {
   } catch (error) {
     console.log("checking post detail Error :: ", error);
     res.status(500).send("checking post detail Error");
+  } finally {
+    if (conn) conn.release();
   }
 };
 

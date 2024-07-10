@@ -12,10 +12,11 @@ const GlobalStyle = createGlobalStyle`
     color: ${(props) => props.theme.colors.text}; 
   }
   
-  a, li {
+  a, li , ul{
     text-decoration: none;
     color: inherit;
     transition: color 0.3s;
+    list-style-type: none;
 
     cursor: pointer;   
     &:hover {

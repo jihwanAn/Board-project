@@ -129,7 +129,7 @@ const registerUser = async (req, res) => {
   let conn;
 
   try {
-    const { nick_name, platform, email } = req.body.userInfo;
+    const { platform, email, nick_name } = req.body.userInfo;
 
     conn = await pool.getConnection();
     await conn.query(QUERY.REGISTER_ACCOUNT, [platform, email, nick_name]);
