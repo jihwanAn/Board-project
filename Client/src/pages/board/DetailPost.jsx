@@ -10,6 +10,7 @@ import {
   removeSessionItem,
 } from "../../utils/storage";
 import CODE from "../../constants/code";
+import CATEGORY from "../../constants/category";
 
 const DetailPost = () => {
   const [isAuthor, setIsAuthor] = useState(false);
@@ -74,13 +75,16 @@ const DetailPost = () => {
   return (
     <Container>
       <Title>{currPost.title}</Title>
-      <UserInfo>
-        <span style={{ color: "black", fontWeight: "bold" }}>
-          {currPost.nick_name}
-        </span>
-        <span>{formatDate(currPost.created_at)}</span>
-        <span>조회: {currPost.view_count}</span>
-      </UserInfo>
+      <Info>
+        <div>{`게시판 > ${CATEGORY[currPost.category].name}`}</div>
+        <div>
+          <span style={{ color: "black", fontWeight: "bold" }}>
+            {currPost.nick_name}
+          </span>
+          <span>{formatDate(currPost.created_at)}</span>
+          <span>{`조회: ${currPost.view_count}`}</span>
+        </div>
+      </Info>
       {isAuthor && (
         <ButtonForm>
           <button type="button" onClick={handleEditClick}>
@@ -106,18 +110,21 @@ const Title = styled.h3`
   color: #5f5f5f;
 `;
 
-const UserInfo = styled.span`
+const Info = styled.span`
   display: flex;
+  justify-content: space-between;
   border-top: 1px solid #ccc;
   border-bottom: 1px solid #ccc;
   padding: 0.5rem 1rem;
-  justify-content: right;
   margin-bottom: 1rem;
+  color: #6a6a6a;
 
-  :nth-child(n) {
-    margin-left: 1rem;
+  :nth-child(2) {
     font-size: 15px;
-    color: #6a6a6a;
+
+    :nth-child(n) {
+      margin-left: 1rem;
+    }
   }
 `;
 

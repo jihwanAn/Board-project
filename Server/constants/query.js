@@ -13,13 +13,15 @@ const QUERY = {
   UPDATE_TOKENS: `UPDATE tokens SET access_token = ?, refresh_token = ? WHERE email = ?`,
 
   // BOARD
-  BOARD_COUNT: `SELECT COUNT(*) as count from board`,
+  BOARD_COUNT: `SELECT COUNT(*) AS count FROM board`,
   GET_BOARD: `SELECT * FROM board ORDER BY created_at DESC LIMIT ? OFFSET ?`,
   CHECK_POST_OWNER: `SELECT email FROM board WHERE id = ?`,
-  CREATE_POST: `INSERT INTO board (email, nick_name, title, content, created_at, view_count) 
-    VALUES (?, ?, ?, ?, NOW(), 0)`,
-  EDIT_POST: `UPDATE board SET title = ?, content = ? WHERE id = ?`,
+  CREATE_POST: `INSERT INTO board (email, nick_name, category, title, content, created_at, view_count) 
+    VALUES (?, ?, ?, ?, ?, NOW(), 0)`,
+  EDIT_POST: `UPDATE board SET category = ?, title = ?, content = ? WHERE id = ?`,
   DELETE_POST: `DELETE FROM board WHERE id = ?`,
+  BOARD_CATEGORY_COUNT: `SELECT COUNT(*) AS count FROM board WHERE category = ?`,
+  BOARD_CATEGORY: `SELECT * FROM board WHERE category = ? ORDER BY created_at DESC LIMIT ? OFFSET ?`,
 };
 
 module.exports = { QUERY };

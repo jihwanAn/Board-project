@@ -1,17 +1,23 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import styled from "styled-components";
-import URL from "../../constants/url";
+import { Link, useLocation } from "react-router-dom";
 import { requestGet } from "../../api/fetch";
 import { formatDate } from "../../utils/formatDate";
+import CATEGORY from "../../constants/category";
+import URL from "../../constants/url";
+import Loading from "../../components/LoadingSpinner";
 
 const Board = () => {
+  const columns = ["No", "제목", "작성자", "날짜", "조회"];
+  const location = useLocation();
   const [posts, setPosts] = useState([]);
   const [pageOptions, setPageOptions] = useState({
+    category: location.state,
     page: 1,
     itemsPerPage: 5,
     totalPages: 0,
   });
+  const [isLoading, setIsLoading] = useState(true);
 
   const handlePageChange = (currPage) => {
     setPageOptions((prev) => ({
@@ -23,14 +29,16 @@ const Board = () => {
   const fetchPosts = () => {
     requestGet(
       URL.BOARD,
-      { page: pageOptions.page, itemsPerPage: pageOptions.itemsPerPage },
+      pageOptions,
       (res) => {
-        const { totalPages, board } = res.data;
+        const { totalPages, board, totalItems } = res.data;
         setPosts(board);
         setPageOptions((prev) => ({
           ...prev,
           totalPages: totalPages,
+          totalItems,
         }));
+        setIsLoading(false);
       },
       (error) => {
         console.log(error);
@@ -44,25 +52,54 @@ const Board = () => {
 
   useEffect(() => {
     fetchPosts();
-  }, [pageOptions.page]);
+  }, [pageOptions.category, pageOptions.page]);
 
-  return (
+  return isLoading ? (
+    <Container
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "40vh",
+      }}
+    >
+      <Loading />
+    </Container>
+  ) : (
     <Container>
+      <CategoryForm>
+        <Select
+          onChange={(e) => {
+            setPageOptions((prev) => ({
+              ...prev,
+              category: Number(e.target.value),
+            }));
+          }}
+        >
+          <option value={-1}>All</option>
+          {Object.keys(CATEGORY).map((key) => (
+            <option value={key} key={CATEGORY[key].name}>
+              {CATEGORY[key].name}
+            </option>
+          ))}
+        </Select>
+      </CategoryForm>
       <StyledTable>
         <thead>
           <tr>
-            <th>No</th>
-            <th>제목</th>
-            <th>작성자</th>
-            <th>날짜</th>
-            <th>조회</th>
+            {columns.map((col, idx) => (
+              <th key={`col_${idx}`}>{col}</th>
+            ))}
           </tr>
         </thead>
         <tbody>
           {posts.length > 0 ? (
             posts.map((post, idx) => (
-              <tr key={post.id}>
-                <td>0000</td>
+              <tr key={`post_${idx}`}>
+                <td>
+                  {pageOptions.totalItems -
+                    ((pageOptions.page - 1) * pageOptions.itemsPerPage + idx)}
+                </td>
                 <TitleCell>
                   <TitleLink to={URL.POST_DETAIL} state={post}>
                     {post.title}
@@ -80,7 +117,6 @@ const Board = () => {
           )}
         </tbody>
       </StyledTable>
-
       {/* 페이지네이션 */}
       <Pagination>
         {pageOptions.totalPages > 0 && (
@@ -104,6 +140,19 @@ const Board = () => {
 const Container = styled.div`
   display: flex;
   flex-direction: column;
+`;
+
+const CategoryForm = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: right;
+  padding: 0.4rem 1rem;
+`;
+
+const Select = styled.select`
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 0.3rem;
 `;
 
 const StyledTable = styled.table`

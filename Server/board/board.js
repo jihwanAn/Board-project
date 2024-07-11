@@ -5,19 +5,29 @@ const getBoard = async (req, res) => {
   let conn;
 
   try {
-    const { page, itemsPerPage } = req.query;
-
     conn = await pool.getConnection();
-    const rows_1 = await conn.query(QUERY.BOARD_COUNT);
+    const { category, page, itemsPerPage } = req.query;
+    let rows_1, rows_2;
+
+    if (Number(category) === -1) {
+      rows_1 = await conn.query(QUERY.BOARD_COUNT);
+      rows_2 = await conn.query(QUERY.GET_BOARD, [
+        Number(itemsPerPage),
+        (page - 1) * itemsPerPage,
+      ]);
+    } else {
+      rows_1 = await conn.query(QUERY.BOARD_CATEGORY_COUNT, [category]);
+      rows_2 = await conn.query(QUERY.BOARD_CATEGORY, [
+        category,
+        Number(itemsPerPage),
+        (page - 1) * itemsPerPage,
+      ]);
+    }
     const { count } = rows_1[0];
-    const totalPages = Math.ceil(Number(count) / itemsPerPage);
+    const totalItems = Number(count);
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
 
-    const rows_2 = await conn.query(QUERY.GET_BOARD, [
-      Number(itemsPerPage),
-      (page - 1) * Number(itemsPerPage),
-    ]);
-
-    res.status(200).json({ totalPages, board: rows_2 });
+    res.status(200).json({ totalPages, board: rows_2, totalItems });
   } catch (error) {
     console.log("fetching board Error :: ", error);
     res.status(500).send("fetching board Error");
@@ -50,7 +60,7 @@ const createPost = async (req, res) => {
   let conn;
 
   try {
-    const { title, content } = req.body;
+    const { category, title, content } = req.body;
     const userInfo = req.userInfo;
 
     conn = await pool.getConnection();
@@ -58,6 +68,7 @@ const createPost = async (req, res) => {
     await conn.query(QUERY.CREATE_POST, [
       userInfo.email,
       userInfo.nick_name,
+      category,
       title,
       content,
     ]);
@@ -78,7 +89,12 @@ const editPost = async (req, res) => {
     const post = req.body.post;
 
     conn = await pool.getConnection();
-    await conn.query(QUERY.EDIT_POST, [post.title, post.content, post.id]);
+    await conn.query(QUERY.EDIT_POST, [
+      post.category,
+      post.title,
+      post.content,
+      post.id,
+    ]);
 
     res.status(200).send("Complete Edit");
   } catch (error) {

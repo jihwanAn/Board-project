@@ -9,12 +9,16 @@ import {
   setSessionItem,
   removeSessionItem,
 } from "../../utils/storage";
+import CATEGORY from "../../constants/category";
 
 const CreatePost = () => {
-  const [inputs, setInputs] = useState({ title: "", content: "" });
+  const [inputs, setInputs] = useState({
+    category: -1,
+    title: "",
+    content: "",
+  });
   const navigate = useNavigate();
-  const titleRef = useRef(null);
-  const contentRef = useRef(null);
+  const categoryRef = useRef(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -27,14 +31,16 @@ const CreatePost = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (inputs.category < 0) {
+      alert("카테고리를 선택해 주세요.");
+      return;
+    }
     if (inputs.title.trim() === "") {
-      alert("제목을 입력해 주세요");
-      titleRef.current.focus();
+      alert("제목을 입력해 주세요.");
       return;
     }
     if (inputs.content.trim() === "") {
-      alert("내용을 입력해 주세요");
-      contentRef.current.focus();
+      alert("내용을 입력해 주세요.");
       return;
     }
     if (inputs.title.length > 70) {
@@ -49,9 +55,8 @@ const CreatePost = () => {
           const token = Authorization.split("Bearer ")[1];
           setSessionItem("token", token);
         }
-
         alert("게시글이 작성되었습니다.");
-        navigate(URL.BOARD);
+        navigate(URL.BOARD, { state: -1 });
       }
     };
 
@@ -80,19 +85,37 @@ const CreatePost = () => {
       return;
     }
 
-    titleRef.current.focus();
+    categoryRef.current.focus();
   }, []);
 
   return (
     <Container>
       <Title>게시 글 작성</Title>
       <Form onSubmit={handleSubmit}>
+        <CategoryForm>
+          <Label htmlFor="category">카테고리</Label>
+          <Select
+            onChange={(e) => {
+              setInputs((prev) => ({
+                ...prev,
+                category: Number(e.target.value),
+              }));
+            }}
+            ref={categoryRef}
+          >
+            <option value="-1">카테고리를 선택해주세요.</option>
+            {Object.keys(CATEGORY).map((key) => (
+              <option value={key} key={CATEGORY[key].name}>
+                {CATEGORY[key].name}
+              </option>
+            ))}
+          </Select>
+        </CategoryForm>
         <Label htmlFor="title">제목</Label>
         <Input
           type="text"
           id="title"
           name="title"
-          ref={titleRef}
           value={inputs.title}
           onChange={handleChange}
         />
@@ -101,7 +124,6 @@ const CreatePost = () => {
         <TextArea
           id="content"
           name="content"
-          ref={contentRef}
           value={inputs.content}
           onChange={handleChange}
         />
@@ -130,17 +152,30 @@ const Form = styled.form`
   width: 100%;
 `;
 
+const CategoryForm = styled.div`
+  display: flex;
+  align-items: center;
+  margin: 1rem 0;
+`;
+
+const Select = styled.select`
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  flex: 1;
+  padding: 0.5rem;
+  margin-left: 1rem;
+`;
+
 const Label = styled.label`
-  margin-bottom: 8px;
   color: #555;
 `;
 
 const Input = styled.input`
-  margin-bottom: 16px;
+  margin: 1rem 0;
 `;
 
 const TextArea = styled.textarea`
-  margin-bottom: 16px;
+  margin: 1rem 0;
   resize: none;
   height: 300px;
 `;

@@ -1,20 +1,19 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useLocation, useNavigate } from "react-router-dom";
 import URL from "../../constants/url";
 import { requestPost } from "../../api/fetch";
+import CATEGORY from "../../constants/category";
 
 const EditPost = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [inputs, setInputs] = useState(location.state);
-  const titleRef = useRef(null);
-  const contentRef = useRef(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setInputs((prevState) => ({
-      ...prevState,
+    setInputs((prev) => ({
+      ...prev,
       [name]: value,
     }));
   };
@@ -24,12 +23,10 @@ const EditPost = () => {
 
     if (inputs.title.trim() === "") {
       alert("제목을 입력해 주세요");
-      titleRef.current.focus();
       return;
     }
     if (inputs.content.trim() === "") {
       alert("내용을 입력해 주세요");
-      contentRef.current.focus();
       return;
     }
     if (inputs.title.length > 70) {
@@ -40,7 +37,7 @@ const EditPost = () => {
     requestPost(URL.POST_EDIT, { post: inputs }, (res) => {
       if (res.status === 200) {
         alert("수정이 완료되었습니다.");
-        navigate(URL.BOARD);
+        navigate(URL.BOARD, { state: inputs.category });
       }
     });
   };
@@ -55,8 +52,6 @@ const EditPost = () => {
       navigate(URL.MAIN);
       return;
     }
-
-    contentRef.current.focus();
   }, []);
 
   return (
@@ -68,12 +63,29 @@ const EditPost = () => {
         </button>
       </ButtonForm>
       <Form>
+        <CategoryForm>
+          <Label htmlFor="category">카테고리</Label>
+          <Select
+            value={inputs.category}
+            onChange={(e) => {
+              setInputs((prev) => ({
+                ...prev,
+                category: Number(e.target.value),
+              }));
+            }}
+          >
+            {Object.keys(CATEGORY).map((key) => (
+              <option value={key} key={CATEGORY[key].name}>
+                {CATEGORY[key].name}
+              </option>
+            ))}
+          </Select>
+        </CategoryForm>
         <Label htmlFor="title">제목</Label>
         <Input
           type="text"
           id="title"
           name="title"
-          ref={titleRef}
           value={inputs.title}
           onChange={handleChange}
         />
@@ -82,7 +94,6 @@ const EditPost = () => {
         <TextArea
           id="content"
           name="content"
-          ref={contentRef}
           value={inputs.content}
           onChange={handleChange}
         />
@@ -114,6 +125,20 @@ const Form = styled.div`
   display: flex;
   flex-direction: column;
   margin: 1rem;
+`;
+
+const CategoryForm = styled.div`
+  display: flex;
+  align-items: center;
+  margin: 1rem 0;
+`;
+
+const Select = styled.select`
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  flex: 1;
+  padding: 0.5rem;
+  margin-left: 1rem;
 `;
 
 const Label = styled.label`
