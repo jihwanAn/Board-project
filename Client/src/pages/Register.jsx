@@ -45,7 +45,7 @@ const Register = () => {
 
     requestPost(
       URL.REGISTER,
-      { userInfo: inputs },
+      inputs,
       (res) => {
         if (res.status === 200) {
           alert(`${inputs.nick_name}님 회원 가입을 축하 드립니다.`);

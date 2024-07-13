@@ -13,7 +13,7 @@ import CATEGORY from "../../constants/category";
 
 const CreatePost = () => {
   const [inputs, setInputs] = useState({
-    category: -1,
+    category_id: -1,
     title: "",
     content: "",
   });
@@ -31,7 +31,7 @@ const CreatePost = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (inputs.category < 0) {
+    if (inputs.category_id < 0) {
       alert("카테고리를 선택해 주세요.");
       return;
     }
@@ -44,7 +44,7 @@ const CreatePost = () => {
       return;
     }
     if (inputs.title.length > 70) {
-      alert("제목은 70자 이내로 작성해 주세요.");
+      alert("제목은 100자 이내로 작성해 주세요.");
       return;
     }
 
@@ -55,27 +55,23 @@ const CreatePost = () => {
           const token = Authorization.split("Bearer ")[1];
           setSessionItem("token", token);
         }
-        alert("게시글이 작성되었습니다.");
-        navigate(URL.BOARD, { state: -1 });
+        const post = res.data;
+
+        navigate(URL.POST_DETAIL, { state: post });
       }
     };
 
-    await requestPost(
-      URL.POST_CREATE,
-      { ...inputs },
-      handleResponse,
-      (error) => {
-        if (error.response.status === CODE.UNAUTHORIZED) {
-          removeSessionItem("token");
-          removeSessionItem("user");
-          alert("세션이 만료되었습니다. 다시 로그인해 주세요.");
-          return;
-        } else {
-          console.error(error);
-          alert("게시글 작성에 실패했습니다. 다시 시도해 주세요.");
-        }
+    await requestPost(URL.POST_CREATE, inputs, handleResponse, (error) => {
+      if (error.response.status === CODE.UNAUTHORIZED) {
+        removeSessionItem("token");
+        removeSessionItem("user");
+        alert("세션이 만료되었습니다. 다시 로그인해 주세요.");
+        return;
+      } else {
+        console.error(error);
+        alert("게시글 작성에 실패했습니다. 다시 시도해 주세요.");
       }
-    );
+    });
   };
 
   useEffect(() => {
@@ -98,7 +94,7 @@ const CreatePost = () => {
             onChange={(e) => {
               setInputs((prev) => ({
                 ...prev,
-                category: Number(e.target.value),
+                category_id: Number(e.target.value),
               }));
             }}
             ref={categoryRef}

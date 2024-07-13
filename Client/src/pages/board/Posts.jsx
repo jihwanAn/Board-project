@@ -7,12 +7,12 @@ import CATEGORY from "../../constants/category";
 import URL from "../../constants/url";
 import Loading from "../../components/LoadingSpinner";
 
-const Board = () => {
+const Posts = () => {
   const columns = ["No", "제목", "작성자", "날짜", "조회"];
   const location = useLocation();
   const [posts, setPosts] = useState([]);
   const [pageOptions, setPageOptions] = useState({
-    category: location.state,
+    category_id: location.state,
     page: 1,
     itemsPerPage: 5,
     totalPages: 0,
@@ -28,11 +28,11 @@ const Board = () => {
 
   const fetchPosts = () => {
     requestGet(
-      URL.BOARD,
+      URL.POSTS,
       pageOptions,
       (res) => {
-        const { totalPages, board, totalItems } = res.data;
-        setPosts(board);
+        const { totalPages, posts, totalItems } = res.data;
+        setPosts(posts);
         setPageOptions((prev) => ({
           ...prev,
           totalPages: totalPages,
@@ -52,7 +52,7 @@ const Board = () => {
 
   useEffect(() => {
     fetchPosts();
-  }, [pageOptions.category, pageOptions.page]);
+  }, [pageOptions.category_id, pageOptions.page]);
 
   return isLoading ? (
     <Container
@@ -69,10 +69,11 @@ const Board = () => {
     <Container>
       <CategoryForm>
         <Select
+          value={pageOptions.category_id}
           onChange={(e) => {
             setPageOptions((prev) => ({
               ...prev,
-              category: Number(e.target.value),
+              category_id: Number(e.target.value),
             }));
           }}
         >
@@ -233,4 +234,4 @@ const PaginationItem = styled.li`
   }
 `;
 
-export default Board;
+export default Posts;

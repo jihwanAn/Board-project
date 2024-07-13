@@ -8,7 +8,7 @@ const {
 const generateAccessToken = (userInfo) => {
   return jwt.sign(
     {
-      id: userInfo.id,
+      user_id: userInfo.id,
       platform: userInfo.platform,
       email: userInfo.email,
       nick_name: userInfo.nick_name,
@@ -22,7 +22,7 @@ const generateAccessToken = (userInfo) => {
 const generateRefreshToken = (userInfo) => {
   return jwt.sign(
     {
-      id: userInfo.id,
+      user_id: userInfo.id,
       platform: userInfo.platform,
       email: userInfo.email,
       nick_name: userInfo.nick_name,

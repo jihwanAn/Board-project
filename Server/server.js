@@ -12,12 +12,12 @@ const {
   checkNickname,
 } = require("./auth/auth");
 const {
-  getBoard,
+  getPosts,
   getPostDetail,
   createPost,
   editPost,
   deletePost,
-} = require("./board/board");
+} = require("./board/posts");
 const { verifyJwt } = require("./middlewares/verifyJwt");
 
 dotenv.config();
@@ -39,7 +39,7 @@ app.post(URL.REGISTER, registerUser);
 app.get(URL.CHECK_NICKNAME, checkNickname);
 
 // 게시판
-app.get(URL.BOARD, getBoard);
+app.get(URL.POSTS, getPosts);
 app.get(URL.POST_DETAIL, verifyJwt, getPostDetail);
 app.post(URL.POST_CREATE, verifyJwt, createPost);
 app.post(URL.POST_EDIT, verifyJwt, editPost);

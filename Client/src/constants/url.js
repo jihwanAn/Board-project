@@ -10,11 +10,11 @@ const URL = {
 
   MYPAGE: "/mypage",
 
-  BOARD: "/board",
-  POST_DETAIL: "/board/detail",
-  POST_CREATE: "/board/create",
-  POST_EDIT: "/board/edit",
-  POST_DELETE: "/board/delete",
+  POSTS: "/posts",
+  POST_DETAIL: "/posts/detail",
+  POST_CREATE: "/posts/create",
+  POST_EDIT: "/posts/edit",
+  POST_DELETE: "/posts/delete",
 };
 
 export default URL;

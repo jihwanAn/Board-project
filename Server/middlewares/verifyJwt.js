@@ -9,17 +9,18 @@ const {
 } = require("../utils/jwtUtils");
 
 const verifyJwt = async (req, res, next) => {
-  const ACCESS_TOKEN = req.headers.authorization.split("Bearer ")[1];
-  let conn;
-
-  console.log(ACCESS_TOKEN);
+  let ACCESS_TOKEN = req.headers.authorization;
 
   if (!ACCESS_TOKEN) {
-    return res.status(400).send("Token is required");
+    console.log("No token");
+    return res.status(CODE.MISSING_ACCESS_TOKEN);
   }
 
+  let conn;
+  ACCESS_TOKEN = ACCESS_TOKEN.split("Bearer ")[1];
+
   try {
-    const decoded = await decodeAccess(ACCESS_TOKEN);
+    const decoded = decodeAccess(ACCESS_TOKEN);
     req.userInfo = decoded;
     return next();
   } catch (error) {
@@ -35,7 +36,7 @@ const verifyJwt = async (req, res, next) => {
 
           try {
             // 리프레시 토큰 유효
-            const decodedRefresh = await decodeRefresh(REFRESH_TOKEN);
+            const decodedRefresh = decodeRefresh(REFRESH_TOKEN);
             // 새 토큰 생성
             const newAccessToken = generateAccessToken(decodedRefresh);
             const newRefreshToken = generateRefreshToken(decodedRefresh);
@@ -43,7 +44,7 @@ const verifyJwt = async (req, res, next) => {
             await conn.query(QUERY.UPDATE_TOKENS, [
               newAccessToken,
               newRefreshToken,
-              decodedRefresh.email,
+              decodedRefresh.user_id,
             ]);
 
             req.userInfo = decodedRefresh;

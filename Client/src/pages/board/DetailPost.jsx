@@ -27,11 +27,11 @@ const DetailPost = () => {
   const handleDelete = () => {
     requestDelete(
       URL.POST_DELETE,
-      { postId },
+      { post_id: postId },
       (res) => {
         if (res.status === 200) {
           alert("게시글이 삭제되었습니다.");
-          navigate(URL.BOARD);
+          navigate(URL.POSTS);
         }
       },
       (error) => {
@@ -55,28 +55,31 @@ const DetailPost = () => {
       return;
     }
 
-    await requestGet(URL.POST_DETAIL, { postId }, handleResponse, (error) => {
-      if (error.status === CODE.UNAUTHORIZED) {
-        removeSessionItem("token");
-        removeSessionItem("user");
-        alert("세션이 만료되었습니다. 다시 로그인해 주세요.");
-      } else {
-        console.error(error);
+    await requestGet(
+      URL.POST_DETAIL,
+      { post_id: postId },
+      handleResponse,
+      (error) => {
+        if (error.status === CODE.UNAUTHORIZED) {
+          removeSessionItem("token");
+          removeSessionItem("user");
+          alert("세션이 만료되었습니다. 다시 로그인해 주세요.");
+        } else {
+          console.error(error);
+        }
       }
-    });
+    );
   };
 
   useEffect(() => {
-    if (session) {
-      getPost();
-    }
+    getPost();
   }, [currPost, session]);
 
   return (
     <Container>
       <Title>{currPost.title}</Title>
       <Info>
-        <div>{`게시판 > ${CATEGORY[currPost.category].name}`}</div>
+        <div>{`게시판 > ${CATEGORY[currPost.category_id].name}`}</div>
         <div>
           <span style={{ color: "black", fontWeight: "bold" }}>
             {currPost.nick_name}

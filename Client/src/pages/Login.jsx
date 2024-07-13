@@ -43,7 +43,7 @@ const Login = () => {
     if (mode === "login") {
       await requestPost(
         URL.LOGIN,
-        { userInfo: inputs },
+        inputs,
         (res) => {
           if (res.status === CODE.INVALID_CREDENTIALS) {
             alert("아이디 또는 비밀번호가 일치하지 않습니다.");
@@ -51,7 +51,7 @@ const Login = () => {
             alert("일치하는 회원 정보가 존재하지 않습니다.");
           } else if (res.status === 200) {
             const token = res.headers["authorization"].split("Bearer ")[1];
-            const userInfo = res.data.userInfo;
+            const userInfo = res.data;
             setSessionItem("token", token);
             setSessionItem("user", userInfo);
             navigate(URL.MAIN);
@@ -77,8 +77,9 @@ const Login = () => {
         return alert(
           "비밀번호는 영문, 숫자, 특수문자 포함 8자 이상이어야 합니다."
         );
-      if (inputs.password === inputs.CheckPassword)
+      if (inputs.password !== inputs.CheckPassword)
         return alert("비밀번호가 일치하지 않습니다.");
+
       if (!nickNameChecked) return alert("닉네임 중복 확인을 완료해 주세요.");
       if (
         inputs.nick_name.length > 16 ||
@@ -90,7 +91,7 @@ const Login = () => {
 
       await requestPost(
         URL.SIGNUP,
-        { userInfo: inputs },
+        inputs,
         (res) => {
           if (res.status === CODE.DUPLICATE_EMAIL) {
             alert("이미 사용 중인 이메일입니다.");
@@ -146,6 +147,7 @@ const Login = () => {
                   type="password"
                   name="CheckPassword"
                   placeholder="비밀번호 확인"
+                  onChange={handleChange}
                   required
                 />
                 <Nickname>

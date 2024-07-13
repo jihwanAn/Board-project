@@ -18,7 +18,7 @@ const GoogleLoginBtn = () => {
     }
     if (res.status === 200) {
       const token = res.headers["authorization"].split("Bearer ")[1];
-      const userInfo = res.data.userInfo;
+      const userInfo = res.data;
       setSessionItem("token", token);
       setSessionItem("user", userInfo);
       navigate(URL.MAIN);

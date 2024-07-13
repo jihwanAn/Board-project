@@ -9,7 +9,6 @@ const EditPost = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [inputs, setInputs] = useState(location.state);
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setInputs((prev) => ({
@@ -37,7 +36,7 @@ const EditPost = () => {
     requestPost(URL.POST_EDIT, { post: inputs }, (res) => {
       if (res.status === 200) {
         alert("수정이 완료되었습니다.");
-        navigate(URL.BOARD, { state: inputs.category });
+        navigate(URL.POSTS, { state: inputs.category_id });
       }
     });
   };
@@ -66,11 +65,11 @@ const EditPost = () => {
         <CategoryForm>
           <Label htmlFor="category">카테고리</Label>
           <Select
-            value={inputs.category}
+            value={inputs.category_id}
             onChange={(e) => {
               setInputs((prev) => ({
                 ...prev,
-                category: Number(e.target.value),
+                category_id: Number(e.target.value),
               }));
             }}
           >

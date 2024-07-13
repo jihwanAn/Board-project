@@ -7,14 +7,14 @@ import URL from "../constants/url";
 const Main = () => {
   return (
     <Container>
-      <StyledLink value={-1} to={URL.BOARD} state={-1}>
+      <StyledLink value={-1} to={URL.POSTS} state={-1}>
         전체
       </StyledLink>
       {Object.keys(CATEGORY).map((key) => (
         <StyledLink
           value={key}
           key={CATEGORY[key].name}
-          to={URL.BOARD}
+          to={URL.POSTS}
           state={Number(key)}
         >
           {CATEGORY[key].name}

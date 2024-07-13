@@ -8,7 +8,7 @@ import Footer from "./components/Footer";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import MyPage from "./pages/MyPage";
-import Board from "./pages/board/Board";
+import POSTS from "./pages/board/Posts";
 import CreatePost from "./pages/board/CreatePost";
 import DetailPost from "./pages/board/DetailPost";
 import EditPost from "./pages/board/EditPost";
@@ -23,7 +23,7 @@ function App() {
           <Route path={URL.LOGIN} element={<Login />} />
           <Route path={URL.REGISTER} element={<Register />} />
           <Route path={URL.MYPAGE} element={<MyPage />} />
-          <Route path={URL.BOARD} element={<Board />} />
+          <Route path={URL.POSTS} element={<POSTS />} />
           <Route path={URL.POST_CREATE} element={<CreatePost />} />
           <Route path={URL.POST_DETAIL} element={<DetailPost />} />
           <Route path={URL.POST_EDIT} element={<EditPost />} />

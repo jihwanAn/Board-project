@@ -13,7 +13,7 @@ const loginUser = async (req, res) => {
   let conn;
 
   try {
-    const { email, password } = req.body.userInfo;
+    const { email, password } = req.body;
     conn = await pool.getConnection();
     const rows = await conn.query(QUERY.GET_USER, ["local", email]);
 
@@ -31,15 +31,16 @@ const loginUser = async (req, res) => {
       // <이전의 토큰 남아있는 경우, 삭제>
 
       await conn.query(QUERY.SAVE_TOKEN, [
-        userInfo.email,
+        userInfo.id,
         accessToken,
         refreshToken,
       ]);
 
-      res
-        .status(200)
-        .header("Authorization", `Bearer ${accessToken}`)
-        .json({ userInfo });
+      res.status(200).header("Authorization", `Bearer ${accessToken}`).json({
+        user_id: userInfo.id,
+        email: userInfo.email,
+        nick_name: userInfo.nick_name,
+      });
     } else {
       return res.status(CODE.ACCOUNT_NOT_REGISTERD).send();
     }
@@ -78,15 +79,16 @@ const getGoogleUser = async (req, res) => {
       // <이전의 토큰 남아있는 경우, 삭제>
 
       await conn.query(QUERY.SAVE_TOKEN, [
-        userInfo.email,
+        userInfo.id,
         accessToken,
         refreshToken,
       ]);
 
-      res
-        .status(200)
-        .header("Authorization", `Bearer ${accessToken}`)
-        .json({ userInfo });
+      res.status(200).header("Authorization", `Bearer ${accessToken}`).json({
+        user_id: userInfo.id,
+        email: userInfo.email,
+        nick_name: userInfo.nick_name,
+      });
     } else {
       // 등록 된 계정 정보 없음
       res
@@ -106,7 +108,7 @@ const signupUser = async (req, res) => {
   let conn;
 
   try {
-    const { email, password, nick_name } = req.body.userInfo;
+    const { email, password, nick_name } = req.body;
     const hashed_PW = await bcrypt.hash(password, 10);
 
     conn = await pool.getConnection();
@@ -129,7 +131,7 @@ const registerUser = async (req, res) => {
   let conn;
 
   try {
-    const { platform, email, nick_name } = req.body.userInfo;
+    const { platform, email, nick_name } = req.body;
 
     conn = await pool.getConnection();
     await conn.query(QUERY.REGISTER_ACCOUNT, [platform, email, nick_name]);
