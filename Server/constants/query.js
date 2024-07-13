@@ -23,6 +23,9 @@ const QUERY = {
   DELETE_POST: `DELETE FROM posts WHERE id = ?`,
   POSTS_CATEGORY_COUNT: `SELECT COUNT(*) AS count FROM posts WHERE category_id = ?`,
   POSTS_CATEGORY: `SELECT * FROM posts WHERE category_id = ? ORDER BY created_at DESC LIMIT ? OFFSET ?`,
+
+  // COMMENTS
+  CREATE_COMMENT: `INSERT INTO comments (user_id, post_id, content, parent_id, created_at) VALUES ( ?, ?, ?, NULL, NOW())`,
 };
 
 module.exports = { QUERY };

@@ -18,6 +18,7 @@ const {
   editPost,
   deletePost,
 } = require("./board/posts");
+const { createComment } = require("./board/comments");
 const { verifyJwt } = require("./middlewares/verifyJwt");
 
 dotenv.config();
@@ -44,6 +45,9 @@ app.get(URL.POST_DETAIL, verifyJwt, getPostDetail);
 app.post(URL.POST_CREATE, verifyJwt, createPost);
 app.post(URL.POST_EDIT, verifyJwt, editPost);
 app.delete(URL.POST_DELETE, verifyJwt, deletePost);
+
+// app.get(URL.COMMENTS, getComments);
+app.post(URL.COMMENTS_CREATE, verifyJwt, createComment);
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {

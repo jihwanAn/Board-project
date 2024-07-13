@@ -11,6 +11,7 @@ import {
 } from "../../utils/storage";
 import CODE from "../../constants/code";
 import CATEGORY from "../../constants/category";
+import Comments from "../../components/Comments";
 
 const DetailPost = () => {
   const [isAuthor, setIsAuthor] = useState(false);
@@ -99,6 +100,7 @@ const DetailPost = () => {
         </ButtonForm>
       )}
       <Content>{currPost.content}</Content>
+      <Comments postId={postId} />
     </Container>
   );
 };
@@ -133,6 +135,7 @@ const Info = styled.span`
 
 const Content = styled.p`
   padding-left: 1rem;
+  height: 300px;
 `;
 
 const ButtonForm = styled.div`
