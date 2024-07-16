@@ -17,8 +17,10 @@ const {
   createPost,
   editPost,
   deletePost,
+  getComments,
+  addComment,
+  deleteComment,
 } = require("./board/posts");
-const { createComment } = require("./board/comments");
 const { verifyJwt } = require("./middlewares/verifyJwt");
 
 dotenv.config();
@@ -41,13 +43,13 @@ app.get(URL.CHECK_NICKNAME, checkNickname);
 
 // 게시판
 app.get(URL.POSTS, getPosts);
-app.get(URL.POST_DETAIL, verifyJwt, getPostDetail);
+app.get(URL.POST_DETAIL, getPostDetail);
 app.post(URL.POST_CREATE, verifyJwt, createPost);
 app.post(URL.POST_EDIT, verifyJwt, editPost);
 app.delete(URL.POST_DELETE, verifyJwt, deletePost);
-
-// app.get(URL.COMMENTS, getComments);
-app.post(URL.COMMENTS_CREATE, verifyJwt, createComment);
+app.get(URL.COMMENT, getComments);
+app.post(URL.COMMENT, verifyJwt, addComment);
+app.delete(URL.COMMENT, verifyJwt, deleteComment);
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {

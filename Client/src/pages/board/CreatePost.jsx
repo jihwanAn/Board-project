@@ -55,21 +55,21 @@ const CreatePost = () => {
           const token = Authorization.split("Bearer ")[1];
           setSessionItem("token", token);
         }
-        const post = res.data;
-
-        navigate(URL.POST_DETAIL, { state: post });
+        const category_id = res.data;
+        navigate(URL.POSTS, { state: category_id });
       }
     };
 
     await requestPost(URL.POST_CREATE, inputs, handleResponse, (error) => {
-      if (error.response.status === CODE.UNAUTHORIZED) {
-        removeSessionItem("token");
-        removeSessionItem("user");
-        alert("세션이 만료되었습니다. 다시 로그인해 주세요.");
-        return;
+      removeSessionItem("token");
+      removeSessionItem("user");
+
+      if (error.response.status === CODE.TOKEN_EXPIRED) {
+        alert("세션이 만료되었습니다. 로그인 후 다시 시도해 주세요.");
+        return navigate(URL.LOGIN);
       } else {
-        console.error(error);
-        alert("게시글 작성에 실패했습니다. 다시 시도해 주세요.");
+        alert("비정상적인 요청입니다. 메인 페이지로 이동합니다.");
+        return navigate(URL.MAIN);
       }
     });
   };
@@ -77,8 +77,8 @@ const CreatePost = () => {
   useEffect(() => {
     const session = getSessionItem("token");
     if (!session) {
-      alert("로그인이 필요합니다. 로그인 후 다시 이용해 주세요.");
-      return;
+      alert("로그아웃 상태입니다. 로그인 페이지로 이동합니다.");
+      return navigate(URL.LOGIN);
     }
 
     categoryRef.current.focus();

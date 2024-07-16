@@ -4,7 +4,6 @@ import styled from "styled-components";
 import URL from "./constants/url";
 import Header from "./components/Header";
 import Main from "./pages/Main";
-import Footer from "./components/Footer";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import MyPage from "./pages/MyPage";
@@ -29,7 +28,6 @@ function App() {
           <Route path={URL.POST_EDIT} element={<EditPost />} />
         </Routes>
       </Contents>
-      <Footer />
     </Container>
   );
 }

@@ -28,11 +28,10 @@ const Login = () => {
 
     requestGet(URL.CHECK_NICKNAME, { nick_name: inputs.nick_name }, (res) => {
       if (res.status === CODE.DUPLICATE_NICKNAME) {
-        alert("이미 사용 중인 닉네임입니다.");
-        return;
+        return alert("이미 사용 중인 닉네임입니다.");
       } else {
-        alert("사용 가능한 닉네임 입니다.");
         setNickNameChecked(true);
+        return alert("사용 가능한 닉네임 입니다.");
       }
     });
   };
@@ -58,7 +57,6 @@ const Login = () => {
           }
         },
         (error) => {
-          console.log(error);
           alert("로그인 실패하였습니다. 잠시 후 다시 시도해 주세요.");
         }
       );
@@ -82,11 +80,11 @@ const Login = () => {
 
       if (!nickNameChecked) return alert("닉네임 중복 확인을 완료해 주세요.");
       if (
-        inputs.nick_name.length > 16 ||
+        inputs.nick_name.length > 20 ||
         !/^[가-힣a-zA-Z0-9]*$/.test(inputs.nick_name)
       )
         return alert(
-          "닉네임은 한글, 영문, 숫자를 포함한 16글자 이내로 입력해 주세요."
+          "닉네임은 한글, 영문, 숫자를 포함한 20글자 이내로 입력해 주세요."
         );
 
       await requestPost(
@@ -108,7 +106,6 @@ const Login = () => {
           }
         },
         (error) => {
-          console.log(error);
           alert("회원 가입 실패하였습니다. 잠시 후 다시 시도해 주세요.");
         }
       );

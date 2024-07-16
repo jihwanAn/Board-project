@@ -1,14 +1,24 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { useLocation, useNavigate } from "react-router-dom";
 import URL from "../../constants/url";
+import CODE from "../../constants/code";
 import { requestPost } from "../../api/fetch";
+import { getSessionItem } from "../../utils/storage";
+import { removeSessionItem } from "../../utils/storage";
 import CATEGORY from "../../constants/category";
 
 const EditPost = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const session = getSessionItem("token");
   const [inputs, setInputs] = useState(location.state);
+
+  if (!location.state || !session) {
+    alert("비정상적인 접근입니다.");
+    return window.history.back();
+  }
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setInputs((prev) => ({
@@ -29,29 +39,37 @@ const EditPost = () => {
       return;
     }
     if (inputs.title.length > 70) {
-      alert("제목은 70자 이내로 작성해 주세요.");
+      alert("제목은 100자 이내로 작성해 주세요.");
       return;
     }
 
-    requestPost(URL.POST_EDIT, { post: inputs }, (res) => {
-      if (res.status === 200) {
-        alert("수정이 완료되었습니다.");
-        navigate(URL.POSTS, { state: inputs.category_id });
+    requestPost(
+      URL.POST_EDIT,
+      { post: inputs },
+      (res) => {
+        if (res.status === 200) {
+          alert("수정이 완료되었습니다.");
+          navigate(URL.POSTS, { state: inputs.category_id });
+        }
+      },
+      (error) => {
+        removeSessionItem("token");
+        removeSessionItem("user");
+
+        if (error.response.status === CODE.TOKEN_EXPIRED) {
+          alert("세션이 만료되었습니다. 로그인 후 다시 시도해 주세요.");
+          return navigate(URL.LOGIN);
+        } else {
+          alert("작업을 완료하지 못했습니다. 잠시 후 다시 시도해 주세요.");
+          return window.history.back();
+        }
       }
-    });
+    );
   };
 
   const handleCancelClick = () => {
-    window.history.back();
+    return window.history.back();
   };
-
-  useEffect(() => {
-    if (!location.state) {
-      alert("비정상적인 접근입니다.");
-      navigate(URL.MAIN);
-      return;
-    }
-  }, []);
 
   return (
     <Container onSubmit={handleSubmit}>

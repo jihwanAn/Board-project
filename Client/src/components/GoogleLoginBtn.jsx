@@ -33,7 +33,6 @@ const GoogleLoginBtn = () => {
         { tokenResponse },
         onSuccessLogin,
         (error) => {
-          console.log(error);
           alert("로그인 실패하였습니다. 잠시 후 다시 시도해 주세요.");
           navigate(URL.MAIN);
         }

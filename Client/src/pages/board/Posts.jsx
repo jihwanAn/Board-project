@@ -12,7 +12,7 @@ const Posts = () => {
   const location = useLocation();
   const [posts, setPosts] = useState([]);
   const [pageOptions, setPageOptions] = useState({
-    category_id: location.state,
+    category_id: location.state || -1,
     page: 1,
     itemsPerPage: 5,
     totalPages: 0,
@@ -31,17 +31,18 @@ const Posts = () => {
       URL.POSTS,
       pageOptions,
       (res) => {
-        const { totalPages, posts, totalItems } = res.data;
-        setPosts(posts);
-        setPageOptions((prev) => ({
-          ...prev,
-          totalPages: totalPages,
-          totalItems,
-        }));
-        setIsLoading(false);
+        if (res.status === 200) {
+          const { totalPages, posts, totalItems } = res.data;
+          setPosts(posts);
+          setPageOptions((prev) => ({
+            ...prev,
+            totalPages: totalPages,
+            totalItems,
+          }));
+          setIsLoading(false);
+        }
       },
       (error) => {
-        console.log(error);
         alert(
           "게시글을 불러오는데 실패하였습니다. 잠시 후 다시 시도해 주세요."
         );
@@ -102,7 +103,7 @@ const Posts = () => {
                     ((pageOptions.page - 1) * pageOptions.itemsPerPage + idx)}
                 </td>
                 <TitleCell>
-                  <TitleLink to={URL.POST_DETAIL} state={post}>
+                  <TitleLink to={URL.POST_DETAIL} state={post.id}>
                     {post.title}
                   </TitleLink>
                 </TitleCell>

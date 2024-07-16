@@ -25,8 +25,14 @@ const loginUser = async (req, res) => {
         return res.status(CODE.INVALID_CREDENTIALS).send();
       }
 
-      const accessToken = generateAccessToken(userInfo);
-      const refreshToken = generateRefreshToken(userInfo);
+      const accessToken = generateAccessToken({
+        ...userInfo,
+        user_id: userInfo.id,
+      });
+      const refreshToken = generateRefreshToken({
+        ...userInfo,
+        user_id: userInfo.id,
+      });
 
       // <이전의 토큰 남아있는 경우, 삭제>
 
@@ -73,8 +79,14 @@ const getGoogleUser = async (req, res) => {
     if (rows.length > 0) {
       const userInfo = rows[0];
 
-      const accessToken = generateAccessToken(userInfo);
-      const refreshToken = generateRefreshToken(userInfo);
+      const accessToken = generateAccessToken({
+        ...userInfo,
+        user_id: userInfo.id,
+      });
+      const refreshToken = generateRefreshToken({
+        ...userInfo,
+        user_id: userInfo.id,
+      });
 
       // <이전의 토큰 남아있는 경우, 삭제>
 

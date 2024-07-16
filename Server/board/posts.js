@@ -30,7 +30,6 @@ const getPosts = async (req, res) => {
 
     res.status(200).json({ totalPages, posts: rows_2, totalItems });
   } catch (error) {
-    console.log("fetching posts Error :: ", error);
     res.status(500).send("fetching posts Error");
   } finally {
     if (conn) conn.release();
@@ -42,26 +41,13 @@ const getPostDetail = async (req, res) => {
 
   try {
     const { post_id } = req.query;
-    let rows;
-    let isAuthor = false;
 
-    // 비로그인 사용자
-    if (res.status === CODE.MISSING_ACCESS_TOKEN) {
-      conn = await pool.getConnection();
-      rows = await conn.query(QUERY.GET_POST_BY_ID, [post_id]);
-    } else {
-      // 로그인 사용자
-      const userInfo = req.userInfo;
+    conn = await pool.getConnection();
+    const [rows] = await conn.query(QUERY.GET_POST_BY_ID, [post_id]);
 
-      conn = await pool.getConnection();
-      rows = await conn.query(QUERY.CHECK_POST_OWNER, [post_id]);
-      isAuthor = userInfo.user_id === rows[0].user_id;
-    }
-
-    res.status(200).json({ isAuthor });
+    res.status(200).json(rows);
   } catch (error) {
-    console.log("checking post detail Error :: ", error);
-    res.status(500).send("checking post detail Error");
+    res.status(500).send("post detail Error");
   } finally {
     if (conn) conn.release();
   }
@@ -71,28 +57,20 @@ const createPost = async (req, res) => {
   let conn;
 
   try {
-    if (res.status === CODE.MISSING_ACCESS_TOKEN) {
-      return res.status(400).send("token required");
-    } else {
-      const { category_id, title, content } = req.body;
-      const userInfo = req.userInfo;
+    const { category_id, title, content } = req.body;
+    const userInfo = req.userInfo;
 
-      conn = await pool.getConnection();
+    conn = await pool.getConnection();
+    await conn.query(QUERY.CREATE_POST, [
+      userInfo.user_id,
+      category_id,
+      title,
+      content,
+    ]);
 
-      const result = await conn.query(QUERY.CREATE_POST, [
-        userInfo.user_id,
-        category_id,
-        title,
-        content,
-      ]);
-
-      const [rows] = await conn.query(QUERY.GET_POST_BY_ID, [result.insertId]);
-
-      res.status(200).json(rows);
-    }
+    res.status(200).json(category_id);
   } catch (error) {
-    console.log("creating post Error :: ", error);
-    res.status(500).send("creating post Error");
+    res.status(500).send("create post Error");
   } finally {
     if (conn) conn.release();
   }
@@ -102,24 +80,24 @@ const editPost = async (req, res) => {
   let conn;
 
   try {
-    if (res.status === CODE.MISSING_ACCESS_TOKEN) {
-      return res.status(400).send("token required");
-    } else {
-      const post = req.body.post;
+    const post = req.body.post;
+    const userInfo = req.userInfo;
 
-      conn = await pool.getConnection();
-      await conn.query(QUERY.EDIT_POST, [
-        post.category_id,
-        post.title,
-        post.content,
-        post.id,
-      ]);
-
-      res.status(200).send("Complete Edit");
+    if (!post.user_id === userInfo.user_id) {
+      return res.status(CODE.FORBIDDEN);
     }
+
+    conn = await pool.getConnection();
+    await conn.query(QUERY.EDIT_POST, [
+      post.category_id,
+      post.title,
+      post.content,
+      post.id,
+    ]);
+
+    res.status(200).send("complete Edit");
   } catch (error) {
-    console.log("Editing post Error :: ", error);
-    res.status(500).send("Editing post Error");
+    res.status(500).send("edit post Error");
   } finally {
     if (conn) conn.release();
   }
@@ -129,22 +107,93 @@ const deletePost = async (req, res) => {
   let conn;
 
   try {
-    if (res.status === CODE.MISSING_ACCESS_TOKEN) {
-      return res.status(400).send("token required");
-    } else {
-      const post_id = req.query.post_id;
+    const { post_id, user_id } = req.query;
+    const userInfo = req.userInfo;
 
-      conn = await pool.getConnection();
-      await conn.query(QUERY.DELETE_POST, [post_id]);
-
-      res.status(200).send("Complete Delete");
+    if (!user_id === userInfo.user_id) {
+      return res.status(CODE.FORBIDDEN);
     }
+
+    conn = await pool.getConnection();
+    await conn.query(QUERY.DELETE_POST, [post_id]);
+
+    res.status(200).send("complete delete");
   } catch (error) {
-    console.log("Delete Error :: ", error);
-    res.status(500).send("Delete Error");
+    res.status(500).send("delete post Error");
   } finally {
     if (conn) conn.release();
   }
 };
 
-module.exports = { getPosts, getPostDetail, createPost, editPost, deletePost };
+const getComments = async (req, res) => {
+  let conn;
+
+  try {
+    const { post_id } = req.query;
+
+    conn = await pool.getConnection();
+    const rows = await conn.query(QUERY.GET_COMMENTS_BY_POST_ID, [post_id]);
+    const comments = rows[0].id ? rows : null;
+
+    res.status(200).json(comments);
+  } catch (error) {
+    res.status(500).send("getComments Error");
+  } finally {
+    if (conn) conn.release();
+  }
+};
+
+const addComment = async (req, res) => {
+  let conn;
+
+  try {
+    const userInfo = req.userInfo;
+    const { post_id, user_id, comment } = req.body;
+
+    if (!user_id === userInfo.user_id) {
+      return res.status(CODE.FORBIDDEN);
+    }
+
+    conn = await pool.getConnection();
+    await conn.query(QUERY.ADD_COMMENT, [userInfo.user_id, post_id, comment]);
+
+    res.status(200).send("add comment");
+  } catch (error) {
+    res.status(500).send("add comment Error");
+  } finally {
+    if (conn) conn.release();
+  }
+};
+
+const deleteComment = async (req, res) => {
+  let conn;
+
+  try {
+    const { user_id, comment_id } = req.query;
+    const userInfo = req.userInfo;
+
+    if (!user_id === userInfo.user_id) {
+      return res.status(CODE.FORBIDDEN);
+    }
+
+    conn = await pool.getConnection();
+    await conn.query(QUERY.DELETE_COMMENT, [comment_id]);
+
+    res.status(200).send();
+  } catch (error) {
+    res.status(500).send("delete comment Error");
+  } finally {
+    if (conn) conn.release();
+  }
+};
+
+module.exports = {
+  getPosts,
+  getPostDetail,
+  createPost,
+  editPost,
+  deletePost,
+  getComments,
+  addComment,
+  deleteComment,
+};
