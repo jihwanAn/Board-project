@@ -21,6 +21,7 @@ export const requestGet = async (url, params, handler, errorHandler) => {
     const res = await axiosInstance.get(url, {
       params,
       headers,
+      withCredentials: true,
     });
     console.log("GET", res);
 

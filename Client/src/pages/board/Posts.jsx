@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { requestGet } from "../../api/fetch";
 import { formatDate } from "../../utils/formatDate";
 import CATEGORY from "../../constants/category";
@@ -10,6 +10,7 @@ import Loading from "../../components/LoadingSpinner";
 const Posts = () => {
   const columns = ["No", "제목", "작성자", "날짜", "조회"];
   const location = useLocation();
+  const navigate = useNavigate();
   const [posts, setPosts] = useState([]);
   const [pageOptions, setPageOptions] = useState({
     category_id: location.state || -1,
@@ -46,7 +47,7 @@ const Posts = () => {
         alert(
           "게시글을 불러오는데 실패하였습니다. 잠시 후 다시 시도해 주세요."
         );
-        navigator(URL.MAIN);
+        navigate(URL.MAIN);
       }
     );
   };
@@ -109,7 +110,7 @@ const Posts = () => {
                 </TitleCell>
                 <td>{post.nick_name}</td>
                 <td>{formatDate(post.created_at)}</td>
-                <td>{post.view_count}</td>
+                <td>{post.views}</td>
               </tr>
             ))
           ) : (

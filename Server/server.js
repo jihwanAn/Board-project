@@ -28,10 +28,14 @@ dotenv.config();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(
-  cors({ origin: "http://localhost:3000", exposedHeaders: ["Authorization"] })
-);
 app.use(cookieParser());
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    exposedHeaders: ["Authorization"],
+    credentials: true,
+  })
+);
 
 // 로그인
 app.post(URL.LOGIN, loginUser);

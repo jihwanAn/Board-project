@@ -31,15 +31,22 @@ const DetailPost = () => {
       return;
     }
 
-    requestGet(URL.POST_DETAIL, { post_id: postId }, (res) => {
-      if (res.status === 200) {
-        if (res.headers.authorization) {
-          const token = res.headers.authorization.split("Bearer ")[1];
-          setSessionItem("token", token);
+    requestGet(
+      URL.POST_DETAIL,
+      { post_id: postId },
+      (res) => {
+        if (res.status === 200) {
+          if (res.headers.authorization) {
+            const token = res.headers.authorization.split("Bearer ")[1];
+            setSessionItem("token", token);
+          }
+          setPost(res.data);
         }
-        setPost(res.data);
+      },
+      (error) => {
+        alert("해당 게시글을 불러오지 못했습니다.");
       }
-    });
+    );
   };
 
   const handleEditClick = () => {
@@ -178,7 +185,7 @@ const DetailPost = () => {
                 {post.nick_name}
               </span>
               <span>{formatDate(post.created_at)}</span>
-              <span>{`조회: ${post.view_count}`}</span>
+              <span>{`조회: ${post.views}`}</span>
             </div>
           </Info>
           {user?.user_id === post.user_id ? (

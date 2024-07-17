@@ -38,16 +38,30 @@ const getPosts = async (req, res) => {
 
 const getPostDetail = async (req, res) => {
   let conn;
+  let rows;
 
   try {
     const { post_id } = req.query;
 
     conn = await pool.getConnection();
-    const [rows] = await conn.query(QUERY.GET_POST_BY_ID, [post_id]);
 
-    res.status(200).json(rows);
+    if (!req.cookies[`post_${post_id}_viewed`]) {
+      res.cookie(`post_${post_id}_viewed`, "true", {
+        maxAge: 24 * 60 * 60 * 1000,
+        httpOnly: true,
+      });
+
+      await conn.query(QUERY.INCREASE_POST_VIEWS, [post_id]);
+
+      rows = await conn.query(QUERY.GET_POST_BY_ID, [post_id]);
+    } else {
+      rows = await conn.query(QUERY.GET_POST_BY_ID, [post_id]);
+    }
+
+    res.status(200).json(rows[0]);
   } catch (error) {
-    res.status(500).send("post detail Error");
+    console.error("getPostDetail Error :", error);
+    res.status(500).send("getPostDetail Error");
   } finally {
     if (conn) conn.release();
   }

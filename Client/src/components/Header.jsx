@@ -2,8 +2,7 @@ import React from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import URL from "../constants/url";
-import { getSessionItem } from "../utils/storage";
-import { removeSessionItem } from "../utils/storage";
+import { getSessionItem, removeSessionItem } from "../utils/storage";
 import { requestPost } from "../api/fetch";
 
 const Header = () => {
