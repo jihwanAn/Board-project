@@ -8,6 +8,7 @@ const {
   loginUser,
   getGoogleUser,
   signupUser,
+  logoutUser,
   registerUser,
   checkNickname,
 } = require("./auth/auth");
@@ -35,6 +36,7 @@ app.use(cookieParser());
 // 로그인
 app.post(URL.LOGIN, loginUser);
 app.get(URL.LOGIN_GOOGLE, getGoogleUser);
+app.post(URL.LOGOUT, logoutUser);
 
 // 가입
 app.post(URL.SIGNUP, signupUser);

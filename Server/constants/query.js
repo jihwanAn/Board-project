@@ -7,7 +7,8 @@ const QUERY = {
 
   // TOKEN
   SAVE_TOKEN: `INSERT INTO tokens (user_id, access_token, refresh_token) VALUES (?, ?, ?)`,
-  DELETE_TOKEN: `DELETE FROM tokens WHERE access_token = ?`,
+  DELETE_TOKEN_BY_ACCESS: `DELETE FROM tokens WHERE access_token = ?`,
+  DELETE_TOKEN_BY_USER_ID: `DELETE FROM tokens WHERE user_id = ?`,
   FIND_REFRESH_TOKEN: `SELECT refresh_token FROM tokens WHERE access_token = ?`,
   UPDATE_TOKENS: `UPDATE tokens SET access_token = ?, refresh_token = ? WHERE user_id = ?`,
 

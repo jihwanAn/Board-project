@@ -4,6 +4,7 @@ const URL = {
   LOGIN: "/login",
   LOGIN_GOOGLE: "/login/google",
   SIGNUP: "/signup",
+  LOGOUT: "/logout",
 
   REGISTER: "/register",
   CHECK_NICKNAME: "/register/verify",

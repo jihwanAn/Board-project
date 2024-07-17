@@ -30,6 +30,8 @@ const verifyJwt = async (req, res, next) => {
         rows = await conn.query(QUERY.FIND_REFRESH_TOKEN, [ACCESS_TOKEN]);
 
         if (rows.length === 0) {
+          await conn.query(QUERY.DELETE_TOKEN_BY_ACCESS, [ACCESS_TOKEN]);
+
           return res.status(CODE.UNAUTHORIZED).send();
         }
 
@@ -49,11 +51,15 @@ const verifyJwt = async (req, res, next) => {
         res.header("Authorization", `Bearer ${newAccessToken}`);
         return next();
       } catch (refreshError) {
+        await conn.query(QUERY.DELETE_TOKEN_BY_ACCESS, [ACCESS_TOKEN]);
+
         return res.status(CODE.TOKEN_EXPIRED).send();
       } finally {
         if (conn) conn.release();
       }
     }
+    await conn.query(QUERY.DELETE_TOKEN_BY_ACCESS, [ACCESS_TOKEN]);
+
     return res.status(400).send();
   }
 };

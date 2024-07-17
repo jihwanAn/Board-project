@@ -34,8 +34,7 @@ const loginUser = async (req, res) => {
         user_id: userInfo.id,
       });
 
-      // <이전의 토큰 남아있는 경우, 삭제>
-
+      await conn.query(QUERY.DELETE_TOKEN_BY_USER_ID, [userInfo.id]);
       await conn.query(QUERY.SAVE_TOKEN, [
         userInfo.id,
         accessToken,
@@ -88,7 +87,7 @@ const getGoogleUser = async (req, res) => {
         user_id: userInfo.id,
       });
 
-      // <이전의 토큰 남아있는 경우, 삭제>
+      await conn.query(QUERY.DELETE_TOKEN_BY_USER_ID, [userInfo.id]);
 
       await conn.query(QUERY.SAVE_TOKEN, [
         userInfo.id,
@@ -157,6 +156,23 @@ const registerUser = async (req, res) => {
   }
 };
 
+// 로그아웃
+const logoutUser = async (req, res) => {
+  let conn;
+
+  try {
+    const { user_id } = req.body;
+
+    conn = await pool.getConnection();
+    await conn.query(QUERY.DELETE_TOKEN_BY_USER_ID, [user_id]);
+  } catch (error) {
+    console.error("logout Error:", error);
+  } finally {
+    res.status(200).send();
+    if (conn) conn.release();
+  }
+};
+
 // 닉네임 중복 체크
 const checkNickname = async (req, res) => {
   let conn;
@@ -185,6 +201,7 @@ module.exports = {
   loginUser,
   getGoogleUser,
   signupUser,
+  logoutUser,
   registerUser,
   checkNickname,
 };

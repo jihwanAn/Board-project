@@ -4,10 +4,11 @@ import styled from "styled-components";
 import URL from "../constants/url";
 import { getSessionItem } from "../utils/storage";
 import { removeSessionItem } from "../utils/storage";
-// import { requestPost } from "../api/fetch";
+import { requestPost } from "../api/fetch";
 
 const Header = () => {
   const session = getSessionItem("token");
+  const user = getSessionItem("user");
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -16,7 +17,9 @@ const Header = () => {
   };
 
   const handleLogout = () => {
-    // requestPost(URL.LOGOUT, { token: session });
+    if (user) {
+      requestPost(URL.LOGOUT, { user_id: user.user_id });
+    }
     removeSessionItem("token");
     removeSessionItem("user");
     alert("로그아웃 되었습니다.");
@@ -28,7 +31,7 @@ const Header = () => {
       <Link to={URL.MAIN}>Title</Link>
       {session ? (
         <RightBox>
-          {location.pathname === "/board" ? (
+          {location.pathname === "/posts" ? (
             <button onClick={handleCreatePostPage}>글 작성</button>
           ) : null}
           <div style={{ marginLeft: "1.6rem" }}>환영합니다</div>
