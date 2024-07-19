@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, Link } from "react-router-dom";
 import { formatDate } from "../../utils/formatDate";
 import { requestGet, requestPost, requestDelete } from "../../api/fetch";
 import URL from "../../constants/url";
@@ -17,6 +17,8 @@ const DetailPost = () => {
   const [post, setPost] = useState();
   const [comments, setComments] = useState([]);
   const [comment, setComment] = useState("");
+  const [isLike, setIsLike] = useState(false);
+  const [likesCount, setLikesCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const location = useLocation();
   const navigate = useNavigate();
@@ -157,10 +159,58 @@ const DetailPost = () => {
     );
   };
 
+  const getLikes = () => {
+    requestGet(
+      URL.LIKE,
+      { post_id: postId },
+      (res) => {
+        if (res.status === 200) {
+          const likes = res.data;
+          setLikesCount(likes.length);
+
+          if (session) {
+            const UserLiked = likes.some(
+              ({ user_id }) => user_id === user.user_id
+            );
+
+            setIsLike(UserLiked);
+          }
+        }
+      },
+      (error) => {
+        alert("게시글을 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.");
+        navigate(URL.POSTS);
+      }
+    );
+  };
+  const toggleLike = () => {
+    if (!session) {
+      return alert("로그아웃 상태입니다. 로그인 후 다시 시도해 주세요.");
+    }
+
+    setIsLike(!isLike);
+
+    requestPost(
+      URL.LIKE,
+      { user_id: user.user_id, post_id: postId },
+      (res) => {
+        if (res.status === 200) {
+          if (!isLike) {
+            alert(`${post.nick_name}님의 게시글에 좋아요.`);
+          }
+        }
+      },
+      (error) => {
+        alert("작업을 완료하지 못했습니다.");
+      }
+    );
+  };
+
   useEffect(() => {
     getPost();
+    getLikes();
     getComments();
-  }, [postId, session]);
+  }, [postId, session, isLike]);
 
   return isLoading ? (
     <Container
@@ -179,7 +229,13 @@ const DetailPost = () => {
         <>
           <Title>{post.title}</Title>
           <Info>
-            <div>{`게시판 > ${CATEGORY[post.category_id].name}`}</div>
+            <Category>
+              <Link to={URL.POSTS}>게시판</Link>
+              <div>{`>`}</div>
+              <Link to={URL.POSTS} state={post.category_id}>
+                {CATEGORY[post.category_id].name}
+              </Link>
+            </Category>
             <div>
               <span style={{ color: "black", fontWeight: "bold" }}>
                 {post.nick_name}
@@ -199,6 +255,14 @@ const DetailPost = () => {
             </ButtonForm>
           ) : null}
           <Content>{post.content}</Content>
+
+          <Like>
+            <Heartbtn $isLike={isLike} onClick={toggleLike}>
+              ♥
+            </Heartbtn>
+            <div>{likesCount}</div>
+          </Like>
+
           <CommentsForm>
             <Form className="writeComment" onSubmit={handleSubmitComment}>
               <TextArea
@@ -274,9 +338,40 @@ const Info = styled.span`
   }
 `;
 
+const Category = styled.div`
+  display: flex;
+  align-items: center;
+  :nth-child(n) {
+    margin-right: 0.5rem;
+  }
+`;
+
 const Content = styled.p`
-  padding-left: 1rem;
   height: 300px;
+  padding-left: 1rem;
+`;
+
+const Like = styled.div`
+  margin: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: right;
+
+  :nth-child(2) {
+    color: #777;
+  }
+`;
+
+const Heartbtn = styled.div`
+  font-size: 27px;
+  width: 40px;
+  color: ${(props) => (props.$isLike ? "red" : "#ccc")};
+  border: ${(props) => (props.$isLike ? "1px solid #ccc" : "1px solid #ccc")};
+  background-color: ${(props) => (props.$isLike ? "#ffdbdb" : "#eee")};
+  border-radius: 50%;
+  text-align: center;
+  margin-right: 0.7rem;
+  cursor: pointer;
 `;
 
 const ButtonForm = styled.div`

@@ -21,6 +21,9 @@ const {
   getComments,
   addComment,
   deleteComment,
+  getUserActivity,
+  getLikes,
+  toggleLikeToPost,
 } = require("./board/posts");
 const { verifyJwt } = require("./middlewares/verifyJwt");
 
@@ -56,6 +59,11 @@ app.delete(URL.POST_DELETE, verifyJwt, deletePost);
 app.get(URL.COMMENT, getComments);
 app.post(URL.COMMENT, verifyJwt, addComment);
 app.delete(URL.COMMENT, verifyJwt, deleteComment);
+app.get(URL.LIKE, getLikes);
+app.post(URL.LIKE, toggleLikeToPost);
+
+// 마이페이지
+app.get(URL.MYPAGE, getUserActivity);
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {

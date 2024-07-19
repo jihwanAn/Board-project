@@ -201,6 +201,62 @@ const deleteComment = async (req, res) => {
   }
 };
 
+const getUserActivity = async (req, res) => {
+  let conn;
+
+  try {
+    const { user_id } = req.query;
+
+    conn = await pool.getConnection();
+    const rows = await conn.query(QUERY.GET_POST_BY_USER_ID, [user_id]);
+
+    res.status(200).json(rows);
+  } catch (error) {
+    res.send(500).send();
+  } finally {
+    if (conn) conn.release();
+  }
+};
+
+const getLikes = async (req, res) => {
+  let conn;
+
+  try {
+    const { post_id } = req.query;
+    conn = await pool.getConnection();
+    const rows = await conn.query(QUERY.POST_GET_LIKES, [post_id]);
+
+    res.status(200).json(rows);
+  } catch (error) {
+    res.status(200).send("getLikes error");
+  } finally {
+    if (conn) conn.release();
+  }
+};
+
+const toggleLikeToPost = async (req, res) => {
+  let conn;
+
+  try {
+    const { user_id, post_id } = req.body;
+
+    conn = await pool.getConnection();
+    const rows = await conn.query(QUERY.POST_CHECK_LIKE, [user_id, post_id]);
+
+    if (rows.length > 0) {
+      await conn.query(QUERY.POST_DELETE_LIKE, [user_id, post_id]);
+    } else {
+      await conn.query(QUERY.POST_ADD_LIKE, [user_id, post_id]);
+    }
+
+    res.status(200).json(rows);
+  } catch (error) {
+    res.send(500).send("add Like to post Error");
+  } finally {
+    if (conn) conn.release();
+  }
+};
+
 module.exports = {
   getPosts,
   getPostDetail,
@@ -210,4 +266,7 @@ module.exports = {
   getComments,
   addComment,
   deleteComment,
+  getUserActivity,
+  getLikes,
+  toggleLikeToPost,
 };
