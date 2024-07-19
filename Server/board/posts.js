@@ -208,11 +208,12 @@ const getUserActivity = async (req, res) => {
     const { user_id } = req.query;
 
     conn = await pool.getConnection();
-    const rows = await conn.query(QUERY.GET_POST_BY_USER_ID, [user_id]);
+    const rows_1 = await conn.query(QUERY.GET_POSTS_BY_USER_ID, [user_id]);
+    const rows_2 = await conn.query(QUERY.GET_LIKED_POSTS, [user_id]);
 
-    res.status(200).json(rows);
+    res.status(200).json({ userPosts: rows_1, userLikedPosts: rows_2 });
   } catch (error) {
-    res.send(500).send();
+    res.status(500).send();
   } finally {
     if (conn) conn.release();
   }

@@ -16,7 +16,7 @@ const QUERY = {
   POSTS_COUNT: `SELECT COUNT(*) AS count FROM posts`,
   GET_POSTS: `SELECT p.id, p.title, p.created_at, p.views, u.nick_name FROM posts p JOIN users u ON p.user_id = u.id ORDER BY p.created_at DESC LIMIT ? OFFSET ?`,
   GET_POST_BY_ID: `SELECT p.*, u.nick_name FROM posts p JOIN users u ON u.id = p.user_id WHERE p.id = ?`,
-  GET_POST_BY_USER_ID: `SELECT p.id, p.title, p.created_at FROM posts p WHERE user_id = ?`,
+  GET_POSTS_BY_USER_ID: `SELECT p.id, p.title, p.created_at FROM posts p WHERE user_id = ?`,
   CREATE_POST: `INSERT INTO posts (user_id, category_id, title, content, created_at, views) VALUES ( ?, ?, ?, ?, NOW(), 0)`,
   EDIT_POST: `UPDATE posts SET category_id = ?, title = ?, content = ? WHERE id = ?`,
   DELETE_POST: `DELETE FROM posts WHERE id = ?`,
@@ -34,6 +34,7 @@ const QUERY = {
   POST_CHECK_LIKE: `SELECT * FROM likes WHERE user_id = ? AND post_id = ?`,
   POST_ADD_LIKE: `INSERT INTO likes (user_id, post_id) VALUES (?, ?)`,
   POST_DELETE_LIKE: `DELETE FROM likes WHERE user_id = ? AND post_id = ?`,
+  GET_LIKED_POSTS: `SELECT p.id, p.title, u.nick_name FROM likes l INNER JOIN posts p ON l.post_id = p.id INNER JOIN users u ON p.user_id = u.id WHERE l.user_id = ?`,
 };
 
 module.exports = { QUERY };

@@ -33,8 +33,10 @@ const Header = () => {
           {location.pathname === "/posts" ? (
             <button onClick={handleCreatePostPage}>글 작성</button>
           ) : null}
-          <div style={{ marginLeft: "1.6rem" }}>환영합니다</div>
-          <LogoutBtn onClick={handleLogout}> 로그아웃</LogoutBtn>
+          <Link to={URL.MYPAGE} state={user}>
+            마이페이지
+          </Link>
+          <button onClick={handleLogout}> 로그아웃</button>
         </RightBox>
       ) : (
         <Link to={URL.LOGIN}>로그인</Link>
@@ -54,10 +56,9 @@ const Container = styled.header`
 
 const RightBox = styled.div`
   display: flex;
-`;
-
-const LogoutBtn = styled.button`
-  margin-left: 1.5rem;
+  :nth-child(n) {
+    margin-left: 1rem;
+  }
 `;
 
 export default Header;

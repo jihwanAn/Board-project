@@ -53,7 +53,6 @@ const Register = () => {
         }
       },
       (error) => {
-        console.log(error);
         alert("가입 실패하였습니다. 잠시 후 다시 시도해 주세요");
         navigate(URL.MAIN);
       }

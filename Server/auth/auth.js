@@ -50,7 +50,6 @@ const loginUser = async (req, res) => {
       return res.status(CODE.ACCOUNT_NOT_REGISTERD).send();
     }
   } catch (error) {
-    console.log("Login Error :: ", error);
     res.status(500).send("Login Error");
   } finally {
     if (conn) conn.release();
@@ -107,7 +106,6 @@ const getGoogleUser = async (req, res) => {
         .json({ platform: "google", email: data.email });
     }
   } catch (error) {
-    console.log("getGoogleUser Error :: ", error);
     res.status(500).send("getGoogleUser Error");
   } finally {
     if (conn) conn.release();
@@ -130,7 +128,6 @@ const signupUser = async (req, res) => {
     if (error.code === "ER_DUP_ENTRY") {
       return res.status(CODE.DUPLICATE_EMAIL).send();
     }
-    console.log("Signup Error :: ", error);
     res.status(500).send("Signup Error");
   } finally {
     if (conn) conn.release();
@@ -149,7 +146,6 @@ const registerUser = async (req, res) => {
 
     res.status(200).send();
   } catch (error) {
-    console.log("registerUser Error :: ", error);
     res.status(500).send("registerUser Error");
   } finally {
     if (conn) conn.release();
@@ -190,7 +186,6 @@ const checkNickname = async (req, res) => {
       res.send("Available Nickname");
     }
   } catch (error) {
-    console.log("Nickname check Error :: ", error);
     res.status(500).send("Nickname check Error");
   } finally {
     if (conn) conn.release();
