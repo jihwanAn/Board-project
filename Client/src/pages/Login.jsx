@@ -162,7 +162,7 @@ const Login = () => {
                     style={{
                       fontSize: "15px",
                       width: "110px",
-                      marginLeft: "0.5rem",
+                      marginLeft: "0.5em",
                     }}
                     disabled={nickNameChecked}
                   >
@@ -199,8 +199,7 @@ const Login = () => {
 const Container = styled.div`
   display: flex;
   justify-content: center;
-  align-items: center;
-  height: 70vh;
+  padding: 5em 0;
 `;
 
 const ButtonContainer = styled.div`
@@ -210,24 +209,24 @@ const ButtonContainer = styled.div`
   align-items: center;
   border: 1px solid #d1d1d1;
   border-radius: 8px;
-  width: 400px;
-  padding: 1rem;
+  padding: 1em;
+  width: 50%;
 `;
 
 const Button = styled.button`
   border: 1px solid #ccc;
   background-color: #f8f8ff;
-  padding: 0.5rem;
+  padding: 0.5em;
   border-radius: 8px;
-  width: 300px;
-  margin: 0.5rem 0;
+  width: 100%;
+  margin: 0.5em 0;
 `;
 
 const ModalForm = styled.div`
   border: 1px solid #d1d1d1;
   border-radius: 8px;
-  width: 400px;
-  padding: 1rem;
+  padding: 1em;
+  width: 60%;
 `;
 
 const InputForm = styled.form`
@@ -235,13 +234,13 @@ const InputForm = styled.form`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin: 1rem 0;
+  margin: 1em 0;
 `;
 
 const Input = styled.input`
   width: 100%;
-  padding: 0.5rem;
-  margin: 0.5rem 0;
+  padding: 0.5em;
+  margin: 0.5em 0;
   border: 1px solid #ccc;
   border-radius: 8px;
 `;
@@ -254,14 +253,14 @@ const Nickname = styled.div`
 const Text = styled.div`
   display: flex;
   justify-content: center;
-  margin-top: 1rem;
+  margin-top: 1em;
 `;
 
 const ToggleButton = styled.button`
   background: none;
   border: none;
   color: blue;
-  margin-left: 0.5rem;
+  margin-left: 0.5em;
   cursor: pointer;
   text-decoration: underline;
 `;

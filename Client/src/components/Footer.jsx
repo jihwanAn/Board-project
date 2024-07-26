@@ -7,7 +7,7 @@ const Footer = () => {
 
 const Container = styled.div`
   height: 80px;
-  padding: 1rem;
+  padding: 1em;
   border: 1px solid gray;
 `;
 

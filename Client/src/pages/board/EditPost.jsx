@@ -128,12 +128,12 @@ const ButtonForm = styled.div`
   display: flex;
   justify-content: right;
   border-bottom: 1px solid #ccc;
-  padding: 1rem;
+  padding: 1em;
   display: flex;
   justify-content: right;
 
   :nth-child(n) {
-    margin: 0 1rem;
+    margin: 0 1em;
     color: #6a6a6a;
   }
 `;
@@ -141,21 +141,21 @@ const ButtonForm = styled.div`
 const Form = styled.div`
   display: flex;
   flex-direction: column;
-  margin: 1rem;
+  margin: 1em;
 `;
 
 const CategoryForm = styled.div`
   display: flex;
   align-items: center;
-  margin: 1rem 0;
+  margin: 1em 0;
 `;
 
 const Select = styled.select`
   border: 1px solid #ccc;
   border-radius: 4px;
   flex: 1;
-  padding: 0.5rem;
-  margin-left: 1rem;
+  padding: 0.5em;
+  margin-left: 1em;
 `;
 
 const Label = styled.label`

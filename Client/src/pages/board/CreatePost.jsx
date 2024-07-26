@@ -135,7 +135,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 1rem;
+  margin: 1em;
 `;
 
 const Title = styled.h2`
@@ -151,15 +151,15 @@ const Form = styled.form`
 const CategoryForm = styled.div`
   display: flex;
   align-items: center;
-  margin: 1rem 0;
+  margin: 1em 0;
 `;
 
 const Select = styled.select`
   border: 1px solid #ccc;
   border-radius: 4px;
   flex: 1;
-  padding: 0.5rem;
-  margin-left: 1rem;
+  padding: 0.5em;
+  margin-left: 1em;
 `;
 
 const Label = styled.label`
@@ -167,11 +167,11 @@ const Label = styled.label`
 `;
 
 const Input = styled.input`
-  margin: 1rem 0;
+  margin: 1em 0;
 `;
 
 const TextArea = styled.textarea`
-  margin: 1rem 0;
+  margin: 1em 0;
   resize: none;
   height: 300px;
 `;
@@ -179,7 +179,7 @@ const TextArea = styled.textarea`
 const BtnContainer = styled.div`
   display: flex;
   justify-content: center;
-  margin: 1rem 0;
+  margin: 1em 0;
 `;
 
 export default CreatePost;

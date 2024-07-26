@@ -29,7 +29,7 @@ const verifyJwt = async (req, res, next) => {
         conn = await pool.getConnection();
         rows = await conn.query(QUERY.FIND_REFRESH_TOKEN, [ACCESS_TOKEN]);
 
-        if (rows.length === 0) {
+        if (rows.length < 1) {
           await conn.query(QUERY.DELETE_TOKEN_BY_ACCESS, [ACCESS_TOKEN]);
 
           return res.status(CODE.UNAUTHORIZED).send();

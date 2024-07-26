@@ -44,13 +44,14 @@ const GoogleLoginBtn = () => {
 
   return <Button onClick={googleLogin}>Google 로그인</Button>;
 };
+
 const Button = styled.button`
-  margin: 1rem 0;
+  margin: 1em 0;
   border: 1px solid #ccc;
   background-color: #f8f8ff;
-  padding: 0.5rem;
+  padding: 0.5em;
   border-radius: 8px;
-  width: 300px;
+  width: 100%;
 `;
 
 export default GoogleLoginBtn;

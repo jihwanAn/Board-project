@@ -28,18 +28,18 @@ const Container = styled.main`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 2rem;
+  padding: 3em;
 `;
 
 const StyledLink = styled(Link)`
   border: 1px solid #ccc;
   border-radius: 4px;
-  margin-bottom: 1rem;
+  margin-bottom: 1em;
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 0.3rem;
+  padding: 0.3em;
 `;
 
 export default Main;

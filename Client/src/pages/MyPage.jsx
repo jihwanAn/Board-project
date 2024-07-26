@@ -78,25 +78,25 @@ const MyPage = () => {
 };
 
 const Container = styled.div`
-  padding: 1rem;
+  padding: 1em;
   width: 100%;
 `;
 
 const UserInfoBox = styled.div`
   display: flex;
-  margin-bottom: 1rem;
+  margin-bottom: 1em;
 
   :nth-child(n) {
-    margin-right: 2rem;
+    margin-right: 2em;
   }
 `;
 
 const Box = styled.div`
   border: 1px solid #ccc;
-  height: 300px;
+  height: 20em;
   overflow: hidden;
-  margin: 0.5rem 0 1rem 0;
-  padding: 0.5rem;
+  margin: 0.5em 0 1em 0;
+  padding: 0.5em;
 `;
 
 const Post = styled(Link)`

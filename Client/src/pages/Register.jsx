@@ -108,15 +108,15 @@ const Form = styled.form`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100%;
+  padding: 5em 2em;
 `;
 
 const Input = styled.input`
-  width: 220px;
-  padding: 0.3rem;
+  width: 18em;
+  padding: 0.3em;
   border: none;
   border-bottom: 2px solid #c1c8ff;
-  margin-right: 1rem;
+  margin-right: 1em;
 
   &:focus {
     outline: none;
@@ -126,7 +126,7 @@ const Input = styled.input`
 `;
 
 const InputBox = styled.div`
-  margin-bottom: 2rem;
+  margin-bottom: 2em;
 `;
 
 export default Register;

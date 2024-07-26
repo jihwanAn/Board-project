@@ -7,8 +7,8 @@ const Loading = () => {
 
 const Spinner = styled.div`
   border: 5px solid rgba(0, 0, 0, 0.1);
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 2.5em;
+  height: 2.5em;
   border-radius: 50%;
   border-left-color: #67c2ff;
   animation: spin 0.8s ease infinite;

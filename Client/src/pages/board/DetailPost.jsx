@@ -183,6 +183,7 @@ const DetailPost = () => {
       }
     );
   };
+
   const toggleLike = () => {
     if (!session) {
       return alert("로그아웃 상태입니다. 로그인 후 다시 시도해 주세요.");
@@ -316,7 +317,7 @@ const Container = styled.div`
 `;
 
 const Title = styled.h3`
-  padding: 1rem;
+  padding: 1em;
   color: #5f5f5f;
 `;
 
@@ -325,15 +326,13 @@ const Info = styled.span`
   justify-content: space-between;
   border-top: 1px solid #ccc;
   border-bottom: 1px solid #ccc;
-  padding: 0.5rem 1rem;
-  margin-bottom: 1rem;
+  padding: 0.5em 1em;
+  margin-bottom: 1em;
   color: #6a6a6a;
 
   :nth-child(2) {
-    font-size: 15px;
-
     :nth-child(n) {
-      margin-left: 1rem;
+      margin-left: 1em;
     }
   }
 `;
@@ -341,36 +340,33 @@ const Info = styled.span`
 const Category = styled.div`
   display: flex;
   align-items: center;
+
   :nth-child(n) {
-    margin-right: 0.5rem;
+    margin-right: 0.3em;
   }
 `;
 
 const Content = styled.p`
-  height: 300px;
-  padding-left: 1rem;
+  padding: 0 1em 2.5em 1em;
 `;
 
 const Like = styled.div`
-  margin: 1rem 2rem;
+  margin: 1em 2em;
   display: flex;
   align-items: center;
   justify-content: right;
-
-  :nth-child(2) {
-    color: #777;
-  }
 `;
 
 const Heartbtn = styled.div`
-  font-size: 27px;
-  width: 40px;
+  font-size: 1.7em;
+  width: 1.5em;
+  height: 1.5em;
   color: ${(props) => (props.$isLike ? "red" : "#ccc")};
-  border: ${(props) => (props.$isLike ? "1px solid #ccc" : "1px solid #ccc")};
+  border: 1px solid #ccc;
   background-color: ${(props) => (props.$isLike ? "#ffdbdb" : "#eee")};
   border-radius: 50%;
   text-align: center;
-  margin-right: 0.7rem;
+  margin-right: 0.5em;
   cursor: pointer;
 `;
 
@@ -379,7 +375,7 @@ const ButtonForm = styled.div`
   justify-content: right;
 
   :nth-child(n) {
-    margin: 0 1rem;
+    margin: 1em 1em 1.8em 0;
     color: #6a6a6a;
   }
 `;
@@ -394,11 +390,11 @@ const Form = styled.form`
   display: flex;
   width: 100%;
   border-bottom: 1px solid #ccc;
-  padding: 0.5rem 1rem;
+  padding: 0.5em 1em;
 
   &.writeComment {
     border-top: 1px solid #ccc;
-    padding: 1rem;
+    padding: 1em;
   }
 
   &.commentItem {
@@ -410,15 +406,15 @@ const UserInfo = styled.div`
   display: flex;
 
   :nth-child(2) {
-    margin-left: 1rem;
     color: #999;
+    margin-left: 1em;
   }
 `;
 
 const TextArea = styled.textarea`
   resize: none;
   flex: 1;
-  margin-right: 1rem;
+  margin-right: 1em;
 `;
 
 export default DetailPost;

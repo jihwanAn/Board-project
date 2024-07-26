@@ -17,16 +17,18 @@ function App() {
     <Container>
       <Header />
       <Contents>
-        <Routes>
-          <Route path={URL.MAIN} element={<Main />} />
-          <Route path={URL.LOGIN} element={<Login />} />
-          <Route path={URL.REGISTER} element={<Register />} />
-          <Route path={URL.MYPAGE} element={<MyPage />} />
-          <Route path={URL.POSTS} element={<POSTS />} />
-          <Route path={URL.POST_CREATE} element={<CreatePost />} />
-          <Route path={URL.POST_DETAIL} element={<DetailPost />} />
-          <Route path={URL.POST_EDIT} element={<EditPost />} />
-        </Routes>
+        <ContentWrap>
+          <Routes>
+            <Route path={URL.MAIN} element={<Main />} />
+            <Route path={URL.LOGIN} element={<Login />} />
+            <Route path={URL.REGISTER} element={<Register />} />
+            <Route path={URL.MYPAGE} element={<MyPage />} />
+            <Route path={URL.POSTS} element={<POSTS />} />
+            <Route path={URL.POST_CREATE} element={<CreatePost />} />
+            <Route path={URL.POST_DETAIL} element={<DetailPost />} />
+            <Route path={URL.POST_EDIT} element={<EditPost />} />
+          </Routes>
+        </ContentWrap>
       </Contents>
     </Container>
   );
@@ -37,12 +39,18 @@ const Container = styled.div`
   flex-direction: column;
   width: 100%;
   height: 100vh;
-  max-width: 1200px;
-  margin: 0 auto;
 `;
 
 const Contents = styled.main`
+  display: flex;
+  justify-content: center;
+  width: 100%;
   height: 100%;
+`;
+
+const ContentWrap = styled.div`
+  width: 100%;
+  max-width: 1280px;
 `;
 
 export default App;

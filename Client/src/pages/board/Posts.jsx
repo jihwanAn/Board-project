@@ -8,7 +8,7 @@ import URL from "../../constants/url";
 import Loading from "../../components/LoadingSpinner";
 
 const Posts = () => {
-  const columns = ["No", "제목", "작성자", "날짜", "조회"];
+  const columns = ["No", "제목", "", "작성자", "날짜"];
   const location = useLocation();
   const navigate = useNavigate();
   const [posts, setPosts] = useState([]);
@@ -103,14 +103,34 @@ const Posts = () => {
                   {pageOptions.totalItems -
                     ((pageOptions.page - 1) * pageOptions.itemsPerPage + idx)}
                 </td>
-                <TitleCell>
+                <td>
                   <TitleLink to={URL.POST_DETAIL} state={post.id}>
                     {post.title}
                   </TitleLink>
-                </TitleCell>
+                </td>
+                <td>
+                  <Reaction>
+                    <Views>
+                      <div>👀</div>
+                      <div>{post.views}</div>
+                    </Views>
+                    {post.comments_count > 0 && (
+                      <Comments>
+                        <div>💬</div>
+                        <div>{post.comments_count}</div>
+                      </Comments>
+                    )}
+                    {post.likes_count > 0 && (
+                      <Like>
+                        <div>♥</div>
+                        <div> {post.likes_count}</div>
+                      </Like>
+                    )}
+                  </Reaction>
+                </td>
+
                 <td>{post.nick_name}</td>
                 <td>{formatDate(post.created_at)}</td>
-                <td>{post.views}</td>
               </tr>
             ))
           ) : (
@@ -149,13 +169,13 @@ const CategoryForm = styled.div`
   display: flex;
   align-items: center;
   justify-content: right;
-  padding: 0.4rem 1rem;
+  padding: 0.4em 1em;
 `;
 
 const Select = styled.select`
   border: 1px solid #ccc;
   border-radius: 4px;
-  padding: 0.3rem;
+  padding: 0.3em;
 `;
 
 const StyledTable = styled.table`
@@ -165,45 +185,61 @@ const StyledTable = styled.table`
   th {
     background-color: #f2f2f2;
     border-bottom: 1px solid #ccc;
-    padding: 5px;
-    font-size: 14px;
+    padding: 0.2em;
+    font-size: 0.8em;
   }
 
   td {
-    padding: 0.5rem;
+    padding: 0.5em;
     text-align: center;
+    border-bottom: 1px solid #ccc;
   }
 
+  td:nth-child(1) {
+    width: 5%;
+  }
   td:nth-child(2) {
-    width: 60%;
+    width: 55%;
+    max-width: 0;
   }
-  td:nth-child(3) {
-    width: 12%;
-  }
-  td:nth-child(4) {
-    width: 15%;
-  }
-`;
-
-const TitleCell = styled.td`
-  max-width: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 `;
 
 const TitleLink = styled(Link)`
   display: block;
-  max-width: 100%;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   text-align: left;
 `;
 
+const Reaction = styled.div`
+  display: flex;
+  justify-content: end;
+
+  :nth-child(n) {
+    display: flex;
+    align-items: center;
+  }
+`;
+
+const Views = styled.div``;
+
+const Comments = styled.div`
+  margin-left: 0.5em;
+`;
+
+const Like = styled.div`
+  margin-left: 0.5em;
+
+  :nth-child(1) {
+    color: red;
+    opacity: 0.7;
+  }
+`;
+
 const NoDataMessage = styled.tr`
   td {
-    padding: 3rem;
+    padding: 3em;
     color: #868686;
   }
 `;
@@ -211,7 +247,7 @@ const NoDataMessage = styled.tr`
 const Pagination = styled.div`
   display: flex;
   justify-content: center;
-  margin-top: 1rem;
+  margin-top: 1em;
 `;
 
 const PaginationList = styled.ul`
@@ -220,8 +256,8 @@ const PaginationList = styled.ul`
 
 const PaginationItem = styled.li`
   cursor: pointer;
-  margin-right: 0.5rem;
-  padding: 0.2rem 0.5rem;
+  margin-right: 0.5em;
+  padding: 0.2em 0.5em;
   border-radius: 4px;
   border: 1px solid ${(props) => props.theme.colors.primaryLight};
 
