@@ -192,6 +192,27 @@ const checkNickname = async (req, res) => {
   }
 };
 
+const changeNickName = async (req, res) => {
+  let conn;
+
+  try {
+    const userInfo = req.userInfo;
+    const { nick_name } = req.body;
+
+    conn = await pool.getConnection();
+    await conn.query(QUERY.CHANGE_USER_NICK_NAME, [
+      nick_name,
+      userInfo.user_id,
+    ]);
+
+    res.status(200).send();
+  } catch (error) {
+    res.status(500).send("Nickname change Error");
+  } finally {
+    if (conn) conn.release();
+  }
+};
+
 module.exports = {
   loginUser,
   getGoogleUser,
@@ -199,4 +220,5 @@ module.exports = {
   logoutUser,
   registerUser,
   checkNickname,
+  changeNickName,
 };

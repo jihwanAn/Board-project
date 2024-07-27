@@ -4,6 +4,7 @@ const QUERY = {
   GET_USER: `SELECT * FROM users WHERE platform=? AND email=?`,
   CHECK_NICKNAME: `SELECT nick_name FROM users WHERE nick_name = ?`,
   REGISTER_ACCOUNT: `INSERT INTO users (platform, email, nick_name) VALUES (?, ?, ?)`,
+  CHANGE_USER_NICK_NAME: `UPDATE users SET nick_name = ? WHERE id = ?`,
 
   // TOKEN
   SAVE_TOKEN: `INSERT INTO tokens (user_id, access_token, refresh_token) VALUES (?, ?, ?)`,

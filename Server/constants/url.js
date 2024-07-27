@@ -10,6 +10,7 @@ const URL = {
   CHECK_NICKNAME: "/register/verify",
 
   MYPAGE: "/mypage",
+  CHANGE_NICKNAME: "/mypage/change-nickname",
 
   POSTS: "/posts",
   POST_DETAIL: "/posts/detail",

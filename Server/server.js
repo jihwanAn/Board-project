@@ -11,6 +11,7 @@ const {
   logoutUser,
   registerUser,
   checkNickname,
+  changeNickName,
 } = require("./auth/auth");
 const {
   getPosts,
@@ -64,6 +65,7 @@ app.post(URL.LIKE, toggleLikeToPost);
 
 // 마이페이지
 app.get(URL.MYPAGE, getUserActivity);
+app.post(URL.CHANGE_NICKNAME, verifyJwt, changeNickName);
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
