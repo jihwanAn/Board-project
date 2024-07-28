@@ -25,6 +25,7 @@ const {
   getUserActivity,
   getLikes,
   toggleLikeToPost,
+  getPopularPosts,
 } = require("./board/posts");
 const { verifyJwt } = require("./middlewares/verifyJwt");
 
@@ -62,6 +63,7 @@ app.post(URL.COMMENT, verifyJwt, addComment);
 app.delete(URL.COMMENT, verifyJwt, deleteComment);
 app.get(URL.LIKE, getLikes);
 app.post(URL.LIKE, toggleLikeToPost);
+app.get(URL.POPULAR, getPopularPosts);
 
 // 마이페이지
 app.get(URL.MYPAGE, getUserActivity);

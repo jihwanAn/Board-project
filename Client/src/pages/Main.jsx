@@ -28,7 +28,7 @@ const Container = styled.main`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 3em;
+  padding: 2em;
 `;
 
 const StyledLink = styled(Link)`

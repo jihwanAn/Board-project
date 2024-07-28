@@ -46,6 +46,19 @@ const QUERY = {
   POST_ADD_LIKE: `INSERT INTO likes (user_id, post_id) VALUES (?, ?)`,
   POST_DELETE_LIKE: `DELETE FROM likes WHERE user_id = ? AND post_id = ?`,
   GET_LIKED_POSTS: `SELECT p.id, p.title, u.nick_name FROM likes l INNER JOIN posts p ON l.post_id = p.id INNER JOIN users u ON p.user_id = u.id WHERE l.user_id = ?`,
+
+  GET_POPULAR_POSTS: `WITH TopPosts AS (
+           SELECT post_id, COUNT(*) AS like_count
+           FROM likes
+           GROUP BY post_id
+           ORDER BY like_count DESC LIMIT ?
+           )
+           
+           SELECT p.id, p.title, p.category_id, u.nick_name, CONVERT(t.like_count, CHAR) AS like_count
+           FROM posts p
+           JOIN TopPosts t ON p.id = t.post_id
+           JOIN users u ON p.user_id = u.id
+           `,
 };
 
 module.exports = { QUERY };

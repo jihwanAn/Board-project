@@ -1,5 +1,5 @@
-import React from "react";
-import { Routes, Route } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Routes, Route, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import URL from "./constants/url";
 import Header from "./components/Header";
@@ -11,13 +11,39 @@ import POSTS from "./pages/board/Posts";
 import CreatePost from "./pages/board/CreatePost";
 import DetailPost from "./pages/board/DetailPost";
 import EditPost from "./pages/board/EditPost";
+import PopularPosts from "./components/PopularPosts";
+import { requestGet } from "./api/fetch";
 
 function App() {
+  const [popularPosts, setPopularPosts] = useState([]);
+  const location = useLocation();
+  const hidePopularPosts = [URL.MYPAGE, URL.POST_CREATE];
+
+  const fetchPopularPosts = () => {
+    requestGet(
+      URL.POPULAR,
+      { limit: 5 },
+      (res) => {
+        setPopularPosts(res.data);
+      },
+      (error) => {
+        setPopularPosts();
+      }
+    );
+  };
+
+  useEffect(() => {
+    fetchPopularPosts();
+  }, []);
+
   return (
     <Container>
       <Header />
       <Contents>
         <ContentWrap>
+          {!hidePopularPosts.includes(location.pathname) && (
+            <PopularPosts popularPosts={popularPosts} />
+          )}
           <Routes>
             <Route path={URL.MAIN} element={<Main />} />
             <Route path={URL.LOGIN} element={<Login />} />

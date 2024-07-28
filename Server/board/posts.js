@@ -1,3 +1,4 @@
+const { query } = require("express");
 const { pool } = require("../DB/connection");
 const { CODE } = require("../constants/code");
 const { QUERY } = require("../constants/query");
@@ -229,7 +230,7 @@ const getLikes = async (req, res) => {
 
     res.status(200).json(rows);
   } catch (error) {
-    res.status(200).send("getLikes error");
+    res.status(500).send("getLikes error");
   } finally {
     if (conn) conn.release();
   }
@@ -252,7 +253,24 @@ const toggleLikeToPost = async (req, res) => {
 
     res.status(200).json(rows);
   } catch (error) {
-    res.send(500).send("add Like to post Error");
+    res.status(500).send("add Like to post Error");
+  } finally {
+    if (conn) conn.release();
+  }
+};
+
+const getPopularPosts = async (req, res) => {
+  let conn;
+
+  try {
+    const { limit } = req.query;
+
+    conn = await pool.getConnection();
+    const rows = await conn.query(QUERY.GET_POPULAR_POSTS, [Number(limit)]);
+
+    res.status(200).json(rows);
+  } catch (error) {
+    res.status(500).send("PopularPosts Error");
   } finally {
     if (conn) conn.release();
   }
@@ -270,4 +288,5 @@ module.exports = {
   getUserActivity,
   getLikes,
   toggleLikeToPost,
+  getPopularPosts,
 };

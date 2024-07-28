@@ -19,6 +19,7 @@ const URL = {
   POST_DELETE: "/posts/delete",
   COMMENT: "/posts/comment",
   LIKE: "/posts/like",
+  POPULAR: "/posts/popular",
 };
 
 module.exports = { URL };
