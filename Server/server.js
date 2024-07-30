@@ -37,7 +37,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: process.env.CORS_ORIGIN || "http://localhost:3000",
     exposedHeaders: ["Authorization"],
     credentials: true,
   })
@@ -71,7 +71,7 @@ app.get(URL.MYPAGE, getUserActivity);
 app.post(URL.CHANGE_NICKNAME, verifyJwt, changeNickName);
 
 // db 테이블 생성
-const run = async () => {
+const runDbInit = async () => {
   try {
     await db.executeSqlFile("../init/create_table.sql");
     console.log("Tables created successfully");
@@ -79,7 +79,7 @@ const run = async () => {
     console.error("Error executing SQL file", error);
   }
 };
-run();
+runDbInit();
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
