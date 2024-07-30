@@ -28,6 +28,7 @@ const {
   getPopularPosts,
 } = require("./board/posts");
 const { verifyJwt } = require("./middlewares/verifyJwt");
+const db = require("./DB/connection");
 
 dotenv.config();
 
@@ -69,7 +70,18 @@ app.get(URL.POPULAR, getPopularPosts);
 app.get(URL.MYPAGE, getUserActivity);
 app.post(URL.CHANGE_NICKNAME, verifyJwt, changeNickName);
 
+// db 테이블 생성
+const run = async () => {
+  try {
+    await db.executeSqlFile("../init/create_table.sql");
+    console.log("Tables created successfully");
+  } catch (error) {
+    console.error("Error executing SQL file", error);
+  }
+};
+run();
+
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
-  console.log(`Server is running at http://localhost:${PORT}`);
+  console.log(`Server Port : ${PORT}`);
 });

@@ -23,7 +23,7 @@ const PopularPosts = ({ popularPosts }) => {
 
   return (
     <Container>
-      {popularPosts ? (
+      {popularPosts.length > 0 ? (
         <Slider {...settings}>
           {popularPosts.map((popularPost, idx) => (
             <Slide
@@ -43,7 +43,7 @@ const PopularPosts = ({ popularPosts }) => {
           ))}
         </Slider>
       ) : (
-        <div>인기 게시글을 불러오지 못했습니다.</div>
+        <div> - </div>
       )}
     </Container>
   );
