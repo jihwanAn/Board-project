@@ -75,6 +75,8 @@ const runDbInit = async () => {
   try {
     await db.executeSqlFile("../init/create_table.sql");
     console.log("Tables created successfully");
+    await db.insertCategories();
+    console.log("Category settings complete");
   } catch (error) {
     console.error("Error executing SQL file", error);
   }

@@ -14,6 +14,8 @@ const QUERY = {
   UPDATE_TOKENS: `UPDATE tokens SET access_token = ?, refresh_token = ? WHERE user_id = ?`,
 
   // POSTS
+  CHECK_CATEGORY: `SELECT COUNT(*) as count FROM categories WHERE name = ?`,
+  INSERT_CATEGORIES: `INSERT INTO categories (name) VALUES (?)`,
   POSTS_COUNT: `SELECT COUNT(*) AS count FROM posts`,
   GET_POSTS: `SELECT p.id, p.title, p.created_at, p.views, u.nick_name, CONVERT(COALESCE(comment_counts.comment_count, 0), CHAR) AS comments_count, CONVERT(COALESCE(like_counts.like_count, 0),CHAR) AS likes_count 
           FROM posts p 

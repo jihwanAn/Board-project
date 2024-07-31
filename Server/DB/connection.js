@@ -2,6 +2,9 @@ const fs = require("fs");
 const path = require("path");
 const mariadb = require("mariadb");
 const dotenv = require("dotenv");
+const { CATEGORY } = require("../constants/category");
+const { QUERY } = require("../constants/query");
+
 dotenv.config();
 
 const pool = mariadb.createPool({
@@ -44,8 +47,32 @@ const executeQuery = async (query, params) => {
   }
 };
 
+// 카테고리 삽입
+const insertCategories = async () => {
+  let conn;
+
+  try {
+    conn = await pool.getConnection();
+
+    for (const id in CATEGORY) {
+      const category = CATEGORY[id];
+      const { name, subcategories } = category;
+
+      const exists = await conn.query(QUERY.CHECK_CATEGORY, [name]);
+      if (exists[0].count === 0) {
+        await conn.query(QUERY.INSERT_CATEGORIES, [name]);
+      }
+    }
+  } catch (err) {
+    console.error(err);
+  } finally {
+    if (conn) conn.release();
+  }
+};
+
 module.exports = {
   pool,
   executeQuery,
   executeSqlFile,
+  insertCategories,
 };
