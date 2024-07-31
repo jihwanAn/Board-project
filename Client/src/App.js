@@ -41,9 +41,10 @@ function App() {
       <Header />
       <Contents>
         <ContentWrap>
-          {!hidePopularPosts.includes(location.pathname) && (
-            <PopularPosts popularPosts={popularPosts} />
-          )}
+          {!hidePopularPosts.includes(location.pathname) &&
+            (popularPosts && popularPosts.length > 0 ? (
+              <PopularPosts popularPosts={popularPosts} />
+            ) : null)}
           <Routes>
             <Route path={URL.MAIN} element={<Main />} />
             <Route path={URL.LOGIN} element={<Login />} />

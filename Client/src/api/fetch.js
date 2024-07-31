@@ -23,7 +23,7 @@ export const requestGet = async (url, params, handler, errorHandler) => {
       headers,
       withCredentials: true,
     });
-    console.log("GET", res);
+    // console.log("GET", res);
 
     if (handler) handler(res);
   } catch (error) {
@@ -38,11 +38,10 @@ export const requestPost = async (url, data, handler, errorHandler) => {
     const res = await axiosInstance.post(url, data, {
       headers,
     });
-    console.log("POST", res);
+    // console.log("POST", res);
 
     if (handler) handler(res);
   } catch (error) {
-    console.error("POST Error:", error);
     if (errorHandler) errorHandler(error);
   }
 };
@@ -52,7 +51,7 @@ export const requestDelete = async (url, params, handler, errorHandler) => {
     const headers = await setAuthHeader();
 
     const res = await axiosInstance.delete(url, { params, headers });
-    console.log("DELETE", res);
+    // console.log("DELETE", res);
 
     if (handler) handler(res);
   } catch (error) {

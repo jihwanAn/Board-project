@@ -23,28 +23,22 @@ const PopularPosts = ({ popularPosts }) => {
 
   return (
     <Container>
-      {popularPosts.length > 0 ? (
-        <Slider {...settings}>
-          {popularPosts.map((popularPost, idx) => (
-            <Slide
-              key={`popular_${idx}`}
-              tabIndex="-1"
-              to={URL.POST_DETAIL}
-              state={popularPost.id}
-            >
-              <div>🔥🔥🔥</div>
-              <Like>+ {popularPost.like_count}</Like>
-              <Category>{`[${
-                CATEGORY[popularPost.category_id].name
-              }]`}</Category>
-              <Title>{popularPost.title}</Title>
-              <NickName>{popularPost.nick_name}</NickName>
-            </Slide>
-          ))}
-        </Slider>
-      ) : (
-        <div> - </div>
-      )}
+      <Slider {...settings}>
+        {popularPosts.map((popularPost, idx) => (
+          <Slide
+            key={`popular_${idx}`}
+            tabIndex="-1"
+            to={URL.POST_DETAIL}
+            state={popularPost.id}
+          >
+            <div>🔥🔥🔥</div>
+            <Like>+ {popularPost.like_count}</Like>
+            <Category>{`[${CATEGORY[popularPost.category_id].name}]`}</Category>
+            <Title>{popularPost.title}</Title>
+            <NickName>{popularPost.nick_name}</NickName>
+          </Slide>
+        ))}
+      </Slider>
     </Container>
   );
 };
