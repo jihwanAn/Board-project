@@ -58,13 +58,15 @@ const insertCategories = async () => {
       const category = CATEGORY[id];
       const { name, subcategories } = category;
 
-      const exists = await conn.query(QUERY.CHECK_CATEGORY, [name]);
-      if (exists[0].count === 0) {
-        await conn.query(QUERY.INSERT_CATEGORIES, [name]);
+      const rows = await conn.query(QUERY.CHECK_CATEGORY, [id, name]);
+      const exists = Number(rows[0].count) > 0;
+
+      if (!exists) {
+        await conn.query(QUERY.INSERT_CATEGORIES, [id, name]);
       }
     }
   } catch (err) {
-    console.error(err);
+    console.error("insert Category Error : ", err);
   } finally {
     if (conn) conn.release();
   }

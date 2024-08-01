@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS users (
 -- categories 테이블 생성
 CREATE TABLE IF NOT EXISTS categories (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(50) NOT NULL UNIQUE
+    name VARCHAR(50) NOT NULL
 );
 
 -- posts 테이블 생성
