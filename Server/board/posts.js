@@ -50,6 +50,8 @@ const getPostDetail = async (req, res) => {
       res.cookie(`post_${post_id}_viewed`, "true", {
         maxAge: 24 * 60 * 60 * 1000,
         httpOnly: true,
+        secure: true,
+        sameSite: "None",
       });
 
       await conn.query(QUERY.INCREASE_POST_VIEWS, [post_id]);
