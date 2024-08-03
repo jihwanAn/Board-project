@@ -1,27 +1,26 @@
 export const formatDate = (dateStr) => {
-  const now = new Date();
   const date = new Date(dateStr);
+  const year = date.getFullYear();
+  const mon = String(date.getMonth() + 1).padStart(2, "0"); // 월은 0부터 시작하므로 +1 필요
+  const day = String(date.getDate()).padStart(2, "0");
+  const hours = String(date.getHours()).padStart(2, "0");
+  const min = String(date.getMinutes()).padStart(2, "0");
 
-  // 당일 작성 된 글인지 체크
-  const isToday =
-    date.getDate() === now.getDate() &&
-    date.getMonth() === now.getMonth() &&
-    date.getFullYear() === now.getFullYear();
+  const datePart = `${year}.${mon}.${day}`;
+  const timePart = `${hours}:${min}`;
+
+  // 날짜 체크
+  const now = new Date();
+  const nowY = now.getFullYear();
+  const nowM = String(now.getMonth() + 1).padStart(2, "0");
+  const nowD = String(now.getDate()).padStart(2, "0");
+  const nowDatePart = `${nowY}.${nowM}.${nowD}`;
+
+  const isToday = nowDatePart === datePart;
 
   if (isToday) {
-    // 오늘 작성된 글 -> 시간 표시
-    return `${date.getHours().toString().padStart(2, "0")}:${date
-      .getMinutes()
-      .toString()
-      .padStart(2, "0")}`;
+    return timePart;
   } else {
-    // 오늘 X -> 전체 날짜 + 시간 표시
-    const year = date.getFullYear().toString().slice(-2);
-    const month = (date.getMonth() + 1).toString().padStart(2, "0");
-    const day = date.getDate().toString().padStart(2, "0");
-    const hours = date.getHours().toString().padStart(2, "0");
-    const minutes = date.getMinutes().toString().padStart(2, "0");
-
-    return `${year}.${month}.${day} ${hours}:${minutes}`;
+    return `${datePart} ${timePart}`;
   }
 };
