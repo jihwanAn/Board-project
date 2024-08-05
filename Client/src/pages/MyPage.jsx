@@ -5,6 +5,7 @@ import URL from "../constants/url";
 import CODE from "../constants/code";
 import { requestGet, requestPost } from "../api/fetch";
 import { formatDate } from "../utils/formatDate";
+import Loading from "../components/LoadingSpinner";
 
 const MyPage = () => {
   const [myPosts, setMyPosts] = useState([]);
@@ -14,6 +15,7 @@ const MyPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const userInfo = location.state;
+  const [isLoading, setIsLoading] = useState(true);
 
   const fetchUserActivity = () => {
     requestGet(
@@ -24,6 +26,7 @@ const MyPage = () => {
           const { userLikedPosts, userPosts } = res.data;
           setMyPosts(userPosts);
           setLikePosts(userLikedPosts);
+          setIsLoading(false);
         }
       },
       (error) => {
@@ -91,7 +94,18 @@ const MyPage = () => {
     fetchUserActivity();
   }, []);
 
-  return (
+  return isLoading ? (
+    <Container
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "40vh",
+      }}
+    >
+      <Loading />
+    </Container>
+  ) : (
     <Container>
       <UserInfoBox>
         <Wrap>이메일 : {userInfo?.email}</Wrap>
@@ -121,7 +135,7 @@ const MyPage = () => {
             </Post>
           ))
         ) : (
-          <Post>작성하신 게시글이 없습니다.</Post>
+          <Empty>작성하신 게시글이 없습니다.</Empty>
         )}
       </Box>
 
@@ -135,7 +149,7 @@ const MyPage = () => {
             </Post>
           ))
         ) : (
-          <Post>좋아요를 누른 게시글이 없습니다.</Post>
+          <Empty>좋아요를 누른 게시글이 없습니다.</Empty>
         )}
       </Box>
     </Container>
@@ -191,6 +205,13 @@ const Title = styled.div`
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+`;
+
+const Empty = styled.div`
+  display: flex;
+  justify-content: center;
+  padding-top: 5em;
+  color: #aaa;
 `;
 
 export default MyPage;
