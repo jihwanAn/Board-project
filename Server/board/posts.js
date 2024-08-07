@@ -29,7 +29,12 @@ const getPosts = async (req, res) => {
     const totalItems = Number(count);
     const totalPages = Math.ceil(totalItems / itemsPerPage);
 
-    res.status(200).json({ totalPages, posts: rows_2, totalItems });
+    const indexedPosts = rows_2.map((post, idx) => ({
+      ...post,
+      num: totalItems - ((page - 1) * itemsPerPage + idx),
+    }));
+
+    res.status(200).json({ totalPages, posts: indexedPosts, totalItems });
   } catch (error) {
     res.status(500).send("fetching posts Error");
   } finally {

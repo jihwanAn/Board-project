@@ -97,12 +97,9 @@ const Posts = () => {
         </thead>
         <tbody>
           {posts.length > 0 ? (
-            posts.map((post, idx) => (
-              <tr key={`post_${idx}`}>
-                <td>
-                  {pageOptions.totalItems -
-                    ((pageOptions.page - 1) * pageOptions.itemsPerPage + idx)}
-                </td>
+            posts.map((post) => (
+              <tr key={`post_${post.num}`}>
+                <td> {post.num}</td>
                 <td>
                   <TitleLink to={URL.POST_DETAIL} state={post.id}>
                     {post.title}
