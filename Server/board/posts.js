@@ -1,4 +1,3 @@
-const { query } = require("express");
 const { pool } = require("../DB/connection");
 const { CODE } = require("../constants/code");
 const { QUERY } = require("../constants/query");

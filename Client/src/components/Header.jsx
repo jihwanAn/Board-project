@@ -81,9 +81,6 @@ const Button = styled.button`
   border: none;
 
   cursor: pointer;
-  &:hover {
-    text-decoration: underline;
-  }
 `;
 
 export default Header;

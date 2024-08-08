@@ -7,7 +7,6 @@ const theme = {
     primaryDark: "#1565C0",
 
     text: "#212121",
-    textLight: "#757575",
   },
 
   // sizes: {},

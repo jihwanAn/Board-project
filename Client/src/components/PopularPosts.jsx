@@ -45,13 +45,21 @@ const PopularPosts = ({ popularPosts }) => {
 
 const Container = styled.div`
   padding: 0.1em;
-  border: 2px solid #ff9c9c;
+  border: 2px solid;
+  border-color: ${(props) => props.theme.colors.primaryLight};
   background-color: #eee;
 `;
 
 const Slide = styled(Link)`
   display: flex !important;
+  align-items: center;
   margin-left: 1.5em;
+
+  :nth-child(n) {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
 `;
 
 const Category = styled.div`
@@ -59,12 +67,9 @@ const Category = styled.div`
 `;
 
 const Title = styled.div`
-  width: 60%;
+  width: 50%;
   margin-left: 0.3em;
   padding-right: 1em;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
 `;
 
 const Like = styled.div`
@@ -76,6 +81,7 @@ const Like = styled.div`
 const NickName = styled.div`
   color: #2c2cff;
   font-weight: bold;
+  width: 15%;
 `;
 
 export default PopularPosts;

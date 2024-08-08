@@ -5,6 +5,7 @@ import URL from "../constants/url";
 import CODE from "../constants/code";
 import { requestGet, requestPost } from "../api/fetch";
 import { formatDate } from "../utils/formatDate";
+import { getSessionItem, setSessionItem } from "../utils/storage";
 import Loading from "../components/LoadingSpinner";
 
 const MyPage = () => {
@@ -15,6 +16,7 @@ const MyPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const userInfo = location.state;
+  const user = getSessionItem("user");
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchUserActivity = () => {
@@ -34,6 +36,16 @@ const MyPage = () => {
         navigate(URL.MAIN);
       }
     );
+  };
+
+  const updateUserNickName = (nickName) => {
+    if (user) {
+      user.nick_name = nickName;
+      setSessionItem("user", user);
+    } else {
+      alert("재로그인이 필요합니다.");
+      navigate(URL.MAIN);
+    }
   };
 
   const requestNickChange = () => {
@@ -57,8 +69,7 @@ const MyPage = () => {
           (res) => {
             if (res.status === 200) {
               alert("닉네임이 정상적으로 변경되었습니다.");
-
-              userInfo.nick_name = nicknameInput;
+              updateUserNickName(nicknameInput);
               setIsNicknameChanging(false);
             }
           },
@@ -109,7 +120,7 @@ const MyPage = () => {
     <Container>
       <UserInfoBox>
         <Wrap>이메일 : {userInfo?.email}</Wrap>
-        <Wrap>닉네임 : {userInfo?.nick_name}</Wrap>
+        <Wrap>닉네임 : {user?.nick_name}</Wrap>
         {!isNicknameChanging ? (
           <button onClick={handleNickNameChange}>닉네임 변경</button>
         ) : (
@@ -125,7 +136,7 @@ const MyPage = () => {
         )}
       </UserInfoBox>
 
-      <div>작성한 게시글</div>
+      <Label>작성한 게시글</Label>
       <Box>
         {myPosts.length > 0 ? (
           myPosts.map((post, idx) => (
@@ -139,7 +150,7 @@ const MyPage = () => {
         )}
       </Box>
 
-      <div>좋아요 누른 게시글</div>
+      <Label>좋아요 누른 게시글</Label>
       <Box>
         {likedPosts.length > 0 ? (
           likedPosts.map((post, idx) => (
@@ -164,6 +175,11 @@ const Container = styled.div`
 const UserInfoBox = styled.div`
   display: flex;
   margin-bottom: 1em;
+
+  // 모바일
+  @media (max-width: 500px) {
+    flex-direction: column;
+  }
 `;
 
 const Wrap = styled.div`
@@ -205,6 +221,11 @@ const Title = styled.div`
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+`;
+
+const Label = styled.div`
+  font-weight: bold;
+  color: ${(props) => props.theme.colors.primaryDark};
 `;
 
 const Empty = styled.div`
