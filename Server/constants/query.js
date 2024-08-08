@@ -18,7 +18,7 @@ const QUERY = {
   INSERT_CATEGORIES: `INSERT INTO categories (id, name) VALUES (?, ?)`,
 
   POSTS_COUNT: `SELECT COUNT(*) AS count FROM posts`,
-  GET_POSTS: `SELECT p.id, p.title, p.created_at, p.views, u.nick_name, CONVERT(COALESCE(comment_counts.comment_count, 0), CHAR) AS comments_count, CONVERT(COALESCE(like_counts.like_count, 0),CHAR) AS likes_count 
+  GET_POSTS: `SELECT p.id, p.title, p.category_id, p.created_at, p.views, u.nick_name, CONVERT(COALESCE(comment_counts.comment_count, 0), CHAR) AS comments_count, CONVERT(COALESCE(like_counts.like_count, 0),CHAR) AS likes_count 
           FROM posts p 
           JOIN users u ON p.user_id = u.id 
           LEFT JOIN (SELECT post_id, COUNT(*) AS comment_count FROM comments GROUP BY post_id) AS comment_counts ON p.id = comment_counts.post_id

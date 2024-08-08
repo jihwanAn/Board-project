@@ -8,7 +8,7 @@ import URL from "../../constants/url";
 import Loading from "../../components/LoadingSpinner";
 
 const Posts = () => {
-  const columns = ["No", "제목", "", "작성자", "날짜"];
+  const columns = ["", "제목", "", "작성자", "날짜"];
   const location = useLocation();
   const navigate = useNavigate();
   const [posts, setPosts] = useState([]);
@@ -99,7 +99,12 @@ const Posts = () => {
           {posts.length > 0 ? (
             posts.map((post) => (
               <tr key={`post_${post.num}`}>
-                <td> {post.num}</td>
+                {pageOptions.category_id === -1 && post.category_id ? (
+                  <td> {`[${CATEGORY[post.category_id].name}]`}</td>
+                ) : (
+                  <td> {post.num}</td>
+                )}
+
                 <td>
                   <TitleLink to={URL.POST_DETAIL} state={post.id}>
                     {post.title}
@@ -187,17 +192,41 @@ const StyledTable = styled.table`
   }
 
   td {
-    padding: 0.5em;
+    padding: 0.3em;
     text-align: center;
     border-bottom: 1px solid #ccc;
+    max-width: 0;
+    white-space: nowrap;
   }
 
   td:nth-child(1) {
-    width: 5%;
+    color: #aaa;
+    font-size: 0.8em;
+    width: 8%;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   td:nth-child(2) {
-    width: 55%;
-    max-width: 0;
+    width: 50%;
+  }
+  td:nth-child(3) {
+    width: 17%;
+  }
+  td:nth-child(4) {
+    width: 10%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  td:nth-child(5) {
+    width: 15%;
+  }
+
+  // 모바일
+  @media (max-width: 500px) {
+    td:nth-child(5),
+    th:nth-child(5) {
+      display: none;
+    }
   }
 `;
 
