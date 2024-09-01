@@ -3,6 +3,7 @@ const app = express();
 const cors = require("cors");
 const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
+const path = require("path");
 const { URL } = require("./constants/url");
 const {
   loginUser,
@@ -82,6 +83,12 @@ const runDbInit = async () => {
   }
 };
 runDbInit();
+
+app.use(express.static(path.join(__dirname, "../Client/build")));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../Client/build", "index.html"));
+});
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
