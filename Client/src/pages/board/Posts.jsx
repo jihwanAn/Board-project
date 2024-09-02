@@ -15,7 +15,7 @@ const Posts = () => {
   const [pageOptions, setPageOptions] = useState({
     category_id: location.state || -1,
     page: 1,
-    itemsPerPage: 5,
+    itemsPerPage: 10,
     totalPages: 0,
   });
   const [isLoading, setIsLoading] = useState(true);
